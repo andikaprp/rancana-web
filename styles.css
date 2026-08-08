@@ -1,0 +1,928 @@
+/* Rancana landing page — a 1:1 transcription of the Figma frame "Desktop - 1" (1440 x 3065).
+   Every offset below is the node's absolute position in that frame. */
+
+@font-face {
+  font-family: 'Lora';
+  src: url('assets/fonts/Lora-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Lora';
+  src: url('assets/fonts/Lora-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('assets/fonts/SourceSansPro-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('assets/fonts/SourceSansPro-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: block;
+}
+
+:root {
+  --v-1000: #1e1e1e;
+  --v-800: #6f6f6f;
+  --v-700: #868686;
+  --v-600: #9d9d9d;
+  --v-200: #e4e4e4;
+  --v-100: #f0f0f0;
+  --v-50: #f9f9f9;
+  --green-700: #1b6447;
+  --green-500: #217957;
+  --tangerine: #ff9a40;
+  --danger: #f00;
+  --lora: 'Lora', Georgia, serif;
+  --ssp: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+  /* Side margin the background layers stretch into on screens wider than the 1440 canvas. */
+  --bleed: 0px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--v-1000);
+  font-family: var(--ssp);
+  -webkit-font-smoothing: antialiased;
+}
+
+.stage-wrap {
+  position: relative;
+  width: 100%;
+  height: 3065px;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  width: 1440px;
+  height: 3065px;
+  transform-origin: top left;
+}
+
+.stage > *,
+.features > *,
+.hero > *,
+.closing > *,
+.wordmark > *,
+.subject > * {
+  position: absolute;
+}
+
+.features, .hero, .closing, .wordmark { position: absolute; }
+
+h1, h2, h3, p, strong { margin: 0; font-weight: 400; }
+
+a { color: inherit; text-decoration: none; }
+
+img { display: block; }
+
+/* ---------- paper texture (node "paper" x -1) ---------- */
+
+.paper {
+  left: calc(-1px - var(--bleed));
+  width: calc(1441px + 2 * var(--bleed));
+  object-fit: cover;
+  opacity: 0.3;
+  pointer-events: none;
+}
+.paper-hero { top: 0; height: 995px; }
+/* Without the ramp the texture's top edge cuts a visible line across the white band. */
+.paper-bottom {
+  top: 2079px;
+  height: 1397px;
+  -webkit-mask: linear-gradient(to bottom, transparent, #000 120px);
+  mask: linear-gradient(to bottom, transparent, #000 120px);
+}
+
+/* ---------- white blur bands ---------- */
+
+.band {
+  left: calc(-1 * var(--bleed));
+  width: calc(1440px + 2 * var(--bleed));
+  height: 104px;
+  background: #fff;
+  filter: blur(50px);
+}
+.band-features { top: 964px; }
+
+/* Falloff sampled from the Figma render of the hero's white blur band. */
+.band-hero {
+  top: 840px;
+  filter: none;
+  height: 187px;
+  background: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.014) 2.1%,
+    rgba(255, 255, 255, 0.035) 6.4%,
+    rgba(255, 255, 255, 0.063) 10.7%,
+    rgba(255, 255, 255, 0.082) 15%,
+    rgba(255, 255, 255, 0.123) 19.3%,
+    rgba(255, 255, 255, 0.158) 23.5%,
+    rgba(255, 255, 255, 0.214) 27.8%,
+    rgba(255, 255, 255, 0.246) 32.1%,
+    rgba(255, 255, 255, 0.356) 36.4%,
+    rgba(255, 255, 255, 0.414) 40.6%,
+    rgba(255, 255, 255, 0.497) 44.9%,
+    rgba(255, 255, 255, 0.581) 49.2%,
+    rgba(255, 255, 255, 0.656) 53.5%,
+    rgba(255, 255, 255, 0.78) 62%,
+    rgba(255, 255, 255, 0.89) 70.6%,
+    rgba(255, 255, 255, 0.96) 79.1%,
+    #fff 87.7%);
+}
+
+/* ---------- shared pills (buttons) ---------- */
+
+.pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 30px;
+  border-radius: 40px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 21.5px;
+  white-space: nowrap;
+  transition: box-shadow 0.25s ease;
+}
+.pill-dark {
+  background: var(--v-1000);
+  color: #fff;
+  filter: drop-shadow(0 0 23.621px rgba(0, 0, 0, 0.1));
+}
+.pill-light { background: var(--v-50); }
+.pill-dark:hover { box-shadow: 0 8px 20px rgba(30, 30, 30, 0.28); }
+.pill-light:hover { box-shadow: 0 8px 20px rgba(30, 30, 30, 0.1); }
+
+/* ---------- hero (frame 30753) ---------- */
+
+/* The frame clips its children, so the blur band below only bleeds upward over the phones. */
+.hero {
+  left: 0;
+  top: 0;
+  width: 1440px;
+  height: 1027px;
+  overflow: hidden;
+}
+
+.brand {
+  left: 96px;
+  top: 56px;
+  width: 149px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: 64px;
+  background: #fff;
+  filter: drop-shadow(0 0 36px rgba(0, 0, 0, 0.1));
+}
+.brand-mark,
+.wordmark-mark {
+  background: currentColor;
+  -webkit-mask: url('assets/logo.svg') center / 83% 79% no-repeat;
+  mask: url('assets/logo.svg') center / 83% 79% no-repeat;
+}
+.brand-mark {
+  position: static;
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+.brand-name {
+  position: static;
+  width: 89px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 24px;
+  text-align: center;
+}
+
+/* Language switch — not part of the Figma frame; matches the brand pill's height and shadow. */
+.lang {
+  right: 96px;
+  top: 61px;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 64px;
+  background: #fff;
+  filter: drop-shadow(0 0 36px rgba(0, 0, 0, 0.1));
+}
+.lang-btn {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 64px;
+  background: none;
+  font-family: var(--ssp);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--v-700);
+  cursor: pointer;
+}
+.lang-btn.is-active {
+  background: var(--v-1000);
+  color: #fff;
+}
+
+.hero-title {
+  left: 348px;
+  top: 142px;
+  width: 745px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 48px;
+  line-height: normal;
+  text-align: center;
+}
+
+.hero-sub-1, .hero-sub-2 {
+  left: 366px;
+  width: 708px;
+  font-size: 18px;
+  line-height: normal;
+  text-align: center;
+  color: var(--v-700);
+}
+.hero-sub-1 { top: 219px; }
+.hero-sub-2 { top: 250px; }
+
+/* Pills are content-sized, so the pair is centred by the row instead of fixed offsets. */
+.hero-ctas {
+  left: 0;
+  top: 299px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* phone mockups — exported at node size plus the shadow bleed the export adds */
+.phone-left { left: 248px; top: 472.78px; width: 371px; height: 531px; }
+.phone-right { left: 821px; top: 472.78px; width: 371px; height: 531px; }
+.phone-center { left: 491.5px; top: 356.5px; width: 458px; height: 656px; }
+
+/* ---------- features (frame 30756) ---------- */
+
+.features {
+  left: 0;
+  top: 1075px;
+  width: 1440px;
+  height: 1068px;
+}
+
+.features-title {
+  left: 480px;
+  top: 0;
+  width: 480px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: normal;
+  text-align: center;
+}
+.features-sub {
+  left: 285px;
+  top: 53px;
+  width: 870px;
+  font-size: 18px;
+  line-height: normal;
+  text-align: center;
+  color: var(--v-700);
+}
+
+.card {
+  position: absolute;
+  width: 560px;
+  height: 428px;
+  border-radius: 16px;
+  background: #fff;
+  filter: drop-shadow(0 0 48px rgba(30, 30, 30, 0.04));
+}
+.card-flashcards { left: 144px; top: 116px; }
+.card-subjects { left: 736px; top: 116px; }
+.card-todo { left: 144px; top: 576px; }
+.card-schedule { left: 736px; top: 576px; }
+
+.card-head {
+  position: absolute;
+  left: 150px;
+  top: 40px;
+  width: 261px;
+  text-align: center;
+}
+.card-head h3 {
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: normal;
+}
+.card-head p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: normal;
+  color: var(--v-700);
+}
+
+/* flashcards visual (exported: the back card carries a Figma-only conic gradient) */
+.fc-front, .fc-back { position: absolute; }
+.fc-front { left: 59.79px; top: 168.43px; width: 341px; height: 204px; }
+.fc-back { left: 151px; top: 193px; width: 345px; height: 188px; }
+
+/* subjects visual */
+.subject {
+  position: absolute;
+  top: 156px;
+  width: 190.357px;
+  height: 195px;
+}
+.subject-1 { left: 81px; }
+.subject-2 { left: 291.089px; }
+
+.subject-back,
+.subject-front {
+  left: 0;
+  width: 190.357px;
+  border-radius: 9.286px;
+}
+.subject-back {
+  top: 4.643px;
+  height: 190.357px;
+  background: var(--v-100);
+  box-shadow: 0 -2.321px 23.214px rgba(0, 0, 0, 0.12);
+}
+.subject-front {
+  top: 9.286px;
+  height: 185.714px;
+  background: #fff;
+}
+.subject-ribbon {
+  left: 35.982px;
+  top: 0;
+  width: 39.464px;
+  height: 109.579px;
+}
+.subject-badge {
+  left: 18.571px;
+  top: 13.929px;
+  width: 74.286px;
+  height: 74.286px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 37.143px;
+  background: #fff;
+  filter: drop-shadow(0 4.643px 6.964px rgba(0, 0, 0, 0.12));
+  font-size: 37.143px;
+  line-height: 46.429px;
+}
+.subject-name {
+  left: 18.571px;
+  top: 148.571px;
+  width: 153.214px;
+  height: 28px;
+  display: flex;
+  align-items: flex-end;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 20.893px;
+  line-height: 27.857px;
+}
+.subject-chevron {
+  position: absolute;
+  left: 137.739px;
+  top: 15.039px;
+  width: 12.381px;
+  height: 7.351px;
+  transform: rotate(-90deg);
+}
+
+/* to-do visual */
+.todo {
+  position: absolute;
+  left: 108px;
+  width: 345px;
+  height: 98px;
+  padding: 16px;
+  border: 2px solid var(--danger);
+  border-radius: 12px;
+  background: #fff;
+}
+.todo-1 { top: 153px; }
+.todo-2 { top: 263px; border-color: var(--tangerine); }
+.todo-emoji {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: normal;
+}
+.todo-title, .todo-note, .todo-meta {
+  position: absolute;
+  left: 48px;
+  width: 249px;
+  line-height: normal;
+}
+.todo-title {
+  top: 16px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 16px;
+}
+.todo-note { top: 40px; font-size: 12px; }
+.todo-meta { top: 67px; font-size: 12px; color: var(--danger); }
+.todo-meta b { font-weight: 600; }
+.todo-2 .todo-meta { color: var(--tangerine); }
+.todo-check {
+  position: absolute;
+  left: 309px;
+  top: 41px;
+  width: 16px;
+  height: 16px;
+}
+
+/* schedule visual */
+.days {
+  position: absolute;
+  left: 85px;
+  top: 149px;
+  width: 392px;
+  height: 96px;
+}
+.month, .day {
+  position: absolute;
+  top: 12px;
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  background: #fff;
+}
+.month {
+  left: 0;
+  padding: 4px 4px 8px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.05), 2px 0 6px rgba(0, 0, 0, 0.03);
+}
+.month-year {
+  display: block;
+  border-radius: 4px 4px 0 0;
+  background: var(--v-100);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  color: var(--v-700);
+}
+.month-name {
+  display: block;
+  margin-top: 7px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 34px;
+  text-align: center;
+}
+.day-1 { left: 80px; }
+.day-2 { left: 160px; }
+.day-3 { left: 240px; }
+.day-4 { left: 320px; }
+.day strong, .day span {
+  display: block;
+  width: 64px;
+  margin-left: 4px;
+  text-align: center;
+}
+.day strong {
+  margin-top: 9px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 34px;
+  color: var(--v-800);
+}
+.day span {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--v-600);
+}
+.day.is-active {
+  border: 2px solid var(--green-500);
+  filter: drop-shadow(0 10px 6px rgba(0, 0, 0, 0.04));
+}
+.day.is-active strong { margin-top: 7px; margin-left: 2px; color: var(--green-500); }
+.day.is-active span { margin-left: 2px; color: var(--green-500); }
+
+.slot-time {
+  position: absolute;
+  left: 85px;
+  top: 267px;
+  width: 392px;
+  font-family: var(--lora);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+}
+.slot {
+  position: absolute;
+  left: 85px;
+  top: 293px;
+  width: 392px;
+  height: 72px;
+  padding: 16px;
+  border: 1px solid var(--v-200);
+  border-radius: 12px;
+  background: var(--v-50);
+}
+.slot-title {
+  display: block;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: normal;
+}
+.slot-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: normal;
+  color: var(--v-600);
+}
+
+/* ---------- closing card (frame 29) ---------- */
+
+.closing {
+  left: 0;
+  top: 2199px;
+  width: 1440px;
+  height: 612px;
+}
+
+.sheet {
+  background: #fff;
+  border-radius: 53.96px;
+}
+.sheet-3 {
+  left: 192px;
+  top: 0;
+  width: 1056px;
+  height: 568px;
+  box-shadow: 0 13.49px 13.49px rgba(12, 91, 69, 0.08), 0 13.49px 13.49px rgba(12, 91, 69, 0.08);
+}
+.sheet-2 {
+  left: 165px;
+  top: 27px;
+  width: 1110px;
+  height: 555px;
+  box-shadow: 0 -13.49px 13.49px rgba(12, 91, 69, 0.08);
+}
+.sheet-1 {
+  left: 137px;
+  top: 54px;
+  width: 1164px;
+  height: 558px;
+  box-shadow: 0 -13.49px 13.49px rgba(12, 91, 69, 0.08);
+}
+/* The stroke uses the "Aurora Green" angular paint; opacity sweep sampled from the design. */
+.sheet-border {
+  left: 164px;
+  top: 81px;
+  width: 1109px;
+  height: 501px;
+  border: 3.373px solid transparent;
+  border-radius: 40.47px;
+  box-shadow: 0 -13.49px 13.49px rgba(12, 91, 69, 0.08);
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    conic-gradient(from 289deg at 50% 50%,
+      rgba(27, 100, 71, 1) 0%,
+      rgba(27, 100, 71, 0.943) 6.1%,
+      rgba(27, 100, 71, 0.904) 14.9%,
+      rgba(27, 100, 71, 0.882) 21.4%,
+      rgba(27, 100, 71, 0.86) 27.4%,
+      rgba(27, 100, 71, 0.82) 34.6%,
+      rgba(27, 100, 71, 0.772) 39.4%,
+      rgba(27, 100, 71, 0.706) 42.25%,
+      rgba(27, 100, 71, 0.64) 45.2%,
+      rgba(27, 100, 71, 0.588) 50%,
+      rgba(27, 100, 71, 0.548) 56.1%,
+      rgba(27, 100, 71, 0.522) 64.9%,
+      rgba(27, 100, 71, 0.496) 71.4%,
+      rgba(27, 100, 71, 0.456) 77.4%,
+      rgba(27, 100, 71, 0.395) 83.3%,
+      rgba(27, 100, 71, 0.329) 87.3%,
+      rgba(27, 100, 71, 0.211) 91.3%,
+      rgba(27, 100, 71, 0.123) 93.2%,
+      rgba(27, 100, 71, 0.386) 95.2%,
+      rgba(27, 100, 71, 0.684) 97.2%,
+      rgba(27, 100, 71, 0.947) 99.1%,
+      rgba(27, 100, 71, 1) 100%) border-box;
+}
+
+.closing-title {
+  left: 358px;
+  top: 212px;
+  width: 725px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 48px;
+  line-height: normal;
+  text-align: center;
+}
+.closing-sub {
+  left: 358px;
+  top: 289px;
+  width: 725px;
+  font-size: 18px;
+  line-height: normal;
+  text-align: center;
+  color: var(--v-700);
+}
+.closing-cta { left: 50%; top: 369px; transform: translateX(-50%); }
+
+/* Links are content-sized, so the row centres them at any label length. */
+.legal-row {
+  left: 0;
+  top: 495px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+.legal {
+  height: 23px;
+  font-size: 18px;
+  line-height: normal;
+  color: var(--v-700);
+  transition: color 0.2s ease;
+}
+.legal:hover { color: var(--v-1000); }
+
+/* ---------- wordmark (frame "Planora logo") ---------- */
+
+.wordmark {
+  left: 186.399px;
+  top: 2866px;
+  width: 1067px;
+  height: 238px;
+  opacity: 0.32;
+  filter: drop-shadow(0 0 356.754px rgba(0, 0, 0, 0.1));
+}
+/* Exported flattened on white; multiply keeps the surrounding white transparent. */
+.wordmark-glow {
+  left: -36px;
+  top: 11px;
+  width: 216px;
+  height: 216px;
+  transform: rotate(64.68deg);
+  mix-blend-mode: multiply;
+}
+.wordmark-mark {
+  left: 40px;
+  top: 87px;
+  width: 64px;
+  height: 64px;
+  color: #fff;
+}
+.wordmark-text {
+  left: 192px;
+  top: 0;
+  width: 875px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 218.016px;
+  line-height: 237.836px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ---------- legal documents (privacy, terms, delete account) ----------
+   Flow layout, not the fixed canvas: these pages grow with their text but
+   borrow the home page's paper, brand pill, language switch and type scale. */
+
+.doc-page { padding: 0 20px 80px; }
+.doc-paper {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
+}
+.doc-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1248px;
+  margin: 0 auto;
+  padding: 56px 0 44px;
+}
+.doc-bar .brand,
+.doc-bar .lang {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+}
+.doc {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 52px 56px 56px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 0 48px rgba(30, 30, 30, 0.05);
+}
+.doc h1 {
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1.2;
+}
+.doc h2 {
+  margin-top: 40px;
+  font-family: var(--lora);
+  font-weight: 600;
+  font-size: 24px;
+}
+.doc p, .doc li {
+  margin-top: 14px;
+  font-size: 17px;
+  line-height: 1.65;
+}
+.doc ul, .doc ol {
+  margin: 0;
+  padding-left: 24px;
+}
+.doc li ul { padding-left: 20px; }
+.doc-meta, .doc-note { color: var(--v-700); }
+.doc-note { font-size: 15px; }
+.doc a {
+  color: var(--green-500);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.doc a:hover { color: var(--green-700); }
+.doc code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--v-50);
+  font-size: 15px;
+}
+.doc-foot {
+  max-width: 800px;
+  margin: 36px auto 0;
+}
+
+@media (max-width: 640px) {
+  .doc-bar { padding: 24px 0 28px; }
+  .doc { padding: 32px 24px 40px; border-radius: 22px; }
+  .doc h1 { font-size: 30px; }
+  .doc h2 { margin-top: 32px; font-size: 21px; }
+  .doc p, .doc li { font-size: 16px; }
+}
+
+/* ---------- phones: the same components stacked in one column ----------
+   Sections become flow containers; components that are internally
+   absolute (cards, mockups, wordmark) are zoomed to fit the width. */
+
+@media (max-width: 899px) {
+  .stage-wrap { height: auto !important; }
+  .stage {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding-bottom: 24px;
+    transform: none !important;
+  }
+  .hero { order: 1; }
+  .features { order: 2; }
+  .closing { order: 3; }
+  .wordmark { order: 4; }
+
+  .paper-hero {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .paper-bottom, .band { display: none; }
+
+  .hero, .features, .closing, .wordmark {
+    left: auto;
+    top: auto;
+  }
+  .hero, .features, .closing {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  /* relative (not static) so these keep painting above the absolute sheets */
+  .hero > *, .features > *, .closing > * {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+
+  /* hero */
+  .hero { padding: 28px 20px 0; }
+  .lang { margin-top: 14px; }
+  .hero-title {
+    width: 100%;
+    max-width: 420px;
+    margin-top: 28px;
+    font-size: 32px;
+  }
+  .hero-sub-1, .hero-sub-2 { width: 100%; max-width: 420px; font-size: 16px; }
+  .hero-sub-1 { margin-top: 16px; }
+  .hero-ctas {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 26px;
+    gap: 10px;
+  }
+  .phone-left, .phone-right { display: none; }
+  /* Scaled visually, with the freed-up layout height taken back by a negative margin. */
+  .phone-center {
+    transform: scale(var(--phone-scale, 1));
+    transform-origin: top center;
+    margin-top: 20px;
+    margin-bottom: calc(656px * (var(--phone-scale, 1) - 1));
+  }
+
+  /* features */
+  .features { padding: 4px 16px 0; }
+  .features-title { width: 100%; margin-top: 8px; font-size: 26px; }
+  .features-sub { width: 100%; max-width: 460px; margin-top: 12px; font-size: 15px; }
+  .card {
+    transform: scale(var(--card-scale, 1));
+    transform-origin: top center;
+    margin-top: 26px;
+    margin-bottom: calc(428px * (var(--card-scale, 1) - 1));
+  }
+
+  /* closing card: the flow content sets the height, the sheets line it */
+  .closing {
+    position: relative;
+    margin: 48px 16px 0;
+    padding: 48px 28px 44px;
+  }
+  .sheet-3, .sheet-2 { display: none; }
+  .sheet-1, .sheet-border {
+    position: absolute;
+    width: auto;
+    height: auto;
+  }
+  .sheet-1 { inset: 0; border-radius: 28px; }
+  .sheet-border { inset: 10px; border-radius: 20px; }
+  .closing-title { width: 100%; font-size: 26px; }
+  .closing-sub { width: 100%; margin-top: 14px; font-size: 15px; }
+  .closing-cta { margin-top: 26px; }
+  .legal-row {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+  }
+  .legal { font-size: 15px; }
+
+  /* wordmark */
+  .wordmark {
+    position: relative;
+    align-self: center;
+    width: 1067px;
+    height: 199px;
+    overflow: hidden;
+    transform: scale(var(--wm-scale, 1));
+    transform-origin: top center;
+    margin-top: 36px;
+    margin-bottom: calc(199px * (var(--wm-scale, 1) - 1));
+  }
+}
