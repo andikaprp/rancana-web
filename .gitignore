@@ -1,2 +1,3 @@
 check-lang.mjs
 .DS_Store
+.wrangler/
