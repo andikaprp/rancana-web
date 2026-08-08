@@ -853,7 +853,7 @@ img { display: block; }
 
   /* hero */
   .hero { padding: 28px 20px 0; }
-  .lang { margin-top: 14px; }
+  .hero .lang { display: none; }
   .hero-title {
     width: 100%;
     max-width: 420px;
