@@ -1,3 +1,5 @@
 name = "rancana"
 compatibility_date = "2026-08-08"
-pages_build_output_dir = "."
+
+[assets]
+directory = "."

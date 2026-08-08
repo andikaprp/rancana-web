@@ -1,0 +1,8 @@
+.github
+.wrangler
+.git
+.gitignore
+README.md
+wrangler.toml
+check-lang.mjs
+*.mjs
