@@ -1,5 +1,7 @@
 name = "rancana"
 compatibility_date = "2026-08-08"
+main = "worker.js"
 
 [assets]
 directory = "."
+binding = "ASSETS"
