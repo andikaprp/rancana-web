@@ -165,6 +165,13 @@ img { display: block; }
 .pill-dark:hover { box-shadow: 0 8px 20px rgba(30, 30, 30, 0.28); }
 .pill-light:hover { box-shadow: 0 8px 20px rgba(30, 30, 30, 0.1); }
 
+/* Official Play lockup (icon + 2-line label) inside the site pill chrome. */
+.play-lockup {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
 /* ---------- hero (frame 30753) ---------- */
 
 /* The frame clips its children, so the blur band below only bleeds upward over the phones. */

@@ -7,13 +7,16 @@ const index = await readFile(new URL('index.html', root), 'utf8');
 const lang = await readFile(new URL('lang.js', root), 'utf8');
 
 for (const cls of ['hero-title', 'hero-sub-1', 'hero-sub-2', 'features-title', 'features-sub',
-                   'closing-title', 'closing-sub', 'pill-dark', 'pill-light', 'legal']) {
+                   'closing-title', 'closing-sub', 'pill-light', 'legal']) {
   const tag = index.match(new RegExp(`<[^>]*class="(?:[^"]*\\s)?${cls}(?:\\s[^"]*)?"[^>]*>`));
   assert.ok(tag, `no element with class ${cls}`);
   assert.match(tag[0], /data-id="[^"]+"/, `${cls} has no data-id copy`);
 }
+assert.match(index, /class="[^"]*pill-dark/, 'missing pill-dark Play CTA');
+assert.match(index, /en_play_lockup\.png/, 'missing EN Play lockup');
+assert.match(index, /id_play_lockup\.png/, 'missing ID Play lockup');
 assert.match(index, /<title data-id="[^"]+"/, 'page title has no data-id copy');
-assert.equal((index.match(/data-id="/g) ?? []).length, 23, 'copy count changed — translate the new string, then bump this number');
+assert.equal((index.match(/data-id="/g) ?? []).length, 21, 'copy count changed — translate the new string, then bump this number');
 assert.match(index, /href="privacy\.html"/);
 assert.match(index, /href="terms\.html"/);
 assert.match(index, /href="delete-account\.html"/);
