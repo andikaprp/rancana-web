@@ -156,14 +156,20 @@ img { display: block; }
   white-space: nowrap;
   transition: box-shadow 0.25s ease;
 }
-.pill-dark {
-  background: var(--v-1000);
-  color: #fff;
-  filter: drop-shadow(0 0 23.621px rgba(0, 0, 0, 0.1));
-}
 .pill-light { background: var(--v-50); }
-.pill-dark:hover { box-shadow: 0 8px 20px rgba(30, 30, 30, 0.28); }
 .pill-light:hover { box-shadow: 0 8px 20px rgba(30, 30, 30, 0.1); }
+
+/* Official Google Play badges — size only; do not recolor/crop/restyle artwork. */
+.play-badge-link {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+.play-badge {
+  display: block;
+  height: 60px;
+  width: auto;
+}
 
 /* ---------- hero (frame 30753) ---------- */
 
@@ -267,6 +273,7 @@ img { display: block; }
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 12px;
 }
 
