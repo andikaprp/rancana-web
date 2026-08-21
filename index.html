@@ -107,11 +107,11 @@
     <p class="hero-sub-1" data-id="Rancana membantu pelajar mengatur mata pelajaran, jadwal, tugas, dan flashcard.">Rancana helps students organize subjects, schedules, assignments, and flashcards.</p>
     <p class="hero-sub-2" data-id="Semua di satu tempat.">All in one place.</p>
     <div class="hero-ctas">
-      <a class="pill pill-dark play-cta" data-track="play_cta_click" href="https://play.google.com/store/apps/details?id=com.planora.labs&utm_source=rancana.id&utm_medium=cta&utm_campaign=play">
+      <a class="pill pill-dark play-cta" href="/go/play">
         <img class="play-mark" src="assets/google-play-icon.svg" alt="" width="15" height="16" decoding="async" />
         <span data-id="Dapatkan di Google Play">Get it on Google Play</span>
       </a>
-      <a class="pill pill-light" data-track="features_cta_click" href="#features" data-id="Lihat Fitur">View Features</a>
+      <a class="pill pill-light" href="#features" data-id="Lihat Fitur">View Features</a>
     </div>
 
     <img class="phone phone-left" src="assets/phone-left.png" alt="Rancana home screen in the monochrome theme" />
@@ -129,7 +129,7 @@
     <span class="sheet-border"></span>
     <h2 class="closing-title" data-id="Siap Belajar Lebih Mudah?">Ready to Make Studying Easier?</h2>
     <p class="closing-sub" data-id="Unduh Rancana sekarang dan simpan mata pelajaran, jadwal, tugas, serta materi belajarmu di satu tempat.">Download Rancana today and keep your subjects, schedules, tasks, and study materials organized in one place.</p>
-    <a class="pill pill-dark play-cta closing-cta" data-track="play_cta_click" href="https://play.google.com/store/apps/details?id=com.planora.labs&utm_source=rancana.id&utm_medium=cta&utm_campaign=play">
+    <a class="pill pill-dark play-cta closing-cta" href="/go/play">
       <img class="play-mark" src="assets/google-play-icon.svg" alt="" width="15" height="16" decoding="async" />
       <span data-id="Dapatkan di Google Play">Get it on Google Play</span>
     </a>
@@ -176,8 +176,7 @@
 <!-- Enable Cloudflare Web Analytics on rancana.id in the Cloudflare dashboard (zero-config beacon inject). -->
 <script>
   document.addEventListener('click', e => {
-    const el = e.target.closest('[data-track]');
-    if (el) window.zaraz?.track(el.dataset.track);
+    if (e.target.closest('a[href="#features"]')) fetch('/go/features').catch(() => {});
   });
 </script>
 <script src="lang.js"></script>
