@@ -7,7 +7,7 @@ const index = await readFile(new URL('index.html', root), 'utf8');
 const lang = await readFile(new URL('lang.js', root), 'utf8');
 
 for (const cls of ['hero-title', 'hero-sub-1', 'hero-sub-2', 'features-title', 'features-sub',
-                   'closing-title', 'closing-sub', 'pill-dark', 'pill-light', 'legal']) {
+                   'closing-title', 'closing-sub', 'pill-light', 'legal']) {
   const tag = index.match(new RegExp(`<[^>]*class="(?:[^"]*\\s)?${cls}(?:\\s[^"]*)?"[^>]*>`));
   assert.ok(tag, `no element with class ${cls}`);
   assert.match(tag[0], /data-id="[^"]+"/, `${cls} has no data-id copy`);
@@ -17,6 +17,17 @@ assert.equal((index.match(/data-id="/g) ?? []).length, 23, 'copy count changed â
 assert.match(index, /href="privacy\.html"/);
 assert.match(index, /href="terms\.html"/);
 assert.match(index, /href="delete-account\.html"/);
+
+// Approved website CTA: black pill + official Play prism (not the full badge / lockup).
+const playHrefs = index.match(/href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.planora\.labs"/g) ?? [];
+assert.equal(playHrefs.length, 2, 'hero + closing must link to the Play listing');
+assert.equal((index.match(/class="play-mark"/g) ?? []).length, 2, 'hero + closing need the Play prism');
+assert.equal((index.match(/play-cta/g) ?? []).length, 2, 'hero + closing need play-cta');
+assert.equal((index.match(/data-id="Dapatkan di Google Play"/g) ?? []).length, 2);
+assert.equal((index.match(/>Get it on Google Play</g) ?? []).length, 2);
+assert.match(index, /src="assets\/google-play-icon\.svg"/);
+assert.doesNotMatch(index, /assets\/badges\//, 'do not ship full Google Play badges');
+assert.doesNotMatch(index, /play-badge|get-it-on-google-play\.png/i, 'do not ship full Google Play badges');
 
 for (const file of ['privacy.html', 'terms.html', 'delete-account.html']) {
   const html = await readFile(new URL(file, root), 'utf8');
