@@ -13,7 +13,19 @@ const buttons = document.querySelectorAll('.lang-btn');
 const setLang = lang => {
   document.documentElement.lang = lang;
   for (const [el, en, id] of strings) write(el, lang === 'id' ? id : en);
-  for (const el of blocks) el.hidden = el.dataset.lang !== lang;
+  for (const el of blocks) {
+    const active = el.dataset.lang === lang;
+    el.hidden = !active;
+    for (const anchor of el.querySelectorAll('[data-anchor]')) {
+      if (active) anchor.id = anchor.dataset.anchor;
+      else anchor.removeAttribute('id');
+    }
+  }
+  if (location.hash) {
+    let id;
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch { id = ''; }
+    document.getElementById(id)?.scrollIntoView({block: 'start', behavior: 'instant'});
+  }
   for (const b of buttons) {
     const on = b.dataset.setLang === lang;
     b.classList.toggle('is-active', on);
@@ -30,7 +42,7 @@ const looksIndonesian = () =>
 
 // Saved so a shared ?lang= link keeps its language when the visitor opens the legal pages.
 if (LANGS.includes(asked)) remember(asked);
-setLang(LANGS.includes(asked) ? asked : LANGS.includes(saved) ? saved : looksIndonesian() ? 'id' : 'en');
+setLang(LANGS.includes(asked) ? asked : LANGS.includes(saved) ? saved : 'id');
 
 for (const b of buttons) b.addEventListener('click', () => {
   remember(b.dataset.setLang);

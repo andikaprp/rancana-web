@@ -3,34 +3,34 @@
 
 @font-face {
   font-family: 'Lora';
-  src: url('assets/fonts/Lora-Medium.ttf') format('truetype');
+  src: url('assets/fonts/Lora-Medium.woff') format('woff');
   font-weight: 500;
-  font-display: block;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Lora';
-  src: url('assets/fonts/Lora-SemiBold.ttf') format('truetype');
+  src: url('assets/fonts/Lora-SemiBold.woff') format('woff');
   font-weight: 600;
-  font-display: block;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Source Sans Pro';
-  src: url('assets/fonts/SourceSansPro-Regular.ttf') format('truetype');
+  src: url('assets/fonts/SourceSansPro-Regular.woff') format('woff');
   font-weight: 400;
-  font-display: block;
+  font-display: swap;
 }
 @font-face {
   font-family: 'Source Sans Pro';
-  src: url('assets/fonts/SourceSansPro-SemiBold.ttf') format('truetype');
+  src: url('assets/fonts/SourceSansPro-SemiBold.woff') format('woff');
   font-weight: 600;
-  font-display: block;
+  font-display: swap;
 }
 
 :root {
   --v-1000: #1e1e1e;
   --v-800: #6f6f6f;
-  --v-700: #868686;
-  --v-600: #9d9d9d;
+  --v-700: #6f6f6f;
+  --v-600: #6f6f6f;
   --v-200: #e4e4e4;
   --v-100: #f0f0f0;
   --v-50: #f9f9f9;
@@ -958,3 +958,9 @@ img { display: block; }
     margin-bottom: calc(199px * (var(--wm-scale, 1) - 1));
   }
 }
+
+/* Verified app artwork, same wordmark and layout footprint. */
+.brand-mark{background:url("assets/app-icon-64.webp") center/contain no-repeat;-webkit-mask:none;mask:none;border-radius:6px}
+
+/* Keep small planner-example labels readable; colored borders remain. */
+.preview .todo-meta,.preview .todo-2 .todo-meta{color:var(--v-700)}

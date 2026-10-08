@@ -1,0 +1,6 @@
+Existing Simple Icons SVG paths, downloaded unchanged on 8 October 2026.
+https://github.com/simple-icons/simple-icons
+https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/x.svg
+https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/instagram.svg
+https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/tiktok.svg
+No trademark artwork generated. Brand rights remain with the respective owners.

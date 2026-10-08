@@ -1,0 +1,71 @@
+
+.resource-page{padding:0 24px}.resource-main{max-width:1000px;margin:0 auto}.resource-nav{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;font-size:17px}.resource-nav a{color:#585858}.resource-page .doc-bar{padding-bottom:28px}.resource-hero{text-align:center;max-width:740px;margin:80px auto}.resource-hero .eyebrow{display:block;margin-bottom:20px}.resource-hero h1{font:600 42px/1.25 var(--lora);letter-spacing:-.7px}.resource-page p,.resource-page li{font:18px/1.65 var(--ssp);color:#6f6f6f}.resource-hero p{margin-top:24px}.resource-section{margin:64px auto}.resource-section h2{font:600 30px/1.35 var(--lora);margin-bottom:20px}.resource-section>p{margin-top:16px}.resource-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}.resource-card{padding:32px;background:#fff;border:1px solid #e4e4e4;border-radius:20px;box-shadow:0 12px 36px #1e1e1e04}.resource-card>img{object-fit:contain;margin-bottom:20px}.resource-card h3{font:600 23px/1.4 var(--lora)}.resource-card p{margin-top:14px}.resource-faq{max-width:860px}.resource-faq>h2{text-align:center;margin-bottom:36px}.resource-page .faq-list summary{font-size:20px}.resource-page .faq-list p{margin:16px 28px 0 0}.resource-page .faq-list a,.resource-section p a,.resource-section li a{color:#217957;text-decoration:underline;text-underline-offset:3px}.contact-panel{background:#fff;border:1px solid #dce8e1;border-radius:24px;padding:40px}.contact-panel ul{padding-left:24px;margin:20px 0}.contact-panel li{margin-top:10px}.resource-note{font-size:16px!important;color:#777!important}.resource-page .pill{margin:28px 0 0;width:fit-content;color:#fff}.comparison-wrap{background:#fff;border:1px solid #e4e4e4;border-radius:20px;overflow:hidden}table{border-collapse:collapse;width:100%;text-align:left;font:18px/1.5 var(--ssp)}caption{text-align:left;padding:24px;font:600 20px var(--lora)}th,td{padding:20px 24px;border-top:1px solid #e4e4e4}thead{background:#f2f8f4}th{font-weight:600}td{color:#6f6f6f}tbody th{width:35%}.resource-steps{padding-left:24px}.resource-steps li{margin:14px 0}.resource-page .preview-footer{margin:80px -24px 0}.resource-page .resource-section,.resource-page .resource-hero{scroll-margin-top:32px}[data-lang][hidden]{display:none!important}
+@media(max-width:899px){.resource-hero{margin:56px auto}.resource-hero h1{font-size:32px}.resource-section{margin:48px auto}.resource-section h2{font-size:26px}.resource-grid{grid-template-columns:1fr;gap:20px}.resource-card{padding:28px}.contact-panel{padding:28px}.resource-nav{gap:16px 24px}.resource-page .faq-list summary{font-size:19px}.resource-page p,.resource-page li{font-size:17px}.resource-page .preview-footer{margin:56px -24px 0}table{font-size:15px}caption{font-size:18px;padding:20px}th,td{padding:16px 12px}tbody th{width:34%}}
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.plan-card{background:#fff;border:1px solid #dce8e1;border-radius:24px;padding:28px;display:flex;flex-direction:column}.plan-card:last-child{background:#f2f8f4;border-color:#217957}.plan-card h3{font:600 28px var(--lora)}.plan-card p{font-size:16px;min-height:54px;margin-top:14px}.plan-price{font:600 22px/1.4 var(--ssp);min-height:64px;margin:24px 0}.plan-button{display:block;border:1px solid #217957;border-radius:24px;text-align:center;padding:12px;color:#217957;font:600 16px var(--ssp)}.plan-card:last-child .plan-button{background:#217957;color:white}.plan-card ul{margin:24px 0 0;padding-left:20px}.plan-card li{font-size:16px;margin-bottom:12px}.plan-comparison th,.plan-comparison td{font-size:16px;padding:18px}.plan-comparison tbody th{width:28%}
+@media(max-width:899px){.plan-grid{grid-template-columns:1fr}.plan-card p,.plan-price{min-height:0}.plan-comparison th,.plan-comparison td{font-size:13px;padding:12px 8px}.plan-comparison tbody th{width:26%}.plan-comparison{table-layout:fixed}.plan-comparison td,.plan-comparison th{overflow-wrap:anywhere}}
+/* Premium comparison and in-app subscription guidance. */
+.premium-page .resource-faq{max-width:none}.premium-page .resource-faq>h2{text-align:left}.premium-page .plan-card p{min-height:0}.premium-page .plan-card ul{margin-top:24px}.purchase-note{text-align:center;background:#f2f8f4;border-radius:14px;padding:18px 24px;margin-top:24px!important;color:#217957!important}.comparison-caption{font:400 15px/1.5 var(--ssp);color:#6f6f6f;padding:18px 24px}.plan-comparison{table-layout:fixed}.plan-comparison th:first-child{width:34%}.plan-comparison td,.plan-comparison thead th:not(:first-child){text-align:center}.plan-comparison tbody tr:nth-child(even){background:#fafbf9}.plan-comparison td:last-child,.plan-comparison thead th:last-child{background:#21795708}.included{font-size:22px;font-weight:600;color:#217957}.not-included{color:#6f6f6f}.comparison-notes{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}.comparison-notes p{font-size:16px;line-height:1.6;margin:0}.premium-page .plan-comparison tbody th{width:34%}
+@media(max-width:899px){.comparison-notes{grid-template-columns:1fr;gap:12px}.purchase-note{text-align:left;padding:18px}.plan-comparison th:first-child,.premium-page .plan-comparison tbody th{width:34%}.plan-comparison td{font-size:13px}.comparison-caption{font-size:14px;padding:16px}}
+/* A clearer visual progression from starting out to advanced study. */
+.premium-page .plan-grid{gap:20px;align-items:stretch}.premium-page .plan-card{position:relative;padding:32px;border-radius:24px;box-shadow:0 16px 40px #1e1e1e06;background:linear-gradient(145deg,#fff,#f7f8f5);overflow:hidden}.premium-page .plan-card:nth-child(2){background:linear-gradient(145deg,#eff7f2,#fff);border-color:#bad4c7}.plan-badge{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:14px;background:#21795712;color:#217957;font:600 15px var(--ssp);margin-bottom:24px}.premium-page .plan-card h3{font-size:32px}.premium-page .plan-card p{margin-top:12px;min-height:52px}.premium-page .plan-card ul{list-style:none;padding:24px 0 0;border-top:1px solid #21795724;flex:1}.premium-page .plan-card li{position:relative;padding-left:24px;font-size:16px;line-height:1.55}.premium-page .plan-card li::before{content:'✓';position:absolute;left:0;color:#217957;font-weight:600}.premium-page .plan-plus{background:linear-gradient(135deg,#217957,#14583f);border-color:#217957;color:white}.premium-page .plan-plus h3,.premium-page .plan-plus p,.premium-page .plan-plus li{color:white}.premium-page .plan-plus .plan-badge{background:#ffffff20;color:white}.premium-page .plan-plus ul{border-color:#ffffff30}.premium-page .plan-plus li::before{color:#b4e9ce}
+@media(max-width:899px){.premium-page .plan-card p{min-height:0}.premium-page .plan-card{padding:28px}.plan-badge{margin-bottom:18px}}
+/* Align Help FAQs with the surrounding content column. */
+.resource-page .resource-faq{max-width:none}
+
+.policy-draft{padding:18px 20px;background:#fff6df;border:1px solid #e1c988;border-radius:12px;color:#5c4516;margin-bottom:28px;font:16px/1.6 var(--ssp)}
+
+/* Existing card and Rancana sparkle artwork form the plan badge family. */
+.plan-icon{display:block;width:28px;height:28px;background:currentColor;mask:center/contain no-repeat;-webkit-mask:center/contain no-repeat}
+.plan-free{mask-image:url('assets/app-icons/cards.svg');-webkit-mask-image:url('assets/app-icons/cards.svg')}
+.plan-premium{mask-image:url('assets/app-icons/plan-star.svg');-webkit-mask-image:url('assets/app-icons/plan-star.svg')}
+.plan-plus .plan-icon{mask-image:url('assets/app-icons/plan-star-plus.svg');-webkit-mask-image:url('assets/app-icons/plan-star-plus.svg')}
+.about-page .resource-hero{margin:64px auto 72px}
+.about-purpose{padding-top:56px;text-align:center}
+.about-purpose>h2{font:600 14px/1.5 var(--ssp);letter-spacing:1.5px;color:#217957;text-transform:uppercase;margin-bottom:24px}
+.about-page .about-statement{font:600 40px/1.3 var(--lora);letter-spacing:-.7px;color:#1e1e1e;max-width:740px;margin:0 auto}
+.about-description{max-width:680px;margin:24px auto 0!important}
+.about-contact{padding-top:48px;border-top:1px solid #dedede;margin-top:96px}
+.about-contact>h2{text-align:center;margin-bottom:40px}
+.about-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.about-contact-grid>div{padding:28px 0}
+.about-contact-grid p{margin-top:14px}
+@media(max-width:899px){
+.about-page .resource-hero{margin:48px auto}
+.about-purpose{padding-top:32px}
+.about-page .about-statement{font-size:30px}
+.about-contact{margin-top:64px;padding-top:36px}
+.about-contact-grid{grid-template-columns:1fr;gap:8px}
+.about-contact-grid>div{padding:20px 0}
+}
+
+
+/* A text-only founder introduction keeps the shared outer edges. */
+
+.anchor-alias{display:block;scroll-margin-top:32px}
+ .about-intro-copy a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.about-values{max-width:740px;margin:40px auto 0;text-align:left}.about-values p+p{margin-top:20px}
+
+.about-page .about-intro{max-width:none}
+
+/* About uses one reading column for its introduction, mission and contact. */
+.about-page .about-intro,.about-purpose,.about-contact{max-width:900px;margin-left:auto;margin-right:auto}
+.about-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin:40px 0;padding:28px 32px;background:#eef5f0;border-radius:24px;text-align:left}
+.principle-number{display:block;color:#217957;font:600 14px/1.5 var(--ssp);margin-bottom:14px}
+.about-principles h3,.about-contact h3{font:600 22px/1.4 var(--lora)}
+.about-principles p{margin-top:12px;font-size:16px}
+.about-values{max-width:none}
+.about-contact-grid{text-align:center;gap:40px}
+.about-contact a{display:inline-block;margin-top:24px;color:#217957;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:899px){.about-principles{grid-template-columns:1fr;gap:24px;padding:28px 24px}.about-principles article+article{border-top:1px solid #d5e4db;padding-top:24px}.about-contact-grid{gap:8px}}
+.about-principles article{position:relative}
+@media(min-width:900px){.about-principles article+article::before{content:'';position:absolute;left:-14px;top:0;bottom:0;width:1px;background:#21795726}}
+@media(max-width:899px){.about-principles article+article{border-top-color:#21795726}}
+
+.about-intro .eyebrow{font:600 14px/1.5 var(--ssp);letter-spacing:1.5px;color:#217957;text-transform:uppercase;margin-bottom:24px}
+.about-intro-copy{max-width:680px;margin:24px auto 0;text-align:center}
+.about-page .about-intro-copy p{font:18px/1.65 var(--ssp);margin:0}
+@media(max-width:899px){.about-page .about-intro-copy p{font-size:17px}}
+.about-intro h1,.about-intro-copy,.about-page .about-statement,.about-description{box-sizing:border-box;width:100%;max-width:none;margin-left:auto;margin-right:auto;padding-left:32px;padding-right:32px}
+.about-purpose>.eyebrow,.about-intro>.eyebrow{padding-left:32px;padding-right:32px}
+.about-principles,.about-values{text-align:center}
+@media(max-width:899px){.about-intro h1,.about-intro-copy,.about-page .about-statement,.about-description,.about-purpose>.eyebrow,.about-intro>.eyebrow{padding-left:24px;padding-right:24px}}

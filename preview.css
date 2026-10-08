@@ -1,0 +1,89 @@
+/* Flow layout for the review preview. Original component artwork and typography remain intact. */
+html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.hero-wrap{position:relative;height:calc(1027px * var(--hero-scale));overflow:hidden}.preview .hero{left:50%;transform:translateX(-50%) scale(var(--hero-scale));transform-origin:top center}.hero-wrap .paper{position:absolute;top:0;width:100%;left:0;pointer-events:none}.hero-wrap .band-hero{left:0;width:100%;top:auto;bottom:0}.section{max-width:1152px;margin:0 auto;padding:128px 0}.section-title{font-family:var(--lora);font-size:40px;font-weight:600;line-height:1.3;letter-spacing:-.8px}.section-copy{font-size:20px;line-height:1.6;color:#6f6f6f;margin-top:22px}.eyebrow,.audience-label{font-size:13px;letter-spacing:1.8px;color:#6f6f6f}.eyebrow{margin-bottom:24px}.audience>.section-title{max-width:750px}.audience>.section-copy{max-width:700px}.audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:64px}.audience-grid article{padding-top:28px;border-top:1px solid #e4e4e4}.section h3{font:600 25px/1.4 var(--lora);margin-top:18px}.audience-grid .section-copy{font-size:18px}.product{text-align:center}.product>.section-copy{max-width:680px;margin:22px auto 0}.product-grid{display:grid;grid-template-columns:repeat(2,560px);gap:32px;margin-top:64px}.preview .product .card{position:relative;left:auto;top:auto;margin:0;transform:none;border:1px solid #eee;filter:none;box-shadow:0 12px 36px #1e1e1e05}.feature-icon{display:inline-block;width:40px;height:40px;object-fit:contain;vertical-align:middle;margin-right:12px}.preview .card-head h3{font-size:24px;margin:0}.benefits{display:grid;grid-template-columns:1fr 1fr;gap:100px}.benefit-intro{max-width:440px}.benefit-list article{display:flex;gap:24px;padding:28px 0;border-bottom:1px solid #e4e4e4}.benefit-list article:first-child{padding-top:0}.benefit-list h3{font-size:23px;margin:0}.benefit-list .section-copy{font-size:18px;margin-top:10px}.benefit-list img{margin-top:5px}.download{position:relative;text-align:center;margin:80px auto;background:#fcfbfa url('assets/paper.webp') center/cover;border:1px solid #e4e4e4;border-radius:32px;padding:88px 80px;box-shadow:0 16px 48px #1e1e1e08}.download>img{margin:0 auto 28px}.preview .download .closing-title,.preview .download .closing-sub{position:static;width:auto;transform:none}.preview .download .closing-title{font-size:42px}.preview .download .closing-sub{max-width:650px;margin:24px auto 0;font-size:20px;line-height:1.6;color:#6f6f6f}.download .pill{width:fit-content;margin:36px auto 0}.faq{display:grid;grid-template-columns: .8fr 1.2fr;gap:100px}.faq .support{display:inline-block;margin-top:12px;text-decoration:underline;text-underline-offset:5px;font-size:18px}.faq-list details{border-bottom:1px solid #dedede;padding:25px 0}.faq-list details:first-child{padding-top:0}.faq-list summary{font:600 21px/1.5 var(--lora);cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:24px}.faq-list summary::after{content:'+';font:400 26px var(--ssp)}.faq-list details[open] summary::after{content:'−'}.faq-list .section-copy{font-size:18px;margin:18px 40px 8px 0}.preview-footer{border-top:1px solid #e4e4e4;padding:40px 0 64px;display:flex;align-items:center;justify-content:space-between;gap:24px}.footer-brand{display:flex;gap:10px;align-items:center;font:600 24px var(--lora)}.preview-footer nav{display:flex;gap:28px}.preview-footer .legal{font:400 16px var(--ssp)}a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #217957;outline-offset:6px}a:hover{text-decoration:underline;text-underline-offset:5px}.pill:hover{text-decoration:none}
+@media(min-width:900px) and (max-width:1230px){.section{margin-left:48px;margin-right:48px}.product-grid{grid-template-columns:1fr 1fr;gap:24px}.preview .product .card{zoom:var(--product-zoom)}.benefits,.faq{gap:56px}}
+@media(max-width:899px){.hero-wrap{height:auto;padding-bottom:0}.preview .hero{left:auto;transform:none;background:transparent;padding-top:100px}.preview .hero .brand{position:absolute;top:24px;left:24px}.preview .hero .lang{position:absolute;display:flex;top:27px;right:24px}.preview .hero .hero-title{line-height:1.3}.preview .hero .hero-sub-1,.preview .hero .hero-sub-2{line-height:1.55;color:#6f6f6f}.preview .hero .phone-left,.preview .hero .phone-right{display:block;position:absolute;width:210px;height:auto;top:460px;opacity:.85}.preview .hero .phone-left{left:calc(50% - 265px);transform:rotate(-5deg)}.preview .hero .phone-right{left:calc(50% + 55px);transform:rotate(5deg)}.preview .hero .phone-center{z-index:1;max-width:none}.hero-wrap .band-hero{display:block;height:100px;z-index:2}.section{padding:80px 24px}.section-title{font-size:30px;letter-spacing:-.5px}.section-copy{font-size:18px}.audience-grid{grid-template-columns:1fr;gap:36px;margin-top:44px}.section h3{font-size:23px}.product-grid{display:flex;flex-direction:column;align-items:center;gap:28px;margin-top:40px}.preview .product .card{transform:none;zoom:var(--card-scale);text-align:left}.preview .product{display:block;margin-top:0}.benefits,.faq{grid-template-columns:1fr;gap:44px}.benefit-intro{max-width:none}.benefit-list article{gap:18px}.download{margin:32px 24px;padding:64px 28px;border-radius:24px}.preview .download .closing-title{font-size:30px}.preview .download .closing-sub{font-size:18px}.faq-list summary{font-size:19px}.preview-footer{margin:0 24px;padding:32px 0 48px;flex-direction:column;align-items:flex-start}.preview-footer nav{flex-wrap:wrap;gap:18px 24px}.hero-ctas .pill{font-size:15px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* Restore the original hero falloff above the phone artwork. */
+.hero-wrap .band-hero{position:absolute;z-index:3;mix-blend-mode:normal;pointer-events:none;height:calc(240px * var(--hero-scale));bottom:-1px}
+.audience-grid{gap:28px;margin-top:44px}
+.audience-grid article{position:relative;padding:36px;border:1px solid #dce8e1;border-radius:24px;background:linear-gradient(145deg,#f2f8f4,#fff);box-shadow:0 12px 40px #21795708}
+.audience-grid article:nth-child(2){background:linear-gradient(145deg,#fff4f8,#fff);border-color:#f0dfe6}
+.audience-icon{object-fit:contain;margin-bottom:28px}
+.audience-grid h3{max-width:390px}
+.benefit-list img{flex:0 0 32px;width:32px;height:32px;object-fit:contain;margin-top:4px}
+.benefit-list article{align-items:flex-start}
+/* Reuse the original three sheets and Aurora Green border in normal flow. */
+.download{padding:108px 80px 88px;border:0;background:none;box-shadow:none;border-radius:0;isolation:isolate;margin-top:80px}
+.download>.sheet,.download>.sheet-border{position:absolute;height:auto;width:auto;pointer-events:none}
+.download>.sheet-3{inset:0 54px 44px}
+.download>.sheet-2{inset:27px 27px 22px}
+.download>.sheet-1{inset:54px 0 0}
+.download>.sheet-border{inset:81px 27px 27px}
+.download-content{position:relative;z-index:1;padding:32px 24px}
+.preview .download .closing-title{font-size:40px}
+.preview-footer{position:relative;display:block;max-width:none;margin:0;padding:48px 24px 0;border:0;background:linear-gradient(#fff,#f7f7f5);overflow:hidden}
+.preview-footer nav{justify-content:center;flex-wrap:wrap;gap:24px 40px}
+.preview-footer .wordmark{position:relative;left:auto;top:auto;width:min(1067px,100%);height:auto;aspect-ratio:1067/238;margin:56px auto 0;opacity:.32}
+.preview-footer .wordmark-text{left:18%;top:0;width:82%;font-size:clamp(50px,16.3vw,218px);line-height:1.09}
+.preview-footer .wordmark-glow{left:-3.4%;top:4.6%;width:20.25%;height:auto}
+.preview-footer .wordmark-mark{left:3.75%;top:36.6%;width:6%;height:27%}
+@media(max-width:899px){
+.hero-wrap .band-hero{height:150px}
+.audience-grid article{padding:28px}.audience-grid{gap:24px}.audience-icon{width:52px;height:52px;margin-bottom:20px}
+.download{margin:32px 16px;padding:80px 24px 48px}
+.download>.sheet-3{inset:0 24px 24px}.download>.sheet-2{inset:12px 12px 12px}.download>.sheet-1{inset:24px 0 0;border-radius:28px}.download>.sheet-border{inset:36px 12px 12px;border-radius:20px;border-width:2px}
+.download-content{padding:0 12px}.preview .download .closing-title{font-size:28px}
+.preview-footer{margin:0;padding:32px 20px 0}.preview-footer nav{gap:16px 24px}.preview-footer .wordmark{margin-top:40px}
+}
+
+/* Questions first, then contact, legal links, and the original wordmark. */
+.faq{display:block;max-width:860px;padding-bottom:64px}
+.faq>.section-title{text-align:center;margin-bottom:56px}
+.faq-contact{text-align:center;margin-top:56px}
+.faq-contact .section-copy{margin-top:0}
+@media(max-width:899px){.faq>.section-title{margin-bottom:36px}.faq-contact{margin-top:40px}.faq{padding-bottom:40px}}
+/* Balance section introductions and the final download panel. */
+.audience>.eyebrow,.audience>.section-title,.audience>.section-copy{text-align:center}
+.audience>.section-title{margin-left:auto;margin-right:auto}
+.audience>.section-copy{margin-left:auto;margin-right:auto}
+.benefit-intro{align-self:center}
+.benefit-list article:last-child{border-bottom:0}
+.download{min-height:600px;display:flex;align-items:center;justify-content:center;padding:130px 80px 104px}
+.download-content{width:100%;padding:40px 24px}
+@media(max-width:899px){
+.benefit-intro{align-self:auto}
+.download{min-height:520px;padding:92px 28px 64px}
+.download-content{padding:24px 8px}
+}
+
+.preview-footer .resource-nav{margin-bottom:28px}.preview-footer .resource-nav a{font-size:18px;color:#1e1e1e}
+
+/* Give desktop descriptions room to stay on one line. */
+@media(min-width:900px){
+  .audience>.section-copy,.product>.section-copy{max-width:none}
+  .preview .product .card-head{left:24px;width:calc(100% - 48px)}
+}
+/* Keep homepage FAQs aligned with the main section column. */
+.preview #faq{max-width:1152px}
+
+/* Transparent navigation stays outside the scaled, clipped hero. */
+.site-header{position:absolute;z-index:100;top:32px;left:50%;transform:translateX(-50%);width:calc(100% - 96px);max-width:1152px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+.site-header .brand,.site-header .lang,.site-header .pill{position:static;pointer-events:auto}
+.site-header .nav-slot{position:static;width:260px;flex:none;height:48px;display:flex;align-items:center;justify-content:flex-end}
+.site-header .nav-download{height:48px;font-size:16px;padding:0 22px}
+.site-header [hidden]{display:none!important}
+@media(max-width:899px){.site-header{top:24px;width:calc(100% - 48px)}.site-header .brand{width:auto;padding:10px 12px}.site-header .brand-name{font-size:19px;width:auto}.site-header .nav-slot{width:214px}.site-header .nav-download{font-size:14px;padding:0 12px}.site-header .brand-mark{width:22px;height:22px}}
+@media(prefers-reduced-motion:no-preference){
+.preview .hero .phone{animation:hero-reveal .7s ease-out both}
+.preview .hero .phone-left,.preview .hero .phone-right{animation-delay:.12s}
+@keyframes hero-reveal{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+}
+@media(max-width:380px){.site-header .brand-name{display:none}.site-header .brand{padding:10px 12px}}
+@media(max-width:380px){.download .pill{font-size:14px;padding:0 12px}}
+
+.site-header.is-sticky{position:fixed}
+
+@media(prefers-reduced-motion:no-preference){
+.site-header .nav-slot>:not([hidden]){animation:nav-reveal .2s ease-out both}
+@keyframes nav-reveal{from{opacity:0;translate:0 -6px}to{opacity:1;translate:0 0}}
+}

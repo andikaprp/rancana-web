@@ -1,0 +1,41 @@
+/* Shared footer navigation across preview and supporting pages. */
+.preview-footer .footer-links,.doc-foot .footer-links{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:16px 32px;margin:0;padding:0}
+.preview-footer .footer-links a,.doc-foot .footer-links a{font:400 16px/1.5 var(--ssp);color:#6f6f6f;white-space:nowrap;text-decoration:none}
+.preview-footer .footer-links a:hover,.doc-foot .footer-links a:hover{text-decoration:underline;text-underline-offset:5px}
+.footer-meta{max-width:1000px;margin:0 auto 36px;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}.footer-meta section{display:flex;flex-direction:column;align-items:flex-start;gap:12px}.footer-meta h2{font:600 16px/1.5 var(--ssp);color:#1e1e1e;margin:0 0 4px}.footer-meta a{font:400 16px/1.5 var(--ssp);color:#6f6f6f}.footer-copyright{font:400 14px/1.6 var(--ssp);color:#6f6f6f;text-align:center;margin:28px 0 0}.doc-foot .footer-meta{padding-top:16px}.doc-foot .footer-copyright{padding-bottom:24px}@media(max-width:600px){.footer-meta{grid-template-columns:1fr 1fr;gap:28px}.footer-meta section:last-child{grid-column:1/-1}.footer-meta section:last-child{flex-direction:row;flex-wrap:wrap;align-items:center}.footer-meta section:last-child h2{width:100%}.footer-copyright{margin-top:24px}}
+.preview-footer .footer-copyright,.doc-foot .footer-copyright{font:400 14px/1.6 var(--ssp);color:#6f6f6f}
+/* Product, Rancana, Help & Policies, and Social share one footer grid. */
+.footer-meta{grid-template-columns:repeat(4,1fr)}.footer-meta a,.footer-meta a.legal{height:auto;font:400 16px/1.5 var(--ssp);color:#6f6f6f;text-decoration:none}.footer-meta a:hover{text-decoration:underline;text-underline-offset:5px}@media(max-width:600px){.footer-meta{grid-template-columns:repeat(2,1fr)}.footer-meta section:last-child{grid-column:auto;display:flex;flex-direction:column;align-items:flex-start;flex-wrap:nowrap}.footer-meta section:last-child h2{width:auto}}
+/* Social brand marks sit directly above the copyright line. */
+.footer-meta{grid-template-columns:repeat(3,1fr)}.social-icons{display:flex;align-items:center;justify-content:center;gap:16px;margin:28px auto 0}.social-icons a{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px}.social-icons img{display:block;width:20px;height:20px;object-fit:contain}.social-icons a:hover{background:#2179570c}.social-icons a:focus-visible{outline:3px solid #217957;outline-offset:3px}.preview-footer .footer-copyright,.doc-foot .footer-copyright{margin-top:12px}@media(max-width:600px){.footer-meta{grid-template-columns:repeat(2,1fr)}.footer-meta section:last-child{grid-column:1/-1}.social-icons{gap:16px}}
+
+/* Shared outer shell across every page. */
+.doc-page{padding:0 24px}
+.doc-bar,.resource-page .doc-bar{max-width:1152px;width:calc(100% - 48px);padding:0;margin:32px auto 28px}
+.doc-bar .brand,.doc-bar .lang{position:static}
+.doc-bar .lang{height:40px;align-items:center}
+.resource-main,.about-page .resource-main,.doc{max-width:1152px;width:calc(100% - 48px)}
+.preview-footer .footer-meta{max-width:1152px}
+.doc-page .preview-footer{margin:80px -24px 0;padding:48px 24px 0}
+@media(max-width:899px){
+.doc-bar,.resource-page .doc-bar{width:100%;margin:24px auto 28px}
+.doc-bar .brand{width:auto;padding:10px 12px}.doc-bar .brand-name{font-size:19px;width:auto}.doc-bar .brand-mark{width:22px;height:22px}
+.resource-main,.about-page .resource-main,.doc{width:100%}
+.doc-page .preview-footer{margin:56px -24px 0;padding:32px 20px 0}
+}
+@media(max-width:380px){.doc-bar .brand-name{display:none}}
+@media(max-width:899px){.preview-footer,.doc-page .preview-footer{padding-left:24px;padding-right:24px}}
+
+/* Supporting pages reserve header space; all header chrome shares Home CSS. */
+.doc-page>.site-header{margin:0;padding:0}
+.doc-page>.resource-main{padding-top:108px}
+.policy-page .policy-draft{margin-top:0}
+.policy-page .resource-hero{margin:64px auto 80px}
+.policy-page .resource-hero .doc-meta{font-size:16px}
+.policy-page .resource-section h2{margin-top:0}
+.policy-page .resource-section p+p{margin-top:16px}
+.resource-hero .eyebrow{font:600 14px/1.5 var(--ssp);letter-spacing:1.5px;color:#217957}
+html{scroll-padding-top:108px}.resource-page .resource-section,.resource-page .resource-hero,.anchor-alias{scroll-margin-top:108px}
+@media(max-width:899px){.doc-page>.resource-main{padding-top:96px}.policy-page .resource-hero{margin:48px auto}.resource-page .resource-section,.resource-page .resource-hero,.anchor-alias{scroll-margin-top:96px}html{scroll-padding-top:96px}}
+.policy-page .resource-section ul,.policy-page .resource-section ol{padding-left:24px}.policy-page .resource-section li{margin:14px 0}
+.site-header .nav-download{margin:0}
