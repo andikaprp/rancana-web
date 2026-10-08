@@ -6,7 +6,7 @@ const LANGS = ['en', 'id'];
 const read = el => ('content' in el ? el.content : el.innerHTML);
 const write = (el, v) => { if ('content' in el) el.content = v; else el.innerHTML = v; };
 
-const strings = [...document.querySelectorAll('[data-id]')].map(el => [el, read(el), el.dataset.id]);
+const strings = [...document.querySelectorAll('[data-id]')].map(el => [el, el.dataset.en ?? read(el), el.dataset.id]);
 const blocks = [...document.querySelectorAll('[data-lang]')];
 const buttons = document.querySelectorAll('.lang-btn');
 
