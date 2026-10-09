@@ -41,11 +41,11 @@ async function session(locale='en',initial=null) {
 try {
   const s=await session();
   check(s.requests.length,0);check((await s.context.cookies()).length,0);
-  check(await s.page.locator('.analytics-consent h2').textContent(),'Your analytics choice');
+  check(await s.page.locator('.analytics-consent h2').textContent(),'Can we use cookies?');
   await s.page.locator('[data-consent-reject]').click();await s.settle();
   check(s.requests.length,0);
   await s.page.reload();await s.settle();check(s.requests.length,0);check(await s.page.locator('.analytics-consent').isVisible(),false);
-  await s.page.locator('.analytics-settings').click();await s.page.locator('[data-consent-accept]').click();await s.settle();
+  await s.page.evaluate(key=>localStorage.removeItem(key),key);await s.page.reload();await s.page.locator('[data-consent-accept]').click();await s.settle();
   check(s.requests.filter(x=>x.includes('googletagmanager')).length,1);
   check(s.events.map(x=>x[1]),['page_view']);
   check(s.events[0][2].page_location,'https://rancana.id/en/');
@@ -58,8 +58,8 @@ try {
   check((await s.context.cookies()).some(x=>x.name==='rancana_ga'),true);
   // Loading the entry twice must not duplicate UI, tag loads, listeners or views.
   await s.page.addScriptTag({url:origin+'/analytics-consent.js'});await s.settle();
-  check(await s.page.locator('.analytics-settings').count(),1);check(s.events.length,1);
-  await s.page.locator('.analytics-settings').click();await s.page.locator('[data-consent-accept]').click();await s.settle();check(s.events.length,1);
+  check(await s.page.locator('.analytics-settings').count(),0);check(await s.page.locator('.analytics-consent').count(),1);check(s.events.length,1);
+  await s.page.locator('[data-consent-accept]').evaluate(e=>e.click());await s.settle();check(s.events.length,1);
   // Browser history/hash do not create duplicate canonical-page views.
   await s.page.evaluate(()=>{history.pushState({},'','?email=another@example.test#name');});await s.settle();check(s.events.length,1);
   // Trusted click dispatch in Chromium; abort only its destination, never delay navigation for analytics.
@@ -73,16 +73,17 @@ try {
   await s.page.evaluate(()=>{const a=document.createElement('a');a.href='mailto:help@rancana.id?body=private';a.textContent='Email';a.addEventListener('click',e=>e.preventDefault());document.body.append(a);a.click();});await s.settle();
   check(s.events.filter(x=>x[1]==='google_play_click').length,1);
   const count=s.requests.length;
-  await s.page.locator('.analytics-settings').click();await s.page.locator('[data-consent-reject]').click();await s.settle();
+  // Exercise denial cleanup directly; no user-facing reopen control is shipped.
+  await s.page.locator('[data-consent-reject]').evaluate(e=>e.click());await s.settle();
   check(await s.page.locator('script[src*="googletagmanager"]').count(),0);check((await s.context.cookies()).filter(x=>x.name.startsWith('rancana_ga')).length,0);check(s.requests.length,count);
   await s.page.reload();await s.settle();check(s.requests.length,count);
-  const id=await session('id');check(await id.page.locator('[data-consent-accept]').textContent(),'Izinkan analitik');check(await id.page.locator('[data-consent-reject]').textContent(),'Tolak analitik');check(id.requests.length,0);
+  const id=await session('id');check(await id.page.locator('[data-consent-accept]').textContent(),'Izinkan cookies');check(await id.page.locator('[data-consent-reject]').textContent(),'Tolak cookies');check(id.requests.length,0);
   const expired=await session('en',{version:1,choice:'granted',at:Date.now()-181*86400000});check(expired.requests.length,0);check(await expired.page.locator('.analytics-consent').isVisible(),true);
   const corrupt=await session('en',{version:1,choice:'granted',at:'invalid'});check(corrupt.requests.length,0);
   check(await s.page.locator('iframe').count(),0);
   // Cross-tab revocation reloads the document and removes consented cookies.
   const cross=await session();await cross.page.locator('[data-consent-accept]').click();await cross.settle();
-  const second=await cross.context.newPage();await second.goto(origin+'/en/privacy');await second.locator('.analytics-settings').click();await second.locator('[data-consent-reject]').click();await cross.settle();
+  const second=await cross.context.newPage();await second.goto(origin+'/en/privacy');await second.evaluate(key=>localStorage.setItem(key,JSON.stringify({version:1,choice:'denied',at:Date.now()})),key);await cross.settle();
   check(await cross.page.locator('script[src*="googletagmanager"]').count(),0);
   // Disabled storage must fail closed rather than create an unremembered tag.
   const blocked=await browser.newContext();contexts.push(blocked);
@@ -90,7 +91,7 @@ try {
   let blockedRequests=0;await blocked.route('https://www.googletagmanager.com/**',route=>{blockedRequests++;return route.abort();});
   const blockedPage=await blocked.newPage();await blockedPage.goto(origin+'/en/');await blockedPage.locator('[data-consent-accept]').click();await blockedPage.waitForTimeout(150);check(blockedRequests,0);
   const legacy=await session('en');await legacy.page.goto(origin+'/?lang=en');await legacy.settle();await legacy.page.locator('[data-consent-accept]').click();await legacy.settle();
-  await legacy.page.locator('.lang-btn[data-set-lang="id"]').click();await legacy.settle();check(await legacy.page.locator('[data-consent-accept]').textContent(),'Izinkan analitik');check(legacy.events.filter(x=>x[1]==='page_view').length,2);check(legacy.events.at(-1)[2].page_location,'https://rancana.id/id/');
+  await legacy.page.locator('.lang-btn[data-set-lang="id"]').click();await legacy.settle();check(await legacy.page.locator('[data-consent-accept]').textContent(),'Izinkan cookies');check(legacy.events.filter(x=>x[1]==='page_view').length,2);check(legacy.events.at(-1)[2].page_location,'https://rancana.id/id/');
   const legacyCount=legacy.events.length;await legacy.page.evaluate(()=>document.documentElement.lang='id');await legacy.settle();check(legacy.events.length,legacyCount);
   const latestConfig=await legacy.page.evaluate(()=>window.dataLayer.map(x=>Array.from(x)).filter(x=>x[0]==='config').at(-1)[2]);
   check(latestConfig.update,true);check(latestConfig.send_page_view,false);check(latestConfig.page_location,'https://rancana.id/id/');check(latestConfig.language,'id');
@@ -103,17 +104,18 @@ try {
   const visibility=await session();await visibility.page.locator('[data-consent-accept]').click();await visibility.settle();
   await visibility.page.evaluate(key=>{localStorage.setItem(key,JSON.stringify({version:1,choice:'granted',at:Date.now()-181*86400000}));document.dispatchEvent(new Event('visibilitychange'));},key);
   await visibility.settle();check(await visibility.page.locator('script[src*="googletagmanager"]').count(),0);
-  // Keyboard reopening/closing restores focus; zoom/mobile controls remain reachable.
-  await id.page.goto(origin+'/id/');await id.settle();await id.page.locator('[data-consent-reject]').click();
-  await id.page.locator('.analytics-settings').focus();await id.page.keyboard.press('Enter');check(await id.page.locator('[data-consent-accept]').evaluate(e=>e===document.activeElement),true);
-  await id.page.keyboard.press('Escape');check(await id.page.locator('.analytics-settings').evaluate(e=>e===document.activeElement),true);
-  await id.page.setViewportSize({width:320,height:568});await id.page.locator('.analytics-settings').click();
+  // Initial consent controls work with keyboard and remain reachable on small screens.
+  await id.page.goto(origin+'/id/');await id.settle();
+  await id.page.locator('[data-consent-reject]').focus();await id.page.keyboard.press('Enter');
+  check(await id.page.locator('.analytics-consent').isVisible(),false);check(await id.page.locator('.analytics-settings').count(),0);
+  await id.page.evaluate(key=>localStorage.removeItem(key),key);await id.page.reload();
+  await id.page.setViewportSize({width:320,height:568});
   const geometry=await id.page.locator('.analytics-consent').evaluate(e=>({width:e.getBoundingClientRect().width,scroll:e.scrollHeight,client:e.clientHeight}));check(geometry.width<=288,true);
   // Previously persisted consent must not reactivate when a denial write fails.
   const failure=await session();await failure.page.locator('[data-consent-accept]').click();await failure.settle();
   await failure.page.evaluate(()=>{window.qaSetItem=Storage.prototype.setItem;Storage.prototype.setItem=()=>{throw Error('write denied')};});
   const failureCount=failure.requests.length;
-  await failure.page.locator('.analytics-settings').click();await failure.page.locator('[data-consent-reject]').click();await failure.settle();
+  await failure.page.locator('[data-consent-reject]').evaluate(e=>e.click());await failure.settle();
   check(await failure.page.evaluate(()=>window['ga-disable-G-2KDN1C2G3L']),true);
   check((await failure.context.cookies()).filter(c=>c.name.startsWith('rancana_ga')).length,0);
   check(await failure.page.locator('.analytics-consent p').first().textContent(),'Could not save your choice. Analytics is disabled in this tab. Clear this site’s browser data before leaving to keep it off.');
@@ -133,7 +135,7 @@ try {
   check(await s.page.evaluate(()=>window.dataLayer === undefined),true);
   check(await deadline.page.evaluate(()=>window.dataLayer === undefined),true);
   await fs.mkdir(path.join(root,'review-evidence'),{recursive:true});
-  await id.page.setViewportSize({width:390,height:844});await id.page.goto(origin+'/id/');await id.settle();await id.page.locator('.analytics-settings').click();await id.page.screenshot({path:path.join(root,'review-evidence/consent-id-mobile.png')});
-  await s.page.locator('.analytics-settings').click();await s.page.screenshot({path:path.join(root,'review-evidence/consent-en-mobile.png')});
+  await id.page.setViewportSize({width:390,height:844});await id.page.goto(origin+'/id/');await id.settle();await id.page.screenshot({path:path.join(root,'review-evidence/consent-id-mobile.png')});
+  await s.page.evaluate(key=>localStorage.removeItem(key),key);await s.page.reload();await s.page.screenshot({path:path.join(root,'review-evidence/consent-en-mobile.png')});
   console.log('PASS — '+assertions+' Chromium consent, cookie, navigation, deduplication, sanitization and Play-click assertions; Google SDK/collection intercepted, no live GA traffic');
 } finally { await Promise.all(contexts.map(c=>c.close()));await browser.close();server.close(); }

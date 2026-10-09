@@ -59,10 +59,10 @@ page.on('response', response => { if (response.url().startsWith('https://www.goo
 try {
   await page.goto(origin + '/en/?email=qa-probe@example.invalid&utm_campaign=qa_probe#qa-private');
   await pause(500);
-  check(sdkRequests, 0); check(captures.length, 0); check((await context.cookies()).length, 0);
+  check(sdkRequests, 0); check(captures.length, 0); check((await context.cookies()).length, 0); check(await page.locator('.analytics-settings').count(),0);
   await page.locator('[data-consent-reject]').click(); await page.reload(); await pause(500);
   check(sdkRequests, 0); check(captures.length, 0);
-  await page.locator('.analytics-settings').click(); await page.locator('[data-consent-accept]').click();
+  await page.evaluate(() => localStorage.removeItem('rancana_analytics_consent_v1')); await page.reload(); await page.locator('[data-consent-accept]').click();
   await waitFor(() => events('page_view').length > 0); await pause(1000);
   check(sdkResponses, 1); check(events('page_view').length, 1);
   check(events('page_view')[0].get('dl'), 'https://rancana.id/en/');
@@ -70,7 +70,7 @@ try {
   const beforeHistory = events('page_view').length;
   await page.evaluate(() => history.pushState({}, '', '?email=qa-probe@example.invalid#qa-private'));
   await pause(1000); check(events('page_view').length, beforeHistory);
-  await page.locator('.analytics-settings').click(); await page.locator('[data-consent-accept]').click();
+  await page.locator('[data-consent-accept]').evaluate(e=>e.click());
   await pause(500); check(sdkRequests, 1); check(events('page_view').length, 1);
   // Keep the test page open; product navigation handlers remain unchanged.
   const play = page.locator('.hero-ctas a[href*="play.google.com"]').first();
@@ -90,7 +90,8 @@ try {
   }
   check(captures.some(p => ['scroll', 'click', 'video_start', 'video_progress', 'video_complete', 'file_download', 'view_search_results', 'form_start', 'form_submit'].includes(p.get('en'))), false);
   const requestsBeforeRevocation = sdkRequests;
-  await page.locator('.analytics-settings').click(); await page.locator('[data-consent-reject]').click();
+  // Exercise internal denial cleanup; reopening is intentionally unavailable to visitors.
+  await page.locator('[data-consent-reject]').evaluate(e=>e.click());
   await page.waitForFunction(() => window.dataLayer === undefined);
   await pause(1000);
   const afterRevocation = captures.length;
