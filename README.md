@@ -2,7 +2,7 @@
 
 Static bilingual website deployed to the existing Cloudflare Worker `rancana` at https://rancana.id. `worker.js` serves the ASSETS binding and keeps the existing `/go/play` redirect and `/go/features` response. Hosting configuration is in `wrangler.toml`.
 
-The root HTML files support the existing language switch. Generate the static `/id/` and `/en/` variants, canonical/hreflang metadata and sitemap with `python3 build-locales.py` (requires lxml). The sitemap includes Home, About, Help and Premium in both languages. Policy pages retain noindex and are excluded from the sitemap.
+The root HTML files support the existing language switch. Generate the static `/id/` and `/en/` variants, canonical/hreflang metadata and sitemap with `python3 build-locales.py` (requires lxml). The sitemap includes Home, About, Help, Premium, College Schedule and Flashcard Guide in both languages (12 URLs from 18 locale pages). Policy pages retain noindex and are excluded from the sitemap. The two guides use the existing resource-page layout, with selectable templates and keyboard-accessible table scrolling; they require no account. Keep both translations complete when updating a guide.
 
 Run `node check-preview.mjs`, `node check-navigation.mjs` and `node check-anchors.mjs` for language, navigation and fragment checks. Review wrappers, tests, docs, source originals and review evidence are excluded from deployment using `.assetsignore`. Optimized WebP images and subset WOFF fonts are used by the pages; original assets remain in Git.
 

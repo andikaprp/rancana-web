@@ -4,7 +4,7 @@
   window.__rancanaAnalyticsInitialized = true;
   const key = 'rancana_analytics_consent_v1';
   const maxAge = 180 * 86400000;
-  const pages = new Set(['home', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account']);
+  const pages = new Set(['home', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide']);
   const id = window.RancanaAnalyticsConfig?.measurementId;
   const disabled = 'ga-disable-' + id;
   let tag = null, configured = false, lastView = '', focusReturn = null, expiryTimer;

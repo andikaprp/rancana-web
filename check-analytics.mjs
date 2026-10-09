@@ -131,6 +131,14 @@ try {
   check(await bf.page.evaluate(()=>window['ga-disable-G-2KDN1C2G3L']),true);
   await bf.page.evaluate(()=>{dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));});await bf.settle();
   check(await bf.page.evaluate(()=>window['ga-disable-G-2KDN1C2G3L']),false);check(bf.requests.length,bfCount);
+  // New resource routes inherit consent and send only canonical, bounded page context.
+  for (const locale of ['id', 'en']) for (const guide of ['college-schedule', 'flashcard-guide']) {
+    const previousViews = bf.events.filter(event => event[1] === 'page_view').length;
+    await bf.page.goto(origin + '/' + locale + '/' + guide + '?email=private@example.test#private-text');
+    await bf.settle();
+    check(bf.events.filter(event => event[1] === 'page_view').length, previousViews + 1);
+    check(bf.events.at(-1)[2].page_location, 'https://rancana.id/' + locale + '/' + guide);
+  }
   // Revocation actually creates a fresh document; expired consent does likewise.
   check(await s.page.evaluate(()=>window.dataLayer === undefined),true);
   check(await deadline.page.evaluate(()=>window.dataLayer === undefined),true);
