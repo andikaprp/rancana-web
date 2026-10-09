@@ -4,7 +4,7 @@ from lxml import html, etree
 import json, re
 ROOT=Path(__file__).resolve().parent
 ORIGIN='https://rancana.id'
-PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html']
+PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html']
 def locale_url(page, lang):
  return ORIGIN+'/'+lang+'/'+('' if page=='index.html' else page.removesuffix('.html'))
 def canonical_links(tree, lang, legacy=False):
@@ -98,4 +98,4 @@ robots=ROOT/'robots.txt';text=robots.read_text() if robots.exists() else ''
 directive='Sitemap: '+ORIGIN+'/sitemap.xml'
 if not any(line.strip().lower()==directive.lower() for line in text.splitlines()):
  robots.write_text(text+('' if not text or text.endswith('\n') else '\n')+directive+'\n')
-print(f'Built 14 static locale pages; sitemap has {len(urls)} indexable URLs')
+print(f'Built {len(PAGES)*2} static locale pages; sitemap has {len(urls)} indexable URLs')

@@ -5,7 +5,7 @@ import path from 'node:path';
 import {chromium} from 'playwright';
 
 const root = path.dirname(new URL(import.meta.url).pathname);
-const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account'];
+const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide'];
 const documents = [];
 for (const locale of ['', 'id/', 'en/']) for (const page of pages) documents.push({file: locale + page + '.html', source: await fs.readFile(path.join(root, locale + page + '.html'), 'utf8')});
 const server = http.createServer(async (req, res) => {
@@ -52,13 +52,13 @@ try {
   }
   for (const locale of ['id/', 'en/']) {
     const titles = rows.filter(r => r.file.startsWith(locale)).map(r => r.title);
-    assert.equal(new Set(titles).size, 7, 'Unique page titles');
+    assert.equal(new Set(titles).size, pages.length, 'Unique page titles');
     const home = rows.find(r => r.file === locale + 'index.html');
     assert.match(home.description, /Android/); assert.match(home.description, locale === 'id/' ? /mahasiswa/ : /college/);
   }
   const sitemap = await fs.readFile(path.join(root, 'sitemap.xml'), 'utf8');
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert.equal(urls.length, 8); assert.equal(new Set(urls).size, 8);
+  assert.equal(urls.length, 12); assert.equal(new Set(urls).size, 12);
   for (const url of urls) { assert.ok(canonicalSet.has(url)); assert.equal(rows.find(r => r.file.includes('/') && r.canonical === url).robots?.includes('noindex') || false, false); }
   await page.goto(origin + '/?lang=en');
   assert.equal(await page.locator('a[data-locale-page="premium"]').first().getAttribute('href'), '/en/premium');
@@ -68,5 +68,5 @@ try {
   const hero = (await page.locator('.hero-title').innerText()).replace(/\s+/g, ' ').trim();
   assert.equal(hero, 'Teman belajar setiap harimu');
   assert.equal(googleRequests, 0);
-  console.log('PASS — 21-page metadata/schema/canonical-link audit; eight sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
+  console.log('PASS — 27-page metadata/schema/canonical-link audit; 12 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
 } finally { await browser.close(); server.close(); }
