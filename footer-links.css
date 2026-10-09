@@ -39,3 +39,5 @@ html{scroll-padding-top:108px}.resource-page .resource-section,.resource-page .r
 @media(max-width:899px){.doc-page>.resource-main{padding-top:96px}.policy-page .resource-hero{margin:48px auto}.resource-page .resource-section,.resource-page .resource-hero,.anchor-alias{scroll-margin-top:96px}html{scroll-padding-top:96px}}
 .policy-page .resource-section ul,.policy-page .resource-section ol{padding-left:24px}.policy-page .resource-section li{margin:14px 0}
 .site-header .nav-download{margin:0}
+
+.articles-nav{pointer-events:auto;font-size:14px;text-decoration:none;color:inherit;padding:8px}.articles-nav:focus-visible{outline:3px solid #56744b;outline-offset:5px}

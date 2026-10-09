@@ -5,7 +5,7 @@ import path from 'node:path';
 import {chromium} from 'playwright';
 
 const root = path.dirname(new URL(import.meta.url).pathname);
-const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide'];
+const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide'];
 const documents = [];
 for (const locale of ['', 'id/', 'en/']) for (const page of pages) documents.push({file: locale + page + '.html', source: await fs.readFile(path.join(root, locale + page + '.html'), 'utf8')});
 const server = http.createServer(async (req, res) => {
@@ -43,6 +43,16 @@ try {
     assert.equal(graph[0]['@type'], 'WebSite'); assert.equal(graph[0].url, 'https://rancana.id/'); assert.equal(graph[0].name, 'Rancana');
     assert.equal(graph[1].url, row.canonical); assert.equal(graph[1].name, row.title);
     assert.equal(graph[1].isPartOf['@id'], graph[0]['@id']);
+    const org=graph.find(e=>e['@type']==='Organization');
+    const app=graph.find(e=>e['@type']==='SoftwareApplication');
+    assert.equal(org['@id'],'https://rancana.id/#organization');assert.equal(org.name,'Rancana');
+    assert.deepEqual(org.sameAs,['https://play.google.com/store/apps/dev?id=4897195411202652501']);
+    assert.equal(app['@id'],'https://rancana.id/#android-app');assert.equal(app.name,'Rancana');
+    assert.equal(app.operatingSystem,'Android');assert.equal(app.url,'https://rancana.id/');
+    assert.equal(app.installUrl,'https://play.google.com/store/apps/details?id=com.planora.labs');
+    assert.deepEqual(app.sameAs,[app.installUrl]);assert.equal(app.publisher['@id'],org['@id']);
+    assert.equal(graph[0].publisher['@id'],org['@id']);
+    if(row.file.endsWith('index.html'))assert.equal(graph[1].mainEntity['@id'],app['@id']);
     assert.equal('aggregateRating' in (graph[1].mainEntity || {}), false);
     for (const href of row.links) {
       if (!href.startsWith('/')) continue;
@@ -58,7 +68,7 @@ try {
   }
   const sitemap = await fs.readFile(path.join(root, 'sitemap.xml'), 'utf8');
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert.equal(urls.length, 12); assert.equal(new Set(urls).size, 12);
+  assert.equal(urls.length, 16); assert.equal(new Set(urls).size, 16);
   for (const url of urls) { assert.ok(canonicalSet.has(url)); assert.equal(rows.find(r => r.file.includes('/') && r.canonical === url).robots?.includes('noindex') || false, false); }
   await page.goto(origin + '/?lang=en');
   assert.equal(await page.locator('a[data-locale-page="premium"]').first().getAttribute('href'), '/en/premium');
@@ -68,5 +78,5 @@ try {
   const hero = (await page.locator('.hero-title').innerText()).replace(/\s+/g, ' ').trim();
   assert.equal(hero, 'Teman belajar setiap harimu');
   assert.equal(googleRequests, 0);
-  console.log('PASS — 27-page metadata/schema/canonical-link audit; 12 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
+  console.log('PASS — 33-page metadata/schema/canonical-link audit; 16 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
 } finally { await browser.close(); server.close(); }
