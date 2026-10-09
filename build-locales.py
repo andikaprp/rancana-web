@@ -7,6 +7,18 @@ ORIGIN='https://rancana.id'
 PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html']
 def locale_url(page, lang):
  return ORIGIN+'/'+lang+'/'+('' if page=='index.html' else page.removesuffix('.html'))
+def canonical_links(tree, lang, legacy=False):
+ for link in tree.xpath('//a[@href]'):
+  value=link.get('href');path,sep,fragment=value.partition('#')
+  if link.get('data-locale-page'):
+   path=link.get('data-locale-page')+'.html';fragment=link.get('data-locale-fragment','');sep='#' if fragment else ''
+  if path not in PAGES:continue
+  link.set('href',locale_url(path,lang).removeprefix(ORIGIN)+sep+fragment)
+  if legacy:
+   link.set('data-locale-page',path.removesuffix('.html'))
+   if fragment:link.set('data-locale-fragment',fragment)
+  else:
+   link.attrib.pop('data-locale-page',None);link.attrib.pop('data-locale-fragment',None)
 def metadata(tree, page, lang, canonical):
  head=tree.find('head')
  for e in head.xpath('link[@rel="canonical"] | link[@hreflang] | meta[starts-with(@property,"og:")] | meta[starts-with(@name,"twitter:")] | script[@type="application/ld+json"]'):head.remove(e)
@@ -19,9 +31,10 @@ def metadata(tree, page, lang, canonical):
  title=(title_element.get('data-id') if lang=='id' else None) or title_element.get('data-en') or title_element.text or 'Rancana';desc=(description_element.get('data-id') if lang=='id' else None) or description_element.get('data-en') or description_element.get('content')
  for key,value in {'type':'website','site_name':'Rancana','title':title,'description':desc,'url':canonical,'locale':'id_ID' if lang=='id' else 'en_US','image':ORIGIN+'/assets/app-icon-180.png'}.items():add('meta',{'property':'og:'+key,'content':value})
  add('meta',{'name':'twitter:card','content':'summary'})
- data={'@context':'https://schema.org','@type':'WebPage','name':title,'description':desc,'url':canonical,'inLanguage':lang,'isPartOf':{'@type':'WebSite','name':'Rancana','url':ORIGIN}}
+ website={'@type':'WebSite','@id':ORIGIN+'/#website','name':'Rancana','url':ORIGIN+'/'}
+ data={'@type':'WebPage','@id':canonical+'#webpage','name':title,'description':desc,'url':canonical,'inLanguage':lang,'isPartOf':{'@id':website['@id']}}
  if page=='index.html':data['mainEntity']={'@type':'SoftwareApplication','name':'Rancana','applicationCategory':'EducationalApplication','operatingSystem':'Android','url':'https://play.google.com/store/apps/details?id=com.planora.labs'}
- add('script',{'type':'application/ld+json'},json.dumps(data,ensure_ascii=False))
+ add('script',{'type':'application/ld+json'},json.dumps({'@context':'https://schema.org','@graph':[website,data]},ensure_ascii=False))
 for page in PAGES:
  source=ROOT/page
  for lang in ['id','en']:
@@ -52,12 +65,13 @@ for page in PAGES:
    e.attrib.pop('data-id',None);e.attrib.pop('data-en',None)
   for e in tree.xpath('//script[@src="lang.js"]'):e.getparent().remove(e)
   for e in tree.xpath('//button[@data-set-lang]'):
-   l=e.get('data-set-lang');e.tag='a';e.attrib.clear();e.set('class','lang-btn'+(' is-active' if l==lang else ''));e.set('href','../'+l+'/'+page);e.set('lang',l);e.set('hreflang',l)
+   l=e.get('data-set-lang');e.tag='a';e.attrib.clear();e.set('class','lang-btn'+(' is-active' if l==lang else ''));e.set('href',locale_url(page,l).removeprefix(ORIGIN));e.set('lang',l);e.set('hreflang',l)
    if l==lang:e.set('aria-current','page')
+  canonical_links(tree,lang)
   for e in tree.xpath('//*[@src or @href]'):
    for attr in ['src','href']:
     value=e.get(attr)
-    if not value or re.match(r'^(?:https?:|mailto:|#|\.\./)',value):continue
+    if not value or re.match(r'^(?:https?:|mailto:|#|/|\.\./)',value):continue
     path,sep,fragment=value.partition('#')
     if path in PAGES:e.set(attr,'../'+lang+'/'+path+sep+fragment)
     else:e.set(attr,'../'+value)
@@ -69,6 +83,7 @@ for page in PAGES:
   target=ROOT/lang/page;target.parent.mkdir(exist_ok=True);target.write_text('<!doctype html>\n'+html.tostring(tree,encoding='unicode',method='html'))
  # Legacy route retains live language switch; canonical consolidates to static default locale.
  tree=html.fromstring(source.read_text())
+ canonical_links(tree,'id',legacy=True)
  for e in tree.xpath('//head/title[@data-id]|//head/meta[@name="description" and @data-id]'):
   if not e.get('data-en'):e.set('data-en',e.get('content') if e.tag=='meta' else e.text)
   if e.tag=='meta':e.set('content',e.get('data-id'))
@@ -78,6 +93,9 @@ for page in PAGES:
 indexable=[page for page in PAGES if not html.fromstring((ROOT/page).read_text()).xpath('//meta[@name="robots" and contains(@content,"noindex")]')]
 urls=[locale_url(page,lang) for lang in ['id','en'] for page in indexable]
 (ROOT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+u+'</loc></url>'for u in urls)+'</urlset>')
-# Sitemap discovery only. No new crawler access or training rules.
-(ROOT/'robots.txt').write_text('Sitemap: '+ORIGIN+'/sitemap.xml\n')
+# Preserve crawler/training preferences; only ensure our sitemap is discoverable.
+robots=ROOT/'robots.txt';text=robots.read_text() if robots.exists() else ''
+directive='Sitemap: '+ORIGIN+'/sitemap.xml'
+if not any(line.strip().lower()==directive.lower() for line in text.splitlines()):
+ robots.write_text(text+('' if not text or text.endswith('\n') else '\n')+directive+'\n')
 print(f'Built 14 static locale pages; sitemap has {len(urls)} indexable URLs')
