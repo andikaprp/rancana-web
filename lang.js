@@ -9,10 +9,16 @@ const write = (el, v) => { if ('content' in el) el.content = v; else el.innerHTM
 const strings = [...document.querySelectorAll('[data-id]')].map(el => [el, el.dataset.en ?? read(el), el.dataset.id]);
 const blocks = [...document.querySelectorAll('[data-lang]')];
 const buttons = document.querySelectorAll('.lang-btn');
+const pageLinks = [...document.querySelectorAll('a[data-locale-page]')].filter(el => el.dataset.localePage);
 
 const setLang = lang => {
   document.documentElement.lang = lang;
   for (const [el, en, id] of strings) write(el, lang === 'id' ? id : en);
+  for (const link of pageLinks) {
+    const page = link.dataset.localePage;
+    link.href = '/' + lang + '/' + (page === 'index' ? '' : page) +
+      (link.dataset.localeFragment ? '#' + link.dataset.localeFragment : '');
+  }
   for (const el of blocks) {
     const active = el.dataset.lang === lang;
     el.hidden = !active;

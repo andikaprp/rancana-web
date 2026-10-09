@@ -87,3 +87,29 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .site-header .nav-slot>:not([hidden]){animation:nav-reveal .2s ease-out both}
 @keyframes nav-reveal{from{opacity:0;translate:0 -6px}to{opacity:1;translate:0 0}}
 }
+
+/* Keep related copy together while retaining the existing section rhythm. */
+.audience>.eyebrow,.product>.eyebrow{margin-bottom:12px}
+.audience>.section-copy,.product>.section-copy,.benefit-intro>.section-copy{margin-top:12px}
+.audience-grid h3{margin-top:10px}
+.audience-grid .section-copy{margin-top:12px}
+.preview .product .card-head p{margin-top:8px}
+.preview .download .closing-sub{margin-top:12px}
+
+/* Center the complete CTA group within the visible bordered sheet. */
+.download{padding:117px 80px}
+.download-content{transform:translateY(27px);text-align:center}
+@media(max-width:899px){
+  .download{padding:78px 28px}
+  .download-content{transform:translateY(12px)}
+}
+
+/* Flipped flashcard palette, retaining the existing layered sheet design. */
+.download>.sheet-border{border-color:#ffffffb3;background:radial-gradient(ellipse at 50% 115%,var(--green-500),var(--green-700) 65%)}
+.preview .download .closing-title,.preview .download .closing-sub{color:#fff}
+.download .pill-dark{background:#fff;color:var(--green-700)}
+.download .pill:focus-visible{outline-color:#fff}
+
+/* Original Aurora Green artwork used by the app's AppBackFlipCard (BoxFit.fill). */
+.download>.sheet-1{background:#17513d url("assets/flashcard-aurora-background.webp") center/100% 100% no-repeat;box-shadow:0 2px 8px #2179571a}
+.download>.sheet-border{background:transparent;border-color:#fff;border-width:1px}

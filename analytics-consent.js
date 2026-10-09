@@ -26,13 +26,13 @@
     return parts.length <= 1 && pages.has(page) ? page : null;
   };
   const text = {
-    en: {title: 'Your analytics choice', body: 'Allow Google Analytics to measure website page views and Google Play clicks? Analytics uses browser cookies. Our custom events do not include names, email addresses or form text. Google also collects standard browser and session information. You can change your choice here at any time.', accept: 'Allow analytics', reject: 'Reject analytics', close: 'Close', settings: 'Analytics settings', privacy: 'Privacy policy'},
-    id: {title: 'Pilihan analitik kamu', body: 'Izinkan Google Analytics mengukur kunjungan halaman dan klik Google Play? Analitik menggunakan cookie browser. Peristiwa khusus kami tidak menyertakan nama, alamat email, atau isi formulir. Google juga mengumpulkan informasi browser dan sesi standar. Kamu dapat mengubah pilihan di sini kapan saja.', accept: 'Izinkan analitik', reject: 'Tolak analitik', close: 'Tutup', settings: 'Pengaturan analitik', privacy: 'Kebijakan privasi'}
+    en: {title: 'Can we use cookies?', body: 'We use cookies to understand how you use the Rancana website and improve it. These cookies are only active if you agree.', accept: 'Allow cookies', reject: 'Reject cookies', close: 'Close', settings: 'Cookie settings', privacy: 'Privacy policy'},
+    id: {title: 'Boleh pakai cookies?', body: 'Kami pakai cookies untuk memahami cara kamu menggunakan website Rancana dan memperbaikinya. Cookies ini aktif kalau kamu setuju.', accept: 'Izinkan cookies', reject: 'Tolak cookies', close: 'Tutup', settings: 'Pengaturan cookies', privacy: 'Kebijakan privasi'}
   };
   const settings = document.createElement('button');
   settings.type = 'button'; settings.className = 'analytics-settings';
   settings.setAttribute('aria-controls', 'analytics-consent');
-  (document.querySelector('.preview-footer') || document.body).append(settings);
+  // No visible settings control: initial consent remains available until a choice is saved.
   const panel = document.createElement('section');
   panel.id = 'analytics-consent'; panel.className = 'analytics-consent'; panel.setAttribute('role', 'region');
   panel.setAttribute('aria-labelledby', 'analytics-consent-title');
