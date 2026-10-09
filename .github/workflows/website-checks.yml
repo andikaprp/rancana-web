@@ -5,6 +5,21 @@ on:
 permissions:
   contents: read
 jobs:
+  sitemap-http-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node check-sitemap-http.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sitemap-http-report
+          path: review-evidence/sitemap-http-report.json
   consent-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
