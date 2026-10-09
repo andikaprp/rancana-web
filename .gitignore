@@ -1,3 +1,5 @@
 check-lang.mjs
 .DS_Store
 .wrangler/
+node_modules/
+review-evidence/
