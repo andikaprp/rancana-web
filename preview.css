@@ -113,3 +113,23 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 /* Original Aurora Green artwork used by the app's AppBackFlipCard (BoxFit.fill). */
 .download>.sheet-1{background:#17513d url("assets/flashcard-aurora-background.webp") center/100% 100% no-repeat;box-shadow:0 2px 8px #2179571a}
 .download>.sheet-border{background:transparent;border-color:#fff;border-width:1px}
+
+/* Ranca and Cana frame the product, outside the headline and action area. */
+.preview .hero .hero-mascot{position:absolute;z-index:4;width:260px;height:auto;top:auto;bottom:80px;pointer-events:none;user-select:none;object-fit:contain}
+.preview .hero .hero-mascot-cana{left:18px;right:auto}
+.preview .hero .hero-mascot-ranca{left:auto;right:18px}
+/* Keep the existing wordmark lettering, with the approved jade Ranca mark. */
+.preview-footer{background:#fff}
+.preview-footer .wordmark{opacity:1}
+.preview-footer .wordmark-text{opacity:.32}
+.preview-footer .wordmark-glow{display:none}
+.preview-footer .wordmark-mark{left:0;top:9%;width:16%;height:72%;background:url("assets/app-icon-180.png") center/contain no-repeat;mask:none;-webkit-mask:none}
+@media(max-width:899px){
+ .preview .hero .hero-mascot{width:clamp(110px,24vw,190px);bottom:28px;margin:0;transform:none}
+ .preview .hero .hero-mascot-cana{left:0}
+ .preview .hero .hero-mascot-ranca{right:0}
+}
+
+/* The closing duo has its own space after the action, never over a control. */
+.download .closing-mascots{display:block;position:relative;width:300px;max-width:70%;height:auto;margin:20px -16px -42px auto;pointer-events:none;user-select:none}
+@media(max-width:899px){.download .closing-mascots{width:250px;max-width:100%;margin:24px auto -12px}}

@@ -964,3 +964,7 @@ img { display: block; }
 
 /* Keep small planner-example labels readable; colored borders remain. */
 .preview .todo-meta,.preview .todo-2 .todo-meta{color:var(--v-700)}
+
+/* Approved Ranca artwork; preserve the name beside the mark. */
+.site-header .brand{gap:8px}
+.brand-mark{border-radius:0}

@@ -37,7 +37,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: consent-mobile-screenshots
-          path: review-evidence/*.png
+          path: |
+            review-evidence/*.png
+            review-evidence/mascot-layout-report.json
   real-sdk:
     needs: consent-tests
     runs-on: ubuntu-latest
