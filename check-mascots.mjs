@@ -31,9 +31,10 @@ try{
   assert.equal(await page.locator('.hero-mascot').count(),2);
   assert.equal(await page.locator('.closing-mascots').count(),0);
   assert.equal(await page.locator('.footer-mascots').count(),1);
-  assert.equal(await page.locator('.hero-mascot:not([alt=""]),.footer-mascots:not([alt=""])').count(),0);
+  assert.equal(await page.locator('.footer-mascot').count(),2);
+  assert.equal(await page.locator('.hero-mascot:not([alt=""]),.footer-mascot:not([alt=""])').count(),0);
   const state=await page.evaluate(()=>{
-   const mascots=[...document.querySelectorAll('.hero-mascot,.footer-mascots')];
+   const mascots=[...document.querySelectorAll('.hero-mascot,.footer-mascot')];
    const intersects=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
    const controls=[...document.querySelectorAll('.hero-ctas a,.download-content a,.preview-footer a')];
    return {
@@ -45,11 +46,12 @@ try{
     artwork:getComputedStyle(document.querySelector('.sheet-1')).backgroundImage.includes('flashcard-aurora-background.webp'),
     whiteRear:['.sheet-2','.sheet-3'].every(s=>getComputedStyle(document.querySelector(s)).backgroundColor==='rgb(255, 255, 255)'),
     headerBrand:getComputedStyle(document.querySelector('.brand-mark')).backgroundImage.includes('app-icon-64.webp'),
-    footerBrand:getComputedStyle(document.querySelector('.wordmark-mark')).backgroundImage.includes('app-icon-180.png'),
+    footerBrand:getComputedStyle(document.querySelector('.wordmark-mark')).maskImage.includes('logo.svg'),
+    companionsAboveFade:parseInt(getComputedStyle(document.querySelector('.hero-companion')).zIndex)>parseInt(getComputedStyle(document.querySelector('.band-hero')).zIndex),
     paper:document.querySelector('.paper-hero').src.includes('paper.webp'),
    };
   });
-  assert.deepEqual(state,{overflow:false,loaded:true,interactive:false,overlaps:[],whiteFooter:true,artwork:true,whiteRear:true,headerBrand:true,footerBrand:true,paper:true},`${lang} at ${width}`);
+  assert.deepEqual(state,{overflow:false,loaded:true,interactive:false,overlaps:[],whiteFooter:true,artwork:true,whiteRear:true,headerBrand:true,footerBrand:true,companionsAboveFade:true,paper:true},`${lang} at ${width}`);
   for(const selector of ['.hero-ctas .play-cta','.download-content .play-cta']){
    const a=page.locator(selector);await a.scrollIntoViewIfNeeded();
    assert.equal(await a.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),true,'CTA hit target');
@@ -59,7 +61,7 @@ try{
   if(width===390||width===1440)await page.locator('.preview-footer').screenshot({path:path.join(root,'review-evidence',`mascots-${lang}-footer-${width}.png`)});
   report.push({lang,width,...state});await page.close();
  }
- for(const filename of ['cana-hero.webp','ranca-hero.webp','ranca-cana-footer.webp'])assert.ok((await fs.stat(path.join(root,'assets/mascots',filename))).size<50000,filename+' budget');
+ for(const filename of ['ranca-cloud.webp','cana-cloud.webp'])assert.ok((await fs.stat(path.join(root,'assets/mascots',filename))).size<200000,filename+' budget');
  await fs.writeFile(path.join(root,'review-evidence','mascot-layout-report.json'),JSON.stringify(report,null,2));
  console.log('PASS — mascot assets, decorative semantics, CTA hit targets, original paper/sheets and white footer at 6 widths in both languages');
 }finally{await browser.close();await new Promise(r=>server.close(r));}

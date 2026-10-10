@@ -43,6 +43,8 @@ GitHub Actions also runs `node check-analytics-real.mjs`: it downloads the real 
 
 ## Ranca and Cana website artwork
 
-The homepage uses decorative, transparent soft-3D Ranca and Cana artwork in the hero and a distinct farewell pose in the shared white footer near the wordmark. The closing CTA retains only its existing text and download button. The three optimized WebPs total 87,730 bytes. The approved lighter-jade Ranca crop supplies the shared header/footer mark and favicon sizes; the Rancana wordmark and bilingual copy are retained.
+This draft previews the selected soft-gradient cloud Ranca and Cana, with their original white outlined faces and hands, in the homepage hero and shared white footer. The final download CTA remains text/button only. Production header/footer branding, favicons, wordmark, copy, paper and Aurora sheet artwork are retained.
 
-`node check-mascots.mjs` checks both languages at 320, 390, 768, 900, 1440 and 1920 px, validates non-overlapping CTA hit targets, image budgets, original paper/Aurora sheet artwork and the white footer, and saves hero/CTA/footer screenshots under `review-evidence/`. It runs in the existing `npm test` workflow. Review the screenshots before publishing.
+The transparent cutouts come from the selected master image through background-only alpha cleanup, without identity regeneration. Two lossless WebPs total 345,588 bytes and are reused in both locations. A small pale-blue CSS wash keeps white outlined hands visible; the footer itself remains white. Images are decorative, dimensioned, pointer-inert and footer copies lazy-load. No mascot animation is added.
+
+`node check-mascots.mjs` checks both languages at 320, 390, 768, 900, 1440 and 1920 px, validates non-overlapping links/CTA hit targets, image budgets, original branding, paper/Aurora sheet artwork and white footer, and saves hero/CTA/footer screenshots under `review-evidence/`. It runs in the existing `npm test` workflow. Review screenshots before publishing.
