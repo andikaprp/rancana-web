@@ -29,12 +29,13 @@ try{
   await page.evaluate(async()=>{for(const i of document.images)i.loading='eager';await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});
   assert.deepEqual(errors,[]);
   assert.equal(await page.locator('.hero-mascot').count(),2);
-  assert.equal(await page.locator('.closing-mascots').count(),1);
-  assert.equal(await page.locator('.hero-mascot:not([alt=""]),.closing-mascots:not([alt=""])').count(),0);
+  assert.equal(await page.locator('.closing-mascots').count(),0);
+  assert.equal(await page.locator('.footer-mascots').count(),1);
+  assert.equal(await page.locator('.hero-mascot:not([alt=""]),.footer-mascots:not([alt=""])').count(),0);
   const state=await page.evaluate(()=>{
-   const mascots=[...document.querySelectorAll('.hero-mascot,.closing-mascots')];
+   const mascots=[...document.querySelectorAll('.hero-mascot,.footer-mascots')];
    const intersects=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
-   const controls=[...document.querySelectorAll('.hero-ctas a,.download-content a')];
+   const controls=[...document.querySelectorAll('.hero-ctas a,.download-content a,.preview-footer a')];
    return {
     overflow:document.documentElement.scrollWidth>innerWidth,
     loaded:mascots.every(i=>i.complete&&i.naturalWidth>0),
@@ -58,7 +59,7 @@ try{
   if(width===390||width===1440)await page.locator('.preview-footer').screenshot({path:path.join(root,'review-evidence',`mascots-${lang}-footer-${width}.png`)});
   report.push({lang,width,...state});await page.close();
  }
- for(const filename of ['cana-hero.webp','ranca-hero.webp','ranca-cana-cta.webp'])assert.ok((await fs.stat(path.join(root,'assets/mascots',filename))).size<50000,filename+' budget');
+ for(const filename of ['cana-hero.webp','ranca-hero.webp','ranca-cana-footer.webp'])assert.ok((await fs.stat(path.join(root,'assets/mascots',filename))).size<50000,filename+' budget');
  await fs.writeFile(path.join(root,'review-evidence','mascot-layout-report.json'),JSON.stringify(report,null,2));
  console.log('PASS — mascot assets, decorative semantics, CTA hit targets, original paper/sheets and white footer at 6 widths in both languages');
 }finally{await browser.close();await new Promise(r=>server.close(r));}

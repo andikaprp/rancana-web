@@ -43,6 +43,6 @@ GitHub Actions also runs `node check-analytics-real.mjs`: it downloads the real 
 
 ## Ranca and Cana website artwork
 
-The homepage uses decorative, transparent soft-3D Ranca and Cana artwork in the hero and a distinct closing pose after the download action. The three optimized WebPs total 87,730 bytes. The approved lighter-jade Ranca crop supplies the shared header/footer mark and favicon sizes; the Rancana wordmark and bilingual copy are retained.
+The homepage uses decorative, transparent soft-3D Ranca and Cana artwork in the hero and a distinct farewell pose in the shared white footer near the wordmark. The closing CTA retains only its existing text and download button. The three optimized WebPs total 87,730 bytes. The approved lighter-jade Ranca crop supplies the shared header/footer mark and favicon sizes; the Rancana wordmark and bilingual copy are retained.
 
 `node check-mascots.mjs` checks both languages at 320, 390, 768, 900, 1440 and 1920 px, validates non-overlapping CTA hit targets, image budgets, original paper/Aurora sheet artwork and the white footer, and saves hero/CTA/footer screenshots under `review-evidence/`. It runs in the existing `npm test` workflow. Review the screenshots before publishing.

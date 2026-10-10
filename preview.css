@@ -130,6 +130,7 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
  .preview .hero .hero-mascot-ranca{right:0}
 }
 
-/* The closing duo has its own space after the action, never over a control. */
-.download .closing-mascots{display:block;position:relative;width:300px;max-width:70%;height:auto;margin:20px -16px -42px auto;pointer-events:none;user-select:none}
-@media(max-width:899px){.download .closing-mascots{width:250px;max-width:100%;margin:24px auto -12px}}
+/* A quiet farewell beside the footer branding, separate from every link. */
+.preview-footer .footer-mascots{display:block;width:280px;max-width:70%;height:auto;margin:40px auto 0;pointer-events:none;user-select:none}
+.preview-footer .footer-mascots+.wordmark{margin-top:24px}
+@media(max-width:899px){.preview-footer .footer-mascots{width:220px;margin-top:32px}.preview-footer .footer-mascots+.wordmark{margin-top:20px}}
