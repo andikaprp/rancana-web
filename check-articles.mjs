@@ -17,6 +17,8 @@ try{
   for(const lang of ['id','en'])for(const route of routes){
    await page.goto(`${origin}/${lang}/${route}`);await page.evaluate(()=>document.fonts.ready);if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
    assert.equal(await page.locator('h1').count(),1);
+   assert.equal(await page.locator('footer a[href*="college-schedule"], footer a[href*="flashcard-guide"]').count(),0);
+   assert.equal(await page.locator('footer a[href*="articles"]').count(),1);
    assert.equal(await page.locator('html').getAttribute('lang'),lang);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'overflow '+route);
    await page.evaluate(()=>{for(const i of document.images)i.loading='eager'});await page.locator('footer').scrollIntoViewIfNeeded();await page.evaluate(()=>Promise.all([...document.images].map(i=>i.decode().catch(()=>{}))));await page.evaluate(()=>scrollTo(0,0));
