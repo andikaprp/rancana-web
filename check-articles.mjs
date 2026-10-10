@@ -27,6 +27,23 @@ try{
    for(const href of new Set(links)){let p=href.split('#')[0];if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';await fs.access(path.join(root,p));}
    const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());assert.equal(schema['@graph'][1]['@type'],route==='articles'?'CollectionPage':'Article');
    if(route==='articles')assert.equal(await page.locator('.article-card').count(),3);
+   const backdrop = await page.evaluate(() => {
+    const paper = document.querySelector('.doc-paper');
+    const footer = document.querySelector('.preview-footer');
+    const paperBounds = paper.getBoundingClientRect();
+    const footerBounds = footer.getBoundingClientRect();
+    const footerStyle = getComputedStyle(footer);
+    return {
+     position: getComputedStyle(paper).position,
+     coversArticle: paperBounds.top <= 0 && paperBounds.bottom >= footerBounds.top,
+     footerColor: footerStyle.backgroundColor,
+     footerImage: footerStyle.backgroundImage,
+    };
+   });
+   assert.deepEqual(backdrop, {
+    position: 'absolute', coversArticle: true,
+    footerColor: 'rgb(255, 255, 255)', footerImage: 'none',
+   }, 'continuous article paper and white footer ' + lang + '/' + route);
    const spacing = await page.evaluate(() => {
     const groups = [
      ['section > h2 + p', 20],

@@ -10,3 +10,8 @@
 .article-main section > p + .article-related { margin-top: 20px; }
 .article-main .article-card h2 { margin-top: 20px; }
 .article-main .article-card h2 + p { margin-top: 14px; }
+
+/* Keep the paper behind the entire article, including full-page captures. */
+.guide-page { position: relative; display: flow-root; isolation: isolate; }
+.guide-page > .doc-paper { position: absolute; height: 100%; }
+.guide-page > .preview-footer { background: #fff; }
