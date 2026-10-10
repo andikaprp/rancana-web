@@ -129,3 +129,8 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
  .preview-footer .footer-mascots{width:310px;margin-top:32px}
  .preview-footer .footer-mascots+.wordmark{margin-top:20px}
 }
+/* Extend contrast behind the outer hands, not just the opaque cloud bodies. */
+.hero-companion,.preview-footer .footer-mascots{background:none;isolation:isolate}
+.preview-footer .footer-mascots{position:relative}
+.hero-companion::before,.preview-footer .footer-mascots::before{content:"";position:absolute;z-index:-1;inset:-14% -12%;background:radial-gradient(ellipse at center,#bedff4 48%,#d3e8f8cc 62%,transparent 76%);pointer-events:none}
+.hero-mascot,.footer-mascot{filter:drop-shadow(0 1px 1px #4380a84d)}
