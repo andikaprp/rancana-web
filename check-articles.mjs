@@ -27,7 +27,41 @@ try{
    for(const href of new Set(links)){let p=href.split('#')[0];if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';await fs.access(path.join(root,p));}
    const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());assert.equal(schema['@graph'][1]['@type'],route==='articles'?'CollectionPage':'Article');
    if(route==='articles')assert.equal(await page.locator('.article-card').count(),3);
-   if(lang==='id')await page.screenshot({path:path.join(root,'review-evidence',`${route}-${size.width}.png`),fullPage:true});
+   const backdrop = await page.evaluate(() => {
+    const paper = document.querySelector('.doc-paper');
+    const footer = document.querySelector('.preview-footer');
+    const paperBounds = paper.getBoundingClientRect();
+    const footerBounds = footer.getBoundingClientRect();
+    const footerStyle = getComputedStyle(footer);
+    return {
+     position: getComputedStyle(paper).position,
+     coversArticle: paperBounds.top <= 0 && paperBounds.bottom >= footerBounds.top,
+     footerColor: footerStyle.backgroundColor,
+     footerImage: footerStyle.backgroundImage,
+    };
+   });
+   assert.deepEqual(backdrop, {
+    position: 'absolute', coversArticle: true,
+    footerColor: 'rgb(255, 255, 255)', footerImage: 'none',
+   }, 'continuous article paper and white footer ' + lang + '/' + route);
+   const spacing = await page.evaluate(() => {
+    const groups = [
+     ['section > h2 + p', 20],
+     ['section > h2 + .guide-steps', 20],
+     ['section > h2 + .guide-example', 24],
+     ['.guide-example + p', 24],
+     ['.guide-example > * + *', 12],
+     ['.article-card h2', 20],
+     ['.article-card h2 + p', 14],
+    ];
+    return groups.flatMap(([selector, minimum]) =>
+     [...document.querySelectorAll('.article-main ' + selector)]
+      .filter(el => parseFloat(getComputedStyle(el).marginTop) < minimum)
+      .map(el => ({selector, minimum, actual: getComputedStyle(el).marginTop})));
+   });
+   assert.deepEqual(spacing, [], 'article spacing ' + lang + '/' + route);
+   assert.equal(await page.locator('.guide-figure figcaption').count(), 0);
+   await page.screenshot({path:path.join(root,'review-evidence',`${lang}-${route}-${size.width}.png`),fullPage:true});
    evidence.push(`${lang}/${route} @ ${size.width}: no overflow, assets and local links valid`);
   }
   await page.goto(origin+'/id/');await page.locator('.articles-nav').click();assert.ok(page.url().endsWith('/id/articles'));
