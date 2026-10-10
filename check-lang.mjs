@@ -29,7 +29,7 @@ assert.match(index, /src="assets\/google-play-icon\.svg"/);
 assert.doesNotMatch(index, /assets\/badges\//, 'do not ship full Google Play badges');
 assert.doesNotMatch(index, /play-badge|get-it-on-google-play\.png/i, 'do not ship full Google Play badges');
 
-for (const file of ['privacy.html', 'terms.html', 'delete-account.html', 'help.html', 'premium.html', 'about.html', 'college-schedule.html', 'flashcard-guide.html']) {
+for (const file of ['privacy.html', 'terms.html', 'delete-account.html', 'help.html', 'premium.html', 'about.html', 'college-schedule.html', 'flashcard-guide.html', 'articles.html', 'todo-guide.html']) {
   const html = await readFile(new URL(file, root), 'utf8');
   assert.match(html, /data-lang="en"/, `${file} missing EN block`);
   assert.match(html, /data-lang="id"/, `${file} missing ID block`);

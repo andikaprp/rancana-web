@@ -2,7 +2,7 @@
   "name": "rancana-website-checks",
   "private": true,
   "scripts": {
-    "test": "node check-lang.mjs && node check-preview.mjs && node check-navigation.mjs && node check-anchors.mjs && node check-seo.mjs && node check-analytics.mjs",
+    "test": "node check-lang.mjs && node check-preview.mjs && node check-navigation.mjs && node check-anchors.mjs && node check-seo.mjs && node check-articles.mjs && node check-analytics.mjs",
     "test:real-sdk": "node check-analytics-real.mjs"
   },
   "devDependencies": {

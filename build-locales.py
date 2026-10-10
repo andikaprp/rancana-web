@@ -4,7 +4,9 @@ from lxml import html, etree
 import json, re
 ROOT=Path(__file__).resolve().parent
 ORIGIN='https://rancana.id'
-PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html']
+PLAY='https://play.google.com/store/apps/details?id=com.planora.labs'
+DEVELOPER='https://play.google.com/store/apps/dev?id=4897195411202652501'
+PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html']
 def locale_url(page, lang):
  return ORIGIN+'/'+lang+'/'+('' if page=='index.html' else page.removesuffix('.html'))
 def canonical_links(tree, lang, legacy=False):
@@ -29,12 +31,20 @@ def metadata(tree, page, lang, canonical):
  add('link',{'rel':'alternate','hreflang':'x-default','href':locale_url(page,'id')})
  title_element=head.find('title');description_element=head.xpath('meta[@name="description"]')[0]
  title=(title_element.get('data-id') if lang=='id' else None) or title_element.get('data-en') or title_element.text or 'Rancana';desc=(description_element.get('data-id') if lang=='id' else None) or description_element.get('data-en') or description_element.get('content')
- for key,value in {'type':'website','site_name':'Rancana','title':title,'description':desc,'url':canonical,'locale':'id_ID' if lang=='id' else 'en_US','image':ORIGIN+'/assets/app-icon-180.png'}.items():add('meta',{'property':'og:'+key,'content':value})
+ for key,value in {'type':'article' if page in ['college-schedule.html','todo-guide.html','flashcard-guide.html'] else 'website','site_name':'Rancana','title':title,'description':desc,'url':canonical,'locale':'id_ID' if lang=='id' else 'en_US','image':ORIGIN+'/assets/app-icon-180.png'}.items():add('meta',{'property':'og:'+key,'content':value})
  add('meta',{'name':'twitter:card','content':'summary'})
- website={'@type':'WebSite','@id':ORIGIN+'/#website','name':'Rancana','url':ORIGIN+'/'}
+ website={'@type':'WebSite','@id':ORIGIN+'/#website','name':'Rancana','url':ORIGIN+'/','publisher':{'@id':ORIGIN+'/#organization'}}
  data={'@type':'WebPage','@id':canonical+'#webpage','name':title,'description':desc,'url':canonical,'inLanguage':lang,'isPartOf':{'@id':website['@id']}}
- if page=='index.html':data['mainEntity']={'@type':'SoftwareApplication','name':'Rancana','applicationCategory':'EducationalApplication','operatingSystem':'Android','url':'https://play.google.com/store/apps/details?id=com.planora.labs'}
- add('script',{'type':'application/ld+json'},json.dumps({'@context':'https://schema.org','@graph':[website,data]},ensure_ascii=False))
+ if page in ['college-schedule.html','todo-guide.html','flashcard-guide.html']:
+  data['@type']='Article';data['headline']=title;data['author']={'@type':'Organization','name':'Rancana'}
+ if page=='articles.html':data['@type']='CollectionPage'
+ organization={'@type':'Organization','@id':ORIGIN+'/#organization','name':'Rancana','url':ORIGIN+'/','sameAs':[DEVELOPER],'logo':ORIGIN+'/assets/app-icon-180.png'}
+ app={'@type':'SoftwareApplication','@id':ORIGIN+'/#android-app','name':'Rancana','alternateName':'Rancana: Teman Belajar','url':ORIGIN+'/','sameAs':[PLAY],'installUrl':PLAY,'applicationCategory':'EducationalApplication','operatingSystem':'Android','publisher':{'@id':organization['@id']},'description':'Rancana adalah aplikasi Android untuk mengatur pelajaran, jadwal kelas, to-do list, dan flashcard.' if lang=='id' else 'Rancana is an Android app for organizing subjects, class schedules, to-do lists, and flashcards.'}
+ if page=='index.html':data['mainEntity']={'@id':app['@id']}
+ if page in ['articles.html','college-schedule.html','todo-guide.html','flashcard-guide.html']:data['about']={'@id':app['@id']}
+ if data['@type']=='Article':
+  data['author']={'@id':organization['@id']};data['publisher']={'@id':organization['@id']}
+ add('script',{'type':'application/ld+json'},json.dumps({'@context':'https://schema.org','@graph':[website,data,organization,app]},ensure_ascii=False))
 for page in PAGES:
  source=ROOT/page
  for lang in ['id','en']:
