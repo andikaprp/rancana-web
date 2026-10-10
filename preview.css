@@ -114,13 +114,13 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .download>.sheet-1{background:#17513d url("assets/flashcard-aurora-background.webp") center/100% 100% no-repeat;box-shadow:0 2px 8px #2179571a}
 .download>.sheet-border{background:transparent;border-color:#fff;border-width:1px}
 
-/* Selected cloud companions: keep their white line-art hands legible on paper. */
-.hero-companion{position:absolute;z-index:4;bottom:calc(80px * var(--hero-scale));width:min(290px,20.14vw);pointer-events:none;user-select:none;background:radial-gradient(ellipse at center,#bedff4 28%,#d8eafa80 53%,transparent 72%)}
+/* Selected cloud companions on the existing paper and white footer. */
+.hero-companion{position:absolute;z-index:4;bottom:calc(80px * var(--hero-scale));width:min(290px,20.14vw);pointer-events:none;user-select:none}
 .hero-companion-ranca{left:max(12px,calc((100% - 1440px)/2 + 12px))}
 .hero-companion-cana{right:max(12px,calc((100% - 1440px)/2 + 12px))}
 .hero-companion .hero-mascot{display:block;width:100%;height:auto;pointer-events:none;user-select:none}
 .preview-footer{background:#fff}
-.preview-footer .footer-mascots{display:flex;align-items:center;justify-content:center;gap:4px;width:440px;max-width:90%;margin:40px auto 0;pointer-events:none;user-select:none;background:radial-gradient(ellipse at center,#bedff4 28%,#d8eafa80 53%,transparent 72%)}
+.preview-footer .footer-mascots{display:flex;align-items:center;justify-content:center;gap:4px;width:440px;max-width:90%;margin:40px auto 0;pointer-events:none;user-select:none}
 .preview-footer .footer-mascot{display:block;width:calc(50% - 2px);height:auto;pointer-events:none;user-select:none}
 .preview-footer .footer-mascots+.wordmark{margin-top:24px}
 @media(max-width:899px){
@@ -129,8 +129,3 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
  .preview-footer .footer-mascots{width:310px;margin-top:32px}
  .preview-footer .footer-mascots+.wordmark{margin-top:20px}
 }
-/* Extend contrast behind the outer hands, not just the opaque cloud bodies. */
-.hero-companion,.preview-footer .footer-mascots{background:none;isolation:isolate}
-.preview-footer .footer-mascots{position:relative}
-.hero-companion::before,.preview-footer .footer-mascots::before{content:"";position:absolute;z-index:-1;inset:-14% -12%;background:radial-gradient(ellipse at center,#bedff4 48%,#d3e8f8cc 62%,transparent 76%);pointer-events:none}
-.hero-mascot,.footer-mascot{filter:drop-shadow(0 1px 1px #4380a84d)}

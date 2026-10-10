@@ -49,9 +49,11 @@ try{
     footerBrand:getComputedStyle(document.querySelector('.wordmark-mark')).maskImage.includes('logo.svg'),
     companionsAboveFade:parseInt(getComputedStyle(document.querySelector('.hero-companion')).zIndex)>parseInt(getComputedStyle(document.querySelector('.band-hero')).zIndex),
     paper:document.querySelector('.paper-hero').src.includes('paper.webp'),
+    noAddedBackdrop:[...document.querySelectorAll('.hero-companion,.footer-mascots')].every(el=>getComputedStyle(el).backgroundImage==='none'&&getComputedStyle(el,'::before').content==='none'),
+    noImageFilter:mascots.every(el=>getComputedStyle(el).filter==='none'),
    };
   });
-  assert.deepEqual(state,{overflow:false,loaded:true,interactive:false,overlaps:[],whiteFooter:true,artwork:true,whiteRear:true,headerBrand:true,footerBrand:true,companionsAboveFade:true,paper:true},`${lang} at ${width}`);
+  assert.deepEqual(state,{overflow:false,loaded:true,interactive:false,overlaps:[],whiteFooter:true,artwork:true,whiteRear:true,headerBrand:true,footerBrand:true,companionsAboveFade:true,paper:true,noAddedBackdrop:true,noImageFilter:true},`${lang} at ${width}`);
   for(const selector of ['.hero-ctas .play-cta','.download-content .play-cta']){
    const a=page.locator(selector);await a.scrollIntoViewIfNeeded();
    assert.equal(await a.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),true,'CTA hit target');
