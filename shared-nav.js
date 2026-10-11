@@ -44,19 +44,26 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  let animation = null;
  let idleTimer = null;
  let lastEntry = -Infinity;
+ let pendingEntry = false;
+ let animationIsEntry = false;
  const canMove = () => mascotVisible && sectionVisible && !document.hidden && !reducedMotion.matches;
  const clearIdle = () => { clearTimeout(idleTimer); idleTimer = null; };
  const scheduleIdle = () => {
   clearIdle();
-  if (canMove() && !animation) idleTimer = setTimeout(() => playMascot(false), 5000);
+  if (!canMove() || animation) return;
+  const delay = pendingEntry ? Math.max(0, 900 - (performance.now() - lastEntry)) : 5000;
+  idleTimer = setTimeout(() => playMascot(pendingEntry), delay);
  };
  const stopMotion = () => {
   clearIdle();
+  pendingEntry = false;
   if (animation) { const previous = animation; animation = null; previous.cancel(); }
  };
  const playMascot = (entry) => {
   if (!canMove() || animation) return;
   clearIdle();
+  if (entry) { pendingEntry = false; lastEntry = performance.now(); }
+  animationIsEntry = entry;
   const movement = entry
    ? ['translateY(0) rotate(0deg)', 'translateY(-2px) rotate(-6deg)', 'translateY(-1px) rotate(4deg)', 'translateY(0) rotate(0deg)']
    : ['translateY(0) rotate(0deg)', 'translateY(-1.5px) rotate(-3deg)', 'translateY(0) rotate(0deg)'];
@@ -83,9 +90,9 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
   }
   sectionVisible = visibleSections.size > 0;
   if (!canMove()) { stopMotion(); return; }
-  if (entering && performance.now() - lastEntry >= 900 && !animation) {
-   lastEntry = performance.now(); playMascot(true);
-  } else if (!animation && idleTimer === null) scheduleIdle();
+  if (entering) pendingEntry = true;
+  if (pendingEntry && performance.now() - lastEntry >= 900 && !animation) playMascot(true);
+  else if (!animation && (pendingEntry || idleTimer === null)) scheduleIdle();
  };
  let sectionObserver;
  let resizeFrame;
@@ -98,6 +105,11 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  };
  observeSections();
  addEventListener('resize', () => {cancelAnimationFrame(resizeFrame);resizeFrame = requestAnimationFrame(observeSections);});
+ addEventListener('scroll', () => {
+  clearIdle();
+  if (animation && !animationIsEntry) { const previous = animation; animation = null; previous.cancel(); }
+  if (!animation) scheduleIdle();
+ }, {passive: true});
  document.addEventListener('visibilitychange', syncMotion);
  reducedMotion.addEventListener('change', syncMotion);
 }

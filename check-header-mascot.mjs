@@ -44,6 +44,7 @@ try{
   Element.prototype.animate=function(frames,options){if(this.matches('.site-header .brand-mark'))window.mascotMotions.push({time:performance.now(),duration:options.duration});return animate.call(this,frames,options);};
  });
  await page.goto(`${origin}/id/`);
+ if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
  await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';document.querySelector('#for-you').scrollIntoView();});
  await page.waitForFunction(()=>window.mascotMotions.some(m=>m.duration===700));
  await page.waitForTimeout(1200);
