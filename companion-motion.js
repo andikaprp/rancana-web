@@ -226,7 +226,7 @@
   }
 
   function setPose(item, pose, originalOnly = false, time = 0, context = {}) {
-    if (item.rig && !originalOnly) {
+    if (item.rig && (!originalOnly || item.character === 'cana')) {
       try {
         // One shared native scene clock drives both body movement and vector
         // articulation. Interpolation also works after deterministic seeks/resizes.

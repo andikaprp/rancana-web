@@ -526,8 +526,10 @@ async function checkReducedMotion(page, scene) {
   }));
   const before = await snapshot();
   for (const actor of before) {
-    assert.equal(actor.src, `/assets/mascots/${actor.character}-cloud.webp`, 'reduced motion restores exact original art');
-    assert.ok(actor.loaded && actor.originalVisible && actor.svgHidden); assert.equal(actor.opacity, '1');
+    assert.equal(actor.src, `/assets/mascots/${actor.character}-cloud.webp`, 'the original fallback stays available');
+    assert.ok(actor.loaded);
+    assert.equal(actor.originalVisible,actor.character==='ranca','Cana keeps her current static face');
+    assert.equal(actor.svgHidden,actor.character==='ranca'); assert.equal(actor.opacity, '1');
     assert.ok(actor.transform === 'none' || actor.transform === 'matrix(1, 0, 0, 1, 0, 0)', 'reduced motion returns to neutral');
   }
   await page.waitForTimeout(170);
@@ -627,7 +629,7 @@ async function checkInitialReducedAndUnsupported(lang) {
             animations: element.getAnimations({subtree: true}).length, transform: getComputedStyle(element).transform};
         }));
         assert.ok(states.every(state => state.state === mode && state.src === state.original && state.animations === 0),
-          `${mode} on initial load must show stable originals without starting a clock`);
+          `${mode} on initial load must show stable artwork without starting a clock`);
         assert.ok(states.every(state => state.transform === 'none' || state.transform === 'matrix(1, 0, 0, 1, 0, 0)'));
       }
       await verifyArtwork(page, {requireRig: false}); assert.deepEqual(errors, []);

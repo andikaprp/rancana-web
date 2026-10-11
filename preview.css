@@ -176,3 +176,31 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .site-header .rig-eye-left path,.site-header .rig-eye-right path,.site-header .rig-smile path{transform-box:fill-box;transform-origin:center}
 @media(max-width:899px){.site-header .brand-mark{width:44px;height:32px}}
 @media(prefers-reduced-motion:reduce){.site-header .ranca-rig *{animation:none!important;transition:none!important}}
+
+/* Keep the copy at reading size; only the decorative app previews scale. */
+.preview .product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.preview .product .card{width:100%;height:auto;zoom:1;overflow:hidden}
+.preview .product .card-head{position:relative;inset:auto;width:auto;padding:32px 28px 16px;text-align:left}
+.preview .product .card-head h3{display:flex;align-items:center;font-size:25px;line-height:1.4}
+.preview .product .card-head p{font-size:18px;line-height:1.6;margin-top:12px}
+.preview .product .feature-icon{width:48px;height:48px;flex-shrink:0}
+.feature-art{position:relative;width:560px;height:288px;zoom:var(--product-zoom,1)}
+.feature-art-canvas{position:absolute;top:-140px;left:0;width:560px;height:428px}
+.benefit-mascot{display:block;width:180px;height:auto;margin:0 0 24px}
+.site-header .brand-mark{position:relative}
+.study-costumes{display:none;position:absolute;inset:-3px 0;transform-style:preserve-3d}
+.study-costumes img{position:absolute;left:-22.5%;top:-22.5%;width:145%;height:145%;object-fit:contain;backface-visibility:hidden}
+.study-costumes .graduate{transform:rotateY(180deg)}
+.site-header .brand-mark[data-ranca-behavior="study"] .ranca-rig{visibility:hidden}
+.site-header .brand-mark[data-ranca-behavior="study"] .study-costumes{display:block;animation:study-flip 8s ease-in-out infinite}
+@keyframes study-flip{0%,40%{transform:rotateY(0deg)}50%,90%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
+@media(max-width:899px){
+ .preview .product-grid{grid-template-columns:minmax(0,1fr)}
+ .preview .product .card-head{padding:24px 20px 12px}
+ .preview .product .card-head h3{font-size:24px}
+ .feature-art{zoom:var(--card-scale,1)}
+ .benefit-mascot{width:150px;margin-bottom:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ .site-header .brand-mark[data-ranca-behavior="study"] .study-costumes{animation:none}
+}

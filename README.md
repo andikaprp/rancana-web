@@ -72,3 +72,19 @@ Motion pauses offscreen, while the document is hidden and on `pagehide`, then re
 `node check-companion-motion.mjs --static` checks original asset hashes without launching a browser; it explicitly does not verify layout, lifecycle or playback. Use `COMPANION_REQUIRE_POSES=1` in the review workflow as the explicit final-art gate: all four actors must use the native raster/vector artwork, with no placeholders, intact original hashes, one visible body, one face and two hands each. Passing behavior tests does not replace visual review of the repaired body regions, expressions and hand shapes. No merge or deployment is authorized by this review.
 
 Current local verification: JavaScript syntax and both original asset hashes pass. Full real-browser assertions, pixel review and new recordings remain pending CI because this sandbox cannot launch Chromium. No visual/playback pass is implied.
+
+## Homepage browser feedback
+
+The audience section header flips between the existing backpack and graduation-cap artwork. The shared section controller selects it; reduced motion holds the backpack, and hidden/offscreen states pause it. Benefits introduce Cana wearing SVG sunglasses over the original artwork. Feature headings, 18px descriptions and 48px icons remain unscaled while decorative previews resize. After editing source HTML, run `python3 build-locales.py`. Run `node check-browser-comments.mjs` for ID/EN responsive and motion checks at 320, 390, 900 and 1341px (screenshots in the system temporary directory).
+
+Cana's closed eye uses a white chevron that points inward (`>` on her left eye) and morphs through the existing continuous eye animation. Ranca keeps the curved closed-eye shape. `check-browser-comments.mjs` verifies the chevron's two arms and open center in both languages and desktop/mobile sizes.
+
+Hero and footer faces and hands follow the school/college artwork: rounded three-finger hands, small brows, open bean-shaped eyes and fuller white smiles. Wrist endpoints follow each hand's transform so the animated arms stay connected. The responsive browser check verifies those joins in hero and footer poses, including transitions and hiding/counting poses.
+
+## Website favicon
+
+The browser tab uses the static green Ranca artwork from the navbar, with SVG, 32px PNG and a 16/32/48/64px ICO fallback. All source and localized pages reference the current favicon URL; the root `favicon.ico` matches the asset fallback. `node check-seo.mjs` verifies the 33 page references, ICO entries and browser decoding. The app's icon and social preview remain separate assets.
+
+Chana's animated face has delicate brows, subtle curved lashes, slightly taller eyes and a smaller rounded smile. Her chevron wink remains. Lashes follow the eye morph and hide beneath covering hands. Reduced motion keeps this same face as a static ready pose; the original image remains the fallback if the renderer cannot load.
+
+Mascot accessories use softly lit 3D artwork, matching the backpack and graduation cap. Chana's benefits illustration uses the compact graduate character as its direct reference, preserving the white-line face and pointing hands, with softly shaded sunglasses in place of the cap. It is one transparent WebP rendered with ImageGen; the responsive browser check verifies loading, transparency and both character/accessory colors.
