@@ -113,3 +113,36 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 /* Original Aurora Green artwork used by the app's AppBackFlipCard (BoxFit.fill). */
 .download>.sheet-1{background:#17513d url("assets/flashcard-aurora-background.webp") center/100% 100% no-repeat;box-shadow:0 2px 8px #2179571a}
 .download>.sheet-border{background:transparent;border-color:#fff;border-width:1px}
+
+/* Selected cloud companions on the existing paper and white footer. */
+.hero-companion{position:absolute;z-index:4;bottom:calc(80px * var(--hero-scale));width:min(290px,20.14vw);pointer-events:none;user-select:none}
+.hero-companion-ranca{left:max(12px,calc((100% - 1440px)/2 + 12px))}
+.hero-companion-cana{right:max(12px,calc((100% - 1440px)/2 + 12px))}
+.hero-companion .hero-mascot{display:block;width:100%;height:auto;pointer-events:none;user-select:none}
+.preview-footer{background:#fff}
+.preview-footer .footer-mascots{display:flex;align-items:center;justify-content:center;gap:4px;width:440px;max-width:90%;margin:40px auto 0;pointer-events:none;user-select:none}
+.preview-footer .footer-mascot{display:block;width:calc(50% - 2px);height:auto;pointer-events:none;user-select:none}
+.preview-footer .footer-mascots+.wordmark{margin-top:24px}
+@media(max-width:899px){
+ .hero-companion{width:clamp(116px,27vw,205px);bottom:20px}
+ .hero-companion-ranca{left:0}.hero-companion-cana{right:0}
+ .preview-footer .footer-mascots{width:310px;margin-top:32px}
+ .preview-footer .footer-mascots+.wordmark{margin-top:20px}
+}
+
+/* Ranca, the existing Rancana lettering, then Cana: one clear footer signature. */
+.preview-footer .footer-brand-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.65fr) minmax(0,1fr);gap:clamp(4px,1vw,16px);width:min(1100px,100%);max-width:100%;margin:40px auto 0;padding-bottom:20px}
+.preview-footer .footer-brand-row .footer-mascot{position:static;width:100%;height:auto}
+.preview-footer .footer-brand-text{position:static;font-family:var(--lora);font-weight:600;font-size:clamp(32px,9.6vw,138px);line-height:1.2;white-space:nowrap;text-align:center;opacity:.32}
+@media(max-width:600px){.preview-footer .footer-brand-row{margin-top:32px;gap:2px}.preview-footer .footer-brand-text{font-size:clamp(28px,9.4vw,56px)}}
+
+/* Compact final card and uncluttered sticky navigation on mobile. */
+@media(max-width:899px){
+ .download{min-height:360px;padding:60px 20px 36px}
+ .download-content{padding:12px 8px}
+ .site-header .nav-download{display:none!important}
+ .site-header .nav-slot{width:auto;min-width:0}
+}
+
+.audience-grid .audience-icon{display:block;width:144px;height:160px;object-fit:contain;margin-bottom:20px}
+@media(max-width:899px){.audience-grid .audience-icon{width:126px;height:140px;margin-bottom:16px}}

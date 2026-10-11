@@ -40,3 +40,11 @@ Do not publish until actual network behavior is reviewed in an authorized previe
 References: [manual pageviews](https://developers.google.com/analytics/devguides/collection/ga4/views), [enhanced measurement](https://support.google.com/analytics/answer/9216061?hl=en), [configuration](https://developers.google.com/analytics/devguides/collection/ga4/reference/config), [basic consent](https://support.google.com/tagmanager/answer/14009635?hl=en), [CSP](https://developers.google.com/tag-platform/security/guides/csp).
 
 GitHub Actions also runs `node check-analytics-real.mjs`: it downloads the real Google SDK but intercepts all collection requests and blocks other external destinations. Its report records bounded event/context fields and parameter names, not browser IDs. A passing run establishes the observed SDK behavior for those scenarios, not live GA ingestion. Screenshots and the SDK report are retained as CI artifacts. No production deployment occurs in the workflow.
+
+## Ranca and Cana website artwork
+
+This draft previews the selected soft-gradient cloud Ranca and Cana, with their original white outlined faces and hands, in the homepage hero and shared white footer. The final download CTA remains text/button only. Production header/footer branding, favicons, wordmark, copy, paper and Aurora sheet artwork are retained.
+
+The transparent cutouts come from the selected master image through background-only alpha cleanup, without identity regeneration. Two lossless WebPs total 345,588 bytes and are reused in both locations. The cutouts sit directly on the existing paper and white footer, without an added wash, colored shadow or glow. White outlined hands remain unchanged and can be faint on white. Images are decorative, dimensioned, pointer-inert and footer copies lazy-load. No mascot animation is added.
+
+`node check-mascots.mjs` checks both languages at 320, 390, 768, 900, 1440 and 1920 px, validates non-overlapping links/CTA hit targets, image budgets, original branding, paper/Aurora sheet artwork and white footer, and saves hero/CTA/footer screenshots under `review-evidence/`. It runs in the existing `npm test` workflow. Review screenshots before publishing.
