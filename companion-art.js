@@ -36,7 +36,7 @@
   if(pose==='found'){if(character==='cana'){s.left=[210,211,-28,.8];s.right=[645,214,0,.8];}else{s.right=[648,248,-5,.85];}}
   if(pose==='search'){s.right=[440,145,175,.7];s.eyes=['open','open'];s.brow=[-16,15];s.mouth=-.5;s.gaze=character==='ranca'?6:-6;}
   if(pose==='peek'||pose==='duck'){s.left=[230,382,0,.72];s.right=[557,382,0,.72];s.eyes=pose==='duck'?['wink','wink']:['open','open'];s.brow=[18,-18];s.mouth=-1;s.gaze=character==='ranca'?5:-5;}
-  if(pose==='cover'){s.left=[292,216,155,.78];s.right=[451,172,190,.78];s.eyes=['wink','wink'];s.mouth=.4;}
+  if(pose==='cover'){s.left=character==='cana'?[325,185,0,1.05]:[310,195,0,1.05];s.right=character==='cana'?[485,233,0,1.05]:[445,152,0,1.05];s.eyes=['wink','wink'];s.mouth=.4;}
   return s;
  }
  async function create(original,character){
@@ -70,6 +70,7 @@
    eyes.forEach((eye,i)=>{
     const aa=eyeSamples[a.eyes[i]],bb=eyeSamples[b.eyes[i]];
     eye.setAttribute('d',aa.map((p,j)=>`${j?'L':'M'}${lerp(p[0],bb[j][0],t).toFixed(2)} ${lerp(p[1],bb[j][1],t).toFixed(2)}`).join(' ')+'Z');
+    eye.setAttribute('opacity',lerp(pose==='cover'?0:1,context.nextPose==='cover'?0:1,t).toFixed(3));
     const [x,y]=centers[i];eye.setAttribute('transform',`translate(${x+gaze} ${y}) rotate(-8) scale(${green ? .86 : -.86} .86)`);
     const brow=lerp(a.brow[i],b.brow[i],t);
     brows[i].setAttribute('transform',`translate(${x+gaze} ${y-43}) rotate(${brow})`);
@@ -86,7 +87,7 @@
     const start=i?[603,326]:[210,328];
     const cx=i?Math.max(625,x+20):Math.min(120,x-20),cy=(start[1]+y)*.5;
     arm.setAttribute('d',`M${start[0]} ${start[1]} Q${cx} ${cy} ${x-8} ${y+8}`);
-    const handShape=p=>(p==='peek'||p==='duck')?'grip':p==='found'&&green&&i===1?'point':'palm';
+    const handShape=p=>(p==='peek'||p==='duck'||p==='cover')?'grip':p==='found'&&green&&i===1?'point':'palm';
     const shapeA=eyeSamples[handShape(pose)],shapeB=eyeSamples[handShape(context.nextPose)];
     hand.setAttribute('d',shapeA.map((p,j)=>`${j?'L':'M'}${lerp(p[0],shapeB[j][0],t).toFixed(2)} ${lerp(p[1],shapeB[j][1],t).toFixed(2)}`).join(' ')+'Z');
     hand.setAttribute('transform',`translate(${x} ${y}) rotate(${angle}) scale(${scale})`);

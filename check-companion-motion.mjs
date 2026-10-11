@@ -686,9 +686,20 @@ async function checkHeaderIsolation(lang, width) {
         assert.equal(snapshot.animations, 0, 'header A/B uses the same reduced-motion rest state');
         assert.deepEqual(errors, []);
         const screenshot = await page.locator('.site-header').screenshot();
+        const icon = await page.locator('.site-header .brand-mark').screenshot();
+        // The header's bounding rectangle includes transparent margins. In the
+        // sticky state these can reveal the deliberately repositioned HERO
+        // companions below it. That is page-backdrop content, not header pixels.
+        // Preserve the real-page capture and compare the actual opaque icon,
+        // then isolate the whole unchanged header against an identical backdrop.
+        // This screenshot-only style never changes production DOM/styles.
+        const isolated = await page.locator('.site-header').screenshot({style:
+          'html, body { background: #fff !important; } body * { visibility: hidden !important; } .site-header, .site-header * { visibility: visible !important; }'});
         const prefix = `header-isolation-${lang}-${width}-${state}-${enabled ? 'enabled' : 'blocked'}`;
         await fs.writeFile(path.join(out, `${prefix}.png`), screenshot);
-        captures.push({snapshot, screenshot, prefix});
+        await fs.writeFile(path.join(out, `${prefix}-icon.png`), icon);
+        await fs.writeFile(path.join(out, `${prefix}-same-backdrop.png`), isolated);
+        captures.push({snapshot, screenshot, icon, isolated, prefix});
       }
       // Save structured diagnostic input as well if a selector/style unexpectedly
       // leaks into the header, before throwing away the comparison context.
@@ -697,10 +708,15 @@ async function checkHeaderIsolation(lang, width) {
       }
       assert.deepEqual(captures[0].snapshot, captures[1].snapshot,
         `${lang}/${width}/${state}: companion code must not change header DOM, computed styles, geometry or scroll`);
-      assert.ok(captures[0].screenshot.equals(captures[1].screenshot),
-        `${lang}/${width}/${state}: same-state header screenshot must be pixel-identical with companion code enabled vs blocked`);
-      report.headerIsolation.push({lang, width, state, sameDOM: true, sameStylesAndBounds: true, identicalPixels: true,
-        sha256: crypto.createHash('sha256').update(captures[0].screenshot).digest('hex')});
+      assert.ok(captures[0].icon.equals(captures[1].icon),
+        `${lang}/${width}/${state}: actual header icon pixels must be identical with companion code enabled vs blocked`);
+      assert.ok(captures[0].isolated.equals(captures[1].isolated),
+        `${lang}/${width}/${state}: same-state header must be pixel-identical on the same backdrop`);
+      report.headerIsolation.push({lang, width, state, sameDOM: true, sameStylesAndBounds: true,
+        identicalIconPixels: true, identicalSameBackdropPixels: true,
+        identicalPageBackdropPixels: captures[0].screenshot.equals(captures[1].screenshot),
+        iconSha256: crypto.createHash('sha256').update(captures[0].icon).digest('hex'),
+        sameBackdropSha256: crypto.createHash('sha256').update(captures[0].isolated).digest('hex')});
     }
   } finally { await Promise.all(pages.map(({page}) => page.close())); }
 }
