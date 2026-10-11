@@ -636,6 +636,51 @@ async function checkInitialReducedAndUnsupported(lang) {
   }
 }
 
+async function checkScrollInterruptionsAndKeyboard(lang, width) {
+  const {page, errors} = await openPage(lang, width);
+  try {
+    for (const scene of Object.keys(scenes)) {
+      await reveal(page, scene); await seek(page, scene, 3700); await resume(page, scene);
+      for (let cycle = 0; cycle < 3; cycle++) {
+        const before = await animationSnapshot(page, scene);
+        // Interrupt a smooth departure with an immediate return, then complete
+        // another departure. This exercises queued observer/animation updates.
+        await page.evaluate(() => document.querySelector('#features').scrollIntoView({behavior: 'smooth', block: 'center'}));
+        await page.waitForTimeout(35);
+        await reveal(page, scene);
+        const returned = await animationSnapshot(page, scene);
+        returned.forEach((animation, i) => assert.ok(animation.time >= before[i].time - 1 && animation.time < before[i].time + 1500,
+          `${lang}/${width}/${scene}: interrupted scroll retains progress`));
+        await page.evaluate(() => document.querySelector('#features').scrollIntoView({behavior: 'instant', block: 'center'}));
+        await page.waitForFunction(which => [...document.querySelectorAll(`[data-companion-scene="${which}"]`)]
+          .every(element => element.dataset.companionMotion === 'paused'), scene);
+        const paused = await animationSnapshot(page, scene), features = await featureSnapshot(page, scene);
+        await page.waitForTimeout(120);
+        assert.deepEqual(await animationSnapshot(page, scene), paused, 'repeated departures freeze both native clocks');
+        assert.deepEqual(await featureSnapshot(page, scene), features, 'repeated departures freeze all features');
+        await reveal(page, scene); await page.waitForTimeout(100);
+        const resumed = await animationSnapshot(page, scene);
+        resumed.forEach((animation, i) => assert.ok(animation.time > paused[i].time + 20 && animation.time < paused[i].time + 1500,
+          'repeated arrivals resume retained progress'));
+      }
+      report.lifecycle.push({label: `${lang}/${width}`, scene, kind: 'interrupted-and-repeated-scroll', cycles: 3, paused: true, resumed: true});
+    }
+    const links = page.locator('.preview-footer a[href]');
+    const count = await links.count();
+    assert.ok(count > 3);
+    await links.first().focus();
+    for (let i = 0; i < count; i++) {
+      assert.ok(await links.nth(i).evaluate(element => document.activeElement === element),
+        `${lang}/${width}: footer links remain in their keyboard order`);
+      if (i + 1 < count) await page.keyboard.press('Tab');
+    }
+    assert.ok(await page.locator(allActors).evaluateAll(elements => elements.every(element =>
+      element.getAttribute('aria-hidden') === 'true' && element.tabIndex < 0)), 'decorative actors never become keyboard stops');
+    report.lifecycle.push({label: `${lang}/${width}`, kind: 'footer-keyboard', links: count});
+    assert.deepEqual(errors, []);
+  } finally { await page.close(); }
+}
+
 async function checkHeaderIsolation(lang, width) {
   // The existing header has its own animation controller. Compare its exact
   // reduced-motion rest state, not screenshots taken at different gesture times.
@@ -721,6 +766,94 @@ async function checkHeaderIsolation(lang, width) {
   } finally { await Promise.all(pages.map(({page}) => page.close())); }
 }
 
+async function checkStoryReadability(page, beat, clip) {
+  const actors = page.locator(actorSelector('hide-seek'));
+  const word = page.locator('.footer-brand-text');
+  const originalWordStyle = await word.getAttribute('style');
+  const actual = await page.screenshot({clip});
+  const result = {};
+  try {
+    await word.evaluate(element => element.style.visibility = 'hidden');
+    const unobscured = await page.screenshot({clip});
+    for (const character of ['ranca', 'cana']) {
+      const actor = page.locator(`${actorSelector('hide-seek')}[data-companion-character="${character}"]`);
+      const face = actor.locator('[data-companion-face]');
+      const originalFaceStyle = await face.getAttribute('style');
+      let withoutFace;
+      try {
+        await face.evaluate(element => element.style.visibility = 'hidden');
+        withoutFace = await page.screenshot({clip});
+      } finally {
+        await face.evaluate((element, style) => style === null ? element.removeAttribute('style') : element.setAttribute('style', style), originalFaceStyle);
+      }
+      result[character] = await page.evaluate(async ({encoded, character}) => {
+        const pictures = await Promise.all(encoded.map(async source => {
+          const image = new Image(); image.src = `data:image/png;base64,${source}`; await image.decode();
+          const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+          const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
+          return context.getImageData(0, 0, image.width, image.height).data;
+        }));
+        const [actual, clear, noFace] = pictures;
+        const difference = (a, b, i) => Math.max(...[0, 1, 2].map(channel => Math.abs(a[i + channel] - b[i + channel])));
+        let facePixels = 0, visibleFacePixels = 0, bodyPixels = 0, occludedBodyPixels = 0;
+        for (let i = 0; i < actual.length; i += 4) {
+          // Removing just this face identifies its painted features, including
+          // antialiasing. Its bounding box alone cannot prove a readable face.
+          if (difference(clear, noFace, i) > 12) {
+            facePixels++;
+            if (difference(actual, clear, i) <= 3) visibleFacePixels++;
+          }
+          const [r, g, b] = clear.slice(i, i + 3);
+          const body = character === 'ranca' ? g > r + 20 && g > b + 8 : r > g + 20 && b > g + 8;
+          if (body) {
+            bodyPixels++;
+            if (difference(actual, clear, i) > 8) occludedBodyPixels++;
+          }
+        }
+        return {facePixels, visibleFacePixels, bodyPixels, occludedBodyPixels,
+          visibleFaceFraction: visibleFacePixels / facePixels,
+          occludedBodyFraction: occludedBodyPixels / bodyPixels};
+      }, {encoded: [actual, unobscured, withoutFace].map(buffer => buffer.toString('base64')), character});
+    }
+  } finally {
+    await word.evaluate((element, style) => style === null ? element.removeAttribute('style') : element.setAttribute('style', style), originalWordStyle);
+  }
+  const readable = character => {
+    assert.ok(result[character].facePixels >= 3, `${beat.name}/${character}: visible facial feature pixels exist`);
+    assert.ok(result[character].visibleFaceFraction >= .95,
+      `${beat.name}/${character}: at least 95% of painted face remains visible above/beside the letters`);
+  };
+  const partiallyHidden = character => {
+    assert.ok(result[character].occludedBodyFraction >= .025 && result[character].occludedBodyFraction < .75,
+      `${beat.name}/${character}: real letters hide a meaningful part of the body while retaining a readable silhouette`);
+  };
+  if (beat.time === 3000 || beat.time === 14500) {
+    const searcher = beat.time === 3000 ? 'ranca' : 'cana';
+    const hider = searcher === 'ranca' ? 'cana' : 'ranca';
+    readable(searcher); readable(hider); partiallyHidden(hider);
+    assert.ok(result[searcher].occludedBodyFraction < .01, `${beat.name}: searcher remains outside the letters`);
+  } else if (beat.time === 6500) {
+    readable('ranca'); readable('cana');
+  } else if (beat.time === 10500) {
+    readable('cana'); partiallyHidden('ranca');
+    const counting = await actors.evaluateAll(elements => {
+      const cana = elements.find(element => element.dataset.companionCharacter === 'cana');
+      const eyes = [...cana.querySelector('[data-companion-face]').children].slice(0, 2);
+      const hands = [...cana.querySelectorAll('[data-companion-hand]')].map(hand => hand.lastElementChild.getBoundingClientRect());
+      return eyes.map(eye => {
+        const box = eye.getBoundingClientRect(), x = box.x + box.width / 2, y = box.y + box.height / 2;
+        return {opacity: +getComputedStyle(eye).opacity,
+          coveredBy: hands.flatMap((hand, i) => x >= hand.left && x <= hand.right && y >= hand.top && y <= hand.bottom ? [i] : [])};
+      });
+    });
+    assert.ok(counting.every(eye => eye.opacity === 0 && eye.coveredBy.length === 1),
+      'counting: each hidden eye is beneath a covering hand, not merely removed');
+    assert.notEqual(counting[0].coveredBy[0], counting[1].coveredBy[0], 'counting: separate hands cover the two eyes');
+    result.counting = counting;
+  }
+  return result;
+}
+
 async function captureFooterStoryBeats() {
   const beats = [
     {time: 3000, name: 'green-search-pink-peek', poses: ['search', 'peek']},
@@ -746,7 +879,8 @@ async function captureFooterStoryBeats() {
         await page.screenshot({path: path.join(out, `${prefix}-detail.png`), clip: region});
         const poses = await page.locator(actorSelector('hide-seek')).evaluateAll(elements =>
           elements.map(element => element.dataset.companionPose));
-        report.storyBeats.push({label, width, time: beat.time, name: beat.name, poses, file: `${prefix}.png`});
+        const readability = await checkStoryReadability(page, beat, region);
+        report.storyBeats.push({label, width, time: beat.time, name: beat.name, poses, readability, file: `${prefix}.png`});
         assert.deepEqual(poses, beat.poses, `${prefix}: requested held story beat`);
       }
       assert.deepEqual(errors, []);
@@ -835,7 +969,10 @@ try {
   for (const lang of ['id', 'en']) {
     await checkResizeContinuity(lang);
     await checkInitialReducedAndUnsupported(lang);
-    for (const width of [393, 1440]) await checkFailures(lang, width);
+    for (const width of [393, 1440]) {
+      await checkFailures(lang, width);
+      await checkScrollInterruptionsAndKeyboard(lang, width);
+    }
   }
   report.complete = true;
   report.nativeArtReady = report.responsive.every(entry => entry.artwork.every(actor => actor.art === 'native'));
