@@ -36,6 +36,23 @@ try {
    }));
    assert.ok(wink.height>60&&wink.tip&&wink.upper&&wink.lower&&!wink.middle,'Cana wink has two angled arms and an open center');
    await page.locator('.hero-companion-cana').screenshot({path:`${os.tmpdir()}/rancana-cana-wink-${lang}-${width}.png`});
+   for (const [selector,times] of [['.hero-wrap',[0,1100,1400,4200]],['.footer-brand-row',[0,3000,6000,10000,14000]]]) {
+    const scene=page.locator(selector);
+    await scene.scrollIntoViewIfNeeded();
+    await page.waitForFunction(selector=>document.querySelector(selector).querySelectorAll('.companion-art').length===2,selector);
+    for (const time of times) {
+     await scene.evaluate((root,time)=>root.dispatchEvent(new CustomEvent('companion:seek',{detail:{time,paused:true}})),time);
+     const wrists=await scene.locator('[data-companion-hand]').evaluateAll(groups=>groups.map(group=>{
+      const [arm,hand]=group.children;
+      const tip=arm.getPointAtLength(arm.getTotalLength()).matrixTransform(arm.getCTM());
+      const wrist=new DOMPoint(0,24).matrixTransform(hand.getCTM());
+      return Math.hypot(tip.x-wrist.x,tip.y-wrist.y);
+     }));
+     assert.equal(wrists.length,4);
+     assert.ok(wrists.every(gap=>Number.isFinite(gap)&&gap<.1),'all four wrists stay joined to their arms through each pose');
+    }
+    await scene.evaluate(root=>root.dispatchEvent(new CustomEvent('companion:resume')));
+   }
    await page.locator('.hero-wrap').evaluate(root=>root.dispatchEvent(new CustomEvent('companion:resume')));
    await page.locator('#features').scrollIntoViewIfNeeded();
    await page.waitForTimeout(300);
@@ -63,5 +80,5 @@ try {
   }
   await page.close();
  }
- console.log('PASS: ID/EN at 320, 390, 900 and 1341px; chevron wink, readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
+ console.log('PASS: ID/EN at 320, 390, 900 and 1341px; rounded connected hands, chevron wink, readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
 } finally {await browser.close();server.close();}

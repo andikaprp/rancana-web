@@ -8,12 +8,12 @@
  const ns='http://www.w3.org/2000/svg';
  const make=(tag,attrs={},parent)=>{const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);parent?.append(e);return e;};
  const line={fill:'none',stroke:'#fff','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round'};
- const palm='M-22 10 Q-10 29 18 17 L51 4 Q61 0 57 -7 Q54 -13 44 -8 L16 1 Q1 1 -5 -10 L-14 -24 Q-21 -33 -28 -27 Q-33 -22 -25 -12 L-18 0Z';
- const eyePaths={open:'M-4 -24 C-22 -29 -30 -10 -27 9 C-24 30 -7 38 9 28 C16 23 20 13 19 5 C8 14 -3 6 -3 -4 C-3 -14 5 -19 13 -12 C10 -19 4 -23 -4 -24Z',happy:'M-32 11 C-31 -22 16 -30 35 0 L23 9 C9 -10 -14 -5 -18 14Z',wink:'M-32 -2 C-12 10 12 8 29 -3 L32 10 C9 25 -14 23 -34 11Z',canaWink:'M22 -24 L-14 0 L22 24 L14 34 L-32 0 L14 -34Z'};
+ const palm='M-14 20 C-25 12 -25 0 -18 -9 L-8 -24 C-2 -32 8 -26 3 -18 L-2 -8 L23 -20 C34 -25 40 -13 29 -8 L13 -1 L30 -7 C42 -11 47 2 35 7 L17 13 L29 10 C41 7 46 20 34 24 L15 31 C2 36 -8 32 -14 20Z';
+ const eyePaths={open:'M-4 -24 C-22 -29 -30 -10 -27 9 C-24 30 -7 38 9 28 C16 23 20 13 19 5 C8 14 -3 6 -3 -4 C-3 -14 5 -19 13 -12 C10 -19 4 -23 -4 -24Z',wink:'M-32 -2 C-12 10 12 8 29 -3 L32 10 C9 25 -14 23 -34 11Z',canaWink:'M22 -24 L-14 0 L22 24 L14 34 L-32 0 L14 -34Z'};
  const lerp=(a,b,t)=>a+(b-a)*t;
  const smooth=t=>t*t*(3-2*t);
- const grip='M-20 -8 C-28 -14 -33 -4 -27 7 L-18 21 L-16 38 Q-14 48 -8 39 L-7 15 L-3 42 Q1 51 6 41 L7 14 L13 38 Q18 45 22 35 L22 7 Q20 -9 8 -12Z';
- const point='M-22 12 Q-13 26 9 20 L21 12 Q27 6 20 1 L9 2 L56 -1 Q67 -2 65 -10 Q64 -16 54 -15 L3 -12 L-9 -24 Q-16 -33 -22 -26 Q-28 -21 -21 -12 L-22 0Z';
+ const grip='M-16 24 C-25 15 -25 -5 -15 -15 C-5 -25 13 -24 24 -16 C33 -10 30 0 20 -3 L8 -8 L23 1 C33 7 27 17 18 12 L5 6 L18 17 C27 25 18 34 10 27 L-1 18 C2 33 -8 38 -16 24Z';
+ const point='M-14 20 C-24 12 -25 0 -18 -9 L-8 -24 C-2 -32 8 -26 3 -18 L-2 -8 L43 -16 C55 -18 58 -5 46 -2 L15 5 L29 3 C41 1 44 14 32 17 L17 20 C25 28 17 36 7 32 C-3 33 -10 28 -14 20Z';
  const eyeSamples={};
  function samples(svg){
   if(Object.keys(eyeSamples).length)return;
@@ -28,13 +28,13 @@
    eyeSamples[name]=points.slice(start).concat(points.slice(0,start));p.remove();
   }
  }
- const reach=a=>({left:[220,408,85,.72],right:[632+30*a,410-162*a,85-97*a,.85],eyes:['open','open'],brow:[0,0],mouth:0,gaze:0});
+ const reach=a=>({left:[224,376,-8,.92],right:[600+14*a,378-110*a,12-35*a,.92],eyes:['open','open'],brow:[0,0],mouth:0,gaze:0});
  function state(character,pose){
   const s=reach(({lift1:.33,lift2:.67,present:1,settle1:.67,settle2:.33,found:1})[pose]||0);
   if(character==='cana')s.eyes=['wink','open'];
-  if(pose==='present'||pose==='found'){s.eyes=character==='cana'?['wink','happy']:['happy','happy'];s.mouth=1;}
+  if(pose==='present'||pose==='found'){s.eyes=character==='cana'?['wink','open']:['open','open'];s.mouth=1;}
   if(pose==='found'){if(character==='cana'){s.left=[210,211,-28,.8];s.right=[645,214,0,.8];}else{s.right=[648,248,-5,.85];}}
-  if(pose==='search'){s.right=[440,145,175,.7];s.eyes=['open','open'];s.brow=[-16,15];s.mouth=-.5;s.gaze=character==='ranca'?6:-6;}
+  if(pose==='search'){s.right=[545,150,-70,.9];s.eyes=['open','open'];s.brow=[-16,15];s.mouth=-.5;s.gaze=character==='ranca'?6:-6;}
   if(pose==='peek'||pose==='duck'){s.left=[230,382,0,.72];s.right=[557,382,0,.72];s.eyes=pose==='duck'?['wink','wink']:['open','open'];s.brow=[18,-18];s.mouth=-1;s.gaze=character==='ranca'?5:-5;}
   if(pose==='cover'){s.left=character==='cana'?[325,185,0,1.05]:[310,195,0,1.05];s.right=character==='cana'?[485,233,0,1.05]:[445,152,0,1.05];s.eyes=['wink','wink'];s.mouth=.4;}
   return s;
@@ -54,7 +54,7 @@
   const centers=green?[[321,222],[454,178]]:[[260,254],[420,207]];
   const eyes=centers.map(()=>make('path',{fill:'#fff'},face));
   const brows=centers.map(()=>make('path',{...line,'stroke-width':9,d:'M-23 0 Q0 -13 23 0'},face));
-  const mouth=make('path',{...line,'stroke-width':13},face);
+  const mouth=make('path',{fill:'#fff'},face);
   const hands=['left','right'].map(side=>{
    const g=make('g',{'data-companion-hand':side,'data-art-part':'hand-'+side,transform:green?'':'translate(745 0) scale(-1 1)'},svg);
    const arm=make('path',line,g),hand=make('path',{...line,'stroke-width':10,d:palm},g);return {g,arm,hand};
@@ -75,23 +75,25 @@
     const [x,y]=centers[i];eye.setAttribute('transform',`translate(${x+gaze} ${y}) rotate(-8) scale(${green ? .86 : -.86} .86)`);
     const brow=lerp(a.brow[i],b.brow[i],t);
     brows[i].setAttribute('transform',`translate(${x+gaze} ${y-43}) rotate(${brow})`);
-    // Only searching/peeking has eyebrows; no extra facial markings at rest.
-    const ba=(pose==='search'||pose==='peek')?1:0,bbrow=(context.nextPose==='search'||context.nextPose==='peek')?1:0;
+    // Small rounded brows retain the school/college characters' playful expression.
+    const ba=pose==='cover'?0:1,bbrow=context.nextPose==='cover'?0:1;
     brows[i].setAttribute('opacity',lerp(ba,bbrow,t).toFixed(3));
    });
    const mood=lerp(a.mouth,b.mouth,t),mx=green?390:351,my=green?282:307;
-   const half=lerp(15,40,(mood+1)/2),depth=lerp(5,33,(mood+1)/2);
-   mouth.setAttribute('d',`M${-half} 0 Q0 ${depth} ${half} -5`);
+   const half=lerp(18,32,(mood+1)/2),depth=lerp(12,42,(mood+1)/2);
+   mouth.setAttribute('d',`M${-half} -3 Q0 8 ${half} -10 C${half} ${depth*.7} ${-half*.4} ${depth} ${-half} 12 Q${-half-3} 5 ${-half} -3Z`);
    mouth.setAttribute('transform',`translate(${mx+gaze*.5} ${my}) rotate(-14)`);
    hands.forEach(({arm,hand},i)=>{
     const key=i?'right':'left',v=a[key].map((q,j)=>lerp(q,b[key][j],t)),[x,y,angle,scale]=v;
     const start=i?[603,326]:[210,328];
-    const cx=i?Math.max(625,x+20):Math.min(120,x-20),cy=(start[1]+y)*.5;
-    arm.setAttribute('d',`M${start[0]} ${start[1]} Q${cx} ${cy} ${x-8} ${y+8}`);
+    const radians=angle*Math.PI/180;
+    const wrist=[x-24*Math.sin(radians)*scale,y+24*Math.cos(radians)*scale];
+    const cx=i?Math.max(650,x+50):Math.min(145,x-50),cy=(start[1]+wrist[1])*.5+45;
+    arm.setAttribute('d',`M${start[0]} ${start[1]} Q${cx} ${cy} ${wrist[0]} ${wrist[1]}`);
     const handShape=p=>(p==='peek'||p==='duck'||p==='cover')?'grip':p==='found'&&green&&i===1?'point':'palm';
     const shapeA=eyeSamples[handShape(pose)],shapeB=eyeSamples[handShape(context.nextPose)];
     hand.setAttribute('d',shapeA.map((p,j)=>`${j?'L':'M'}${lerp(p[0],shapeB[j][0],t).toFixed(2)} ${lerp(p[1],shapeB[j][1],t).toFixed(2)}`).join(' ')+'Z');
-    hand.setAttribute('transform',`translate(${x} ${y}) rotate(${angle}) scale(${scale})`);
+    hand.setAttribute('transform',`translate(${x} ${y}) rotate(${angle}) scale(${i?-scale:scale} ${scale})`);
    });
    wrap.dataset.companionRenderedPose=pose;
   }
