@@ -453,17 +453,38 @@ try{
   const page=await browser.newPage({viewport,reducedMotion:'no-preference',recordVideo:{dir:path.join(root,'review-evidence'),size:viewport}});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
-  await page.goto(`${origin}/id/#cta`);await page.evaluate(()=>document.fonts.ready);
+  const waitForPreviewBatch=async(key,kind,after)=>{
+   try{
+    await page.waitForFunction(({key,kind,after})=>document.querySelector('.brand-mark').dataset.rancaBehavior===key&&window.mascotMotions.some(m=>m.key===key&&m.kind===kind&&m.time>after),{key,kind,after},{timeout:12000});
+   }catch(error){
+    const diagnostic=await page.evaluate(()=>{
+     const mark=document.querySelector('.brand-mark');
+     return {time:performance.now(),scrollY,hidden:document.hidden,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,
+      activeBehavior:mark?.dataset.rancaBehavior,activeKind:mark?.dataset.rancaMotion,
+      animations:mark?.getAnimations({subtree:true}).map(animation=>({playState:animation.playState,currentTime:animation.currentTime})),
+      sections:['.hero-wrap','#cta','#faq'].map(selector=>{const element=document.querySelector(selector),rect=element.getBoundingClientRect();return {selector,top:rect.top,bottom:rect.bottom,behavior:element.dataset.rancaBehavior};}),
+      recentMotions:window.mascotMotions.slice(-24).map(({key,kind,target,time,finished,cancelled})=>({key,kind,target,time,finished,cancelled}))};
+    });
+    throw new Error(`Focused ${width}px preview timed out waiting for ${key}/${kind} after ${after}ms: ${JSON.stringify(diagnostic)}`,{cause:error});
+   }
+  };
+  // Start at a normal page load and let both observers establish the welcome
+  // entry. A hash load can scroll before the header/section observers agree.
+  await page.goto(`${origin}/id/`);await page.evaluate(()=>document.fonts.ready);
   if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
   await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';});
+  await waitForPreviewBatch('welcome','entry',-1);
+  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  assert.ok((await firstBatch(page,'welcome','entry')).every(m=>m.finished&&!m.cancelled),'the focused preview starts after a complete natural welcome entry');
+  await assertNeutral(page,`${width}px focused preview ready after welcome`);
   for(const [selector,key] of [['#cta','download'],['#faq','question']]){
+   const after=await page.evaluate(()=>performance.now());
    await scrollToSection(page,selector);
-   await page.waitForFunction(key=>document.querySelector('.brand-mark').dataset.rancaBehavior===key,key);
    for(const kind of ['entry','idle']){
-    await page.waitForFunction(({key,kind})=>window.mascotMotions.some(m=>m.key===key&&m.kind===kind),{key,kind},{timeout:10000});
-    const motions=await firstBatch(page,key,kind);
+    await waitForPreviewBatch(key,kind,after);
+    const motions=await firstBatch(page,key,kind,after);
     await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
-    const finished=await firstBatch(page,key,kind);
+    const finished=await firstBatch(page,key,kind,after);
     assert.ok(finished.every(m=>m.finished&&!m.cancelled),`${key} ${kind}: the focused preview records the complete gesture`);
     await assertNeutral(page,`${key} ${kind} focused preview`);
     const boundaries=await assertFrameBoundaries(page,width,key,kind,motions);
