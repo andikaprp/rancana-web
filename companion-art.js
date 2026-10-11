@@ -17,7 +17,13 @@
   if(Object.keys(eyeSamples).length)return;
   for(const [name,d] of Object.entries(eyePaths)){
    const p=make('path',{d,visibility:'hidden'},svg),len=p.getTotalLength();
-   eyeSamples[name]=Array.from({length:64},(_,i)=>{const q=p.getPointAtLength(len*i/64);return[q.x,q.y];});p.remove();
+   let points=Array.from({length:64},(_,i)=>{const q=p.getPointAtLength(len*i/64);return[q.x,q.y];});
+   // Match winding and topmost start points before morphing closed contours.
+   // Otherwise a bean-to-arc interpolation can twist through itself midway.
+   const area=points.reduce((sum,q,i)=>{const n=points[(i+1)%points.length];return sum+q[0]*n[1]-n[0]*q[1];},0);
+   if(area<0)points.reverse();
+   const start=points.reduce((best,q,i)=>q[1]<points[best][1]?i:best,0);
+   eyeSamples[name]=points.slice(start).concat(points.slice(0,start));p.remove();
   }
  }
  const reach=a=>({left:[220,408,85,.72],right:[632+30*a,410-162*a,85-97*a,.85],eyes:['open','open'],brow:[0,0],mouth:0,gaze:0});
