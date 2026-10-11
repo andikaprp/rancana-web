@@ -25,6 +25,18 @@ try {
    await page.goto(`${origin}/${lang}/`);
    const reject = page.locator('[data-consent-reject]');
    if (await reject.isVisible()) await reject.click();
+   await page.waitForFunction(()=>document.querySelector('.hero-companion-cana .companion-art'));
+   await page.locator('.hero-wrap').evaluate(root=>root.dispatchEvent(new CustomEvent('companion:seek',{detail:{time:0,paused:true}})));
+   const wink = await page.locator('.hero-companion-cana [data-companion-face] > path').first().evaluate(eye=>({
+    height:eye.getBBox().height,
+    tip:eye.isPointInFill(new DOMPoint(-24,0)),
+    upper:eye.isPointInFill(new DOMPoint(7,-23)),
+    lower:eye.isPointInFill(new DOMPoint(7,23)),
+    middle:eye.isPointInFill(new DOMPoint(7,0))
+   }));
+   assert.ok(wink.height>60&&wink.tip&&wink.upper&&wink.lower&&!wink.middle,'Cana wink has two angled arms and an open center');
+   await page.locator('.hero-companion-cana').screenshot({path:`${os.tmpdir()}/rancana-cana-wink-${lang}-${width}.png`});
+   await page.locator('.hero-wrap').evaluate(root=>root.dispatchEvent(new CustomEvent('companion:resume')));
    await page.locator('#features').scrollIntoViewIfNeeded();
    await page.waitForTimeout(300);
    const sizes = await page.locator('.card-head').evaluateAll(heads=>heads.map(head=>({text:parseFloat(getComputedStyle(head.querySelector('p')).fontSize),icon:head.querySelector('img').getBoundingClientRect().width,head:head.getBoundingClientRect().bottom,art:head.nextElementSibling.getBoundingClientRect().top})));
@@ -51,5 +63,5 @@ try {
   }
   await page.close();
  }
- console.log('PASS: ID/EN at 320, 390, 900 and 1341px; readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
+ console.log('PASS: ID/EN at 320, 390, 900 and 1341px; chevron wink, readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
 } finally {await browser.close();server.close();}

@@ -9,7 +9,7 @@
  const make=(tag,attrs={},parent)=>{const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);parent?.append(e);return e;};
  const line={fill:'none',stroke:'#fff','stroke-width':12,'stroke-linecap':'round','stroke-linejoin':'round'};
  const palm='M-22 10 Q-10 29 18 17 L51 4 Q61 0 57 -7 Q54 -13 44 -8 L16 1 Q1 1 -5 -10 L-14 -24 Q-21 -33 -28 -27 Q-33 -22 -25 -12 L-18 0Z';
- const eyePaths={open:'M-4 -24 C-22 -29 -30 -10 -27 9 C-24 30 -7 38 9 28 C16 23 20 13 19 5 C8 14 -3 6 -3 -4 C-3 -14 5 -19 13 -12 C10 -19 4 -23 -4 -24Z',happy:'M-32 11 C-31 -22 16 -30 35 0 L23 9 C9 -10 -14 -5 -18 14Z',wink:'M-32 -2 C-12 10 12 8 29 -3 L32 10 C9 25 -14 23 -34 11Z'};
+ const eyePaths={open:'M-4 -24 C-22 -29 -30 -10 -27 9 C-24 30 -7 38 9 28 C16 23 20 13 19 5 C8 14 -3 6 -3 -4 C-3 -14 5 -19 13 -12 C10 -19 4 -23 -4 -24Z',happy:'M-32 11 C-31 -22 16 -30 35 0 L23 9 C9 -10 -14 -5 -18 14Z',wink:'M-32 -2 C-12 10 12 8 29 -3 L32 10 C9 25 -14 23 -34 11Z',canaWink:'M22 -24 L-14 0 L22 24 L14 34 L-32 0 L14 -34Z'};
  const lerp=(a,b,t)=>a+(b-a)*t;
  const smooth=t=>t*t*(3-2*t);
  const grip='M-20 -8 C-28 -14 -33 -4 -27 7 L-18 21 L-16 38 Q-14 48 -8 39 L-7 15 L-3 42 Q1 51 6 41 L7 14 L13 38 Q18 45 22 35 L22 7 Q20 -9 8 -12Z';
@@ -67,8 +67,9 @@
    const gaze=lerp(a.gaze,b.gaze,t);
    // Both eye silhouettes are single white paths, including a Pelajar-style open
    // bean with body-colored cutout. Geometry morphs instead of duplicate overlays.
+   const eyeShape=name=>green||name!=='wink'?name:'canaWink';
    eyes.forEach((eye,i)=>{
-    const aa=eyeSamples[a.eyes[i]],bb=eyeSamples[b.eyes[i]];
+    const aa=eyeSamples[eyeShape(a.eyes[i])],bb=eyeSamples[eyeShape(b.eyes[i])];
     eye.setAttribute('d',aa.map((p,j)=>`${j?'L':'M'}${lerp(p[0],bb[j][0],t).toFixed(2)} ${lerp(p[1],bb[j][1],t).toFixed(2)}`).join(' ')+'Z');
     eye.setAttribute('opacity',lerp(pose==='cover'?0:1,context.nextPose==='cover'?0:1,t).toFixed(3));
     const [x,y]=centers[i];eye.setAttribute('transform',`translate(${x+gaze} ${y}) rotate(-8) scale(${green ? .86 : -.86} .86)`);
