@@ -58,3 +58,11 @@ The mascot now responds to each section’s meaning. Homepage: welcome greeting 
 `check-header-mascot.mjs` covers every locale page at 320, 390 and 1440 px, full-image fit/loading, section entry, idle pauses, layout stability, reduced motion and visibility pause. Header screenshots join the existing CI artifacts.
 
 `check-header-context.mjs` verifies every homepage profile, distinct entry/idle sequences, repeat entry, mascot-only reduced motion, and supporting-page mappings in both languages. Its actual browser recording shows the clean interface with no preview labels. Tests assert the absence of added icons/status text and verify that the wordmark stays still.
+
+## Hero presenters and footer dance (review prototype)
+
+`companion-motion.js` adds independent body, arm, face and smile tracks to the large hero pair and footer pair. Header motion is untouched. Hero characters take turns offering the central app showcase; footer characters exchange short dance phrases, followed by quiet rests. Motion pauses offscreen and while the document is hidden, and cancels under reduced motion. Slots, controls, copy, colors and the stationary footer wordmark retain their layout.
+
+Artwork approval is pending: Ranca reuses the approved articulated header SVG at the larger sizes; Cana is a new code-native vector adaptation of the selected pink cloud (silhouette, rim, wink, smile and outlined hands), not the identical textured WebP. Existing original images remain in the document as no-script fallbacks. Review the real-page desktop/mobile recordings before approving these larger vector versions. This PR does not authorize production deployment.
+
+`node check-companion-motion.mjs` validates ID/EN at 320/393/768/900/1440/1920 px, actual painted animation bounds against controls/wordmark, reduced motion, visibility pause and creates natural-speed page recordings. The separate companion review CI job uploads its report and video artifacts.

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="745" height="528" viewBox="0 0 745 528" class="companion-rig" aria-hidden="true" focusable="false">
+<defs>
+<path id="cana-cloud" d="M256 109 C300 49 357 16 420 18 C516 15 599 93 589 199 C663 205 722 257 719 330 C719 428 658 490 560 494 C518 499 480 488 449 476 C381 525 281 525 224 455 C158 477 88 453 48 401 C-9 326 11 239 45 184 C96 113 176 92 256 109Z"/>
+<clipPath id="cana-clip"><use href="#cana-cloud"/></clipPath>
+<radialGradient id="cana-pink" cx="45%" cy="40%" r="75%"><stop offset="0" stop-color="#ff3884"/><stop offset=".55" stop-color="#fc438e"/><stop offset="1" stop-color="#f75ba0"/></radialGradient>
+<filter id="cana-rim" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="17"/></filter>
+<linearGradient id="cana-fade" x1="0" y1="0" x2=".35" y2="1"><stop stop-color="white"/><stop offset=".4" stop-color="white" stop-opacity=".5"/><stop offset=".82" stop-color="white" stop-opacity=".08"/></linearGradient>
+<mask id="cana-light"><rect width="745" height="528" fill="url(#cana-fade)"/></mask>
+</defs>
+<g class="rig-body">
+<use href="#cana-cloud" fill="url(#cana-pink)"/>
+<g clip-path="url(#cana-clip)"><use href="#cana-cloud" fill="none" stroke="#ffb6de" stroke-width="34" filter="url(#cana-rim)"/><g mask="url(#cana-light)"><use href="#cana-cloud" fill="none" stroke="#fff8ff" stroke-width="27" filter="url(#cana-rim)"/></g></g>
+<g class="rig-face" fill="none" stroke="white" stroke-width="17" stroke-linecap="round" stroke-linejoin="round">
+<g class="rig-eye-left"><path d="M225 256 Q261 259 300 242"/><path fill="white" stroke="none" d="M240 257 Q243 289 270 292 Q291 290 292 253Z"/></g>
+<g class="rig-eye-right"><path d="M383 213 C400 164 432 160 456 188"/></g>
+<g class="rig-smile"><path d="M337 309 C378 314 414 287 426 254"/></g>
+</g>
+<g class="rig-hands" fill="none" stroke="white" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round">
+<g class="rig-hand-left"><path d="M126 326 C103 363 80 410 70 449 C66 463 68 476 77 480 M119 429 Q143 447 134 466 M77 449 L81 477 Q84 490 91 477 L93 453 M92 473 Q97 489 104 476 L107 454 M106 474 Q113 488 120 474 L123 451"/></g>
+<g class="rig-hand-right"><path d="M659 236 C698 250 727 275 718 302 C708 330 688 347 674 366 C667 382 656 394 646 397 C637 400 635 390 641 385 L655 370 M651 329 Q626 322 620 334 Q615 342 632 343 L616 356 Q608 366 618 370 L636 358 M620 371 Q615 381 626 383 L645 368 M630 381 Q625 391 637 391 L650 379"/></g>
+</g></g></svg>

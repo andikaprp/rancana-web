@@ -1,0 +1,13 @@
+/* Articulated review adaptation. Layout slots and original fallback art stay intact. */
+.companion-stage{position:relative;display:block;width:100%;aspect-ratio:741/532;pointer-events:none;user-select:none}
+.companion-stage[data-character="cana"]{aspect-ratio:745/528}
+.companion-stage>img{display:block;width:100%;height:100%;object-fit:contain}
+.companion-stage>.companion-rig{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.companion-stage.is-rigged>img{visibility:hidden}
+.companion-stage .rig-body{transform-box:view-box;transform-origin:50% 62%}
+.companion-stage .rig-face{transform-box:view-box;transform-origin:50% 46%}
+.companion-stage .rig-hand-left{transform-box:view-box;transform-origin:17% 61%}
+.companion-stage .rig-hand-right{transform-box:view-box;transform-origin:84% 61%}
+.companion-stage .rig-eye-left,.companion-stage .rig-eye-right,.companion-stage .rig-smile{transform-box:fill-box;transform-origin:center}
+.preview-footer .footer-brand-row>.companion-stage{min-width:0;max-width:100%}
+@media(prefers-reduced-motion:reduce){.companion-stage *{animation:none!important;transition:none!important}}

@@ -1,0 +1,26 @@
+name: Companion motion review
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  companion-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-companion-motion.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: companion-motion-review
+          path: review-evidence/companion-motion/
