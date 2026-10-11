@@ -7,7 +7,7 @@ permissions:
 jobs:
   companion-review:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,6 +19,8 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: node check-companion-motion.mjs
+        env:
+          COMPANION_REQUIRE_POSES: "1"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
