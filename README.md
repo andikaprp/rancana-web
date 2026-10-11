@@ -87,4 +87,4 @@ The browser tab uses the static green Ranca artwork from the navbar, with SVG, 3
 
 Chana's animated face has delicate brows, subtle curved lashes, slightly taller eyes and a smaller rounded smile. Her chevron wink remains. Lashes follow the eye morph and hide beneath covering hands. Reduced motion keeps this same face as a static ready pose; the original image remains the fallback if the renderer cannot load.
 
-Mascot accessories use softly lit 3D artwork, matching the backpack and graduation cap. Chana's benefits sunglasses are a transparent WebP rendered with ImageGen, with rounded frame depth and lens reflections; the SVG adds a small contact shadow. The responsive browser check verifies loading, transparency and the shadow.
+Mascot accessories use softly lit 3D artwork, matching the backpack and graduation cap. Chana's benefits illustration uses the compact graduate character as its direct reference, preserving the white-line face and pointing hands, with softly shaded sunglasses in place of the cap. It is one transparent WebP rendered with ImageGen; the responsive browser check verifies loading, transparency and both character/accessory colors.

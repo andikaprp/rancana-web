@@ -68,14 +68,21 @@ try {
    for (const size of sizes) {assert.ok(size.text>=18);assert.ok(size.icon>=47);assert.ok(size.art>=size.head-1);}
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
    await page.locator('#features').screenshot({style:'.site-header{visibility:hidden}',path:`${os.tmpdir()}/rancana-features-${lang}-${width}.png`});
-   const glasses=await page.locator('.benefit-sunglasses').evaluate(async element=>{
-    const image=new Image();image.src=element.href.baseVal;await image.decode();
+   const mascot=await page.locator('.benefit-mascot').evaluate(async element=>{
+    const image=new Image();image.src=element.currentSrc||element.src;await image.decode();
     const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
     const context=canvas.getContext('2d');context.drawImage(image,0,0);
-    return {width:image.width,cornerAlpha:context.getImageData(0,0,1,1).data[3],shadow:getComputedStyle(element).filter};
+    const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
+    let pink=0,green=0;
+    for(let i=0;i<pixels.length;i+=4){
+     if(pixels[i+3]<64)continue;
+     if(pixels[i]>pixels[i+1]*1.25&&pixels[i+2]>pixels[i+1]*1.1)pink++;
+     if(pixels[i+1]>pixels[i]*1.2&&pixels[i+1]>pixels[i+2]*.8)green++;
+    }
+    return {width:image.width,cornerAlpha:pixels[3],pink,green};
    });
-   assert.equal(glasses.width,640);assert.equal(glasses.cornerAlpha,0,'3D accessory keeps a transparent background');
-   assert.ok(glasses.shadow.includes('drop-shadow'),'glasses have a contact shadow');
+   assert.equal(mascot.width,640);assert.equal(mascot.cornerAlpha,0,'mascot keeps a transparent background');
+   assert.ok(mascot.pink>10000&&mascot.green>100,'one finished asset includes both Chana and the 3D glasses');
    await page.locator('.benefit-mascot').screenshot({path:`${os.tmpdir()}/rancana-chana-3d-glasses-${lang}-${width}.png`});
    await page.locator('#benefits').screenshot({style:'.site-header{visibility:hidden}',path:`${os.tmpdir()}/rancana-benefits-${lang}-${width}.png`});
    await page.evaluate(()=>scrollTo(0,document.querySelector('#for-you').offsetTop-innerHeight*.2));
@@ -101,5 +108,5 @@ try {
   }
   await page.close();
  }
- console.log('PASS: ID/EN at 320, 390, 900 and 1341px; 3D sunglasses with transparency/shadow, soft Chana face and static reduced motion, rounded connected hands, chevron wink, readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
+ console.log('PASS: ID/EN at 320, 390, 900 and 1341px; reference-aligned 3D sunglasses mascot, soft Chana face and static reduced motion, rounded connected hands, chevron wink, readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
 } finally {await browser.close();server.close();}
