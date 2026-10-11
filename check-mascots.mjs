@@ -51,7 +51,9 @@ try{
     whiteFooter:getComputedStyle(document.querySelector('.preview-footer')).backgroundColor==='rgb(255, 255, 255)',
     artwork:getComputedStyle(document.querySelector('.sheet-1')).backgroundImage.includes('flashcard-aurora-background.webp'),
     whiteRear:['.sheet-2','.sheet-3'].every(s=>getComputedStyle(document.querySelector(s)).backgroundColor==='rgb(255, 255, 255)'),
-    headerBrand:getComputedStyle(document.querySelector('.brand-mark')).backgroundImage.includes('mascots/ranca-cloud.webp'),
+    headerBrand:document.querySelector('.site-header .brand-mark[data-ranca-rig="true"] > svg.ranca-rig')?.getAttribute('viewBox')==='0 0 741 532'&&getComputedStyle(document.querySelector('.brand-mark')).backgroundImage==='none',
+    headerHeight:document.querySelector('.site-header .brand').getBoundingClientRect().height,
+    headerMotion:document.querySelector('.site-header .brand-mark').getAnimations({subtree:true}).length,
     footerBrand:document.querySelector('.footer-brand-row').children[1].textContent==='Rancana'&&document.querySelectorAll('.preview-footer .wordmark-mark,.preview-footer .wordmark-glow').length===0,
     companionsAboveFade:parseInt(getComputedStyle(document.querySelector('.hero-companion')).zIndex)>parseInt(getComputedStyle(document.querySelector('.band-hero')).zIndex),
     paper:document.querySelector('.paper-hero').src.includes('paper.webp'),
@@ -59,7 +61,7 @@ try{
     noImageFilter:mascots.every(el=>getComputedStyle(el).filter==='none'),
    };
   });
-  assert.deepEqual(state,{overflow:false,loaded:true,interactive:false,overlaps:[],whiteFooter:true,artwork:true,whiteRear:true,headerBrand:true,footerBrand:true,companionsAboveFade:true,paper:true,noAddedBackdrop:true,noImageFilter:true},`${lang} at ${width}`);
+  assert.deepEqual(state,{overflow:false,loaded:true,interactive:false,overlaps:[],whiteFooter:true,artwork:true,whiteRear:true,headerBrand:true,headerHeight:48,headerMotion:0,footerBrand:true,companionsAboveFade:true,paper:true,noAddedBackdrop:true,noImageFilter:true},`${lang} at ${width}`);
   for(const selector of ['.hero-ctas .play-cta','.download-content .play-cta']){
    const a=page.locator(selector);await a.scrollIntoViewIfNeeded();
    assert.equal(await a.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),true,'CTA hit target');

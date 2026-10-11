@@ -48,6 +48,9 @@ jobs:
           path: |
             review-evidence/*.webm
             review-evidence/header-context-*.png
+            review-evidence/header-ranca-*.png
+            review-evidence/header-ranca-context-report.json
+            review-evidence/header-ranca-layout-report.json
   real-sdk:
     needs: consent-tests
     runs-on: ubuntu-latest
