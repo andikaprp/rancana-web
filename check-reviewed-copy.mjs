@@ -39,8 +39,13 @@ try {
    if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
    assert.equal(await page.locator('html').getAttribute('lang'),'id');
    const missing=await page.evaluate(expected=>{
-    const norm=s=>s.replace(/\s/g,'');
-    const texts=new Set([...document.querySelectorAll('body *')].filter(e=>!['SCRIPT','STYLE'].includes(e.tagName)).map(e=>norm(e.textContent)));
+    const norm=s=>s.replace(/\s+/g,' ').trim();
+    const textWithBreaks=e=>{
+     const clone=e.cloneNode(true);
+     clone.querySelectorAll('br').forEach(br=>br.replaceWith('\n'));
+     return clone.textContent;
+    };
+    const texts=new Set([...document.querySelectorAll('body *')].filter(e=>!['SCRIPT','STYLE'].includes(e.tagName)).map(e=>norm(textWithBreaks(e))));
     const description=norm(document.querySelector('meta[name="description"]').content);
     return expected.filter(item=>{
      const needsMetadata=item.source_locations.some(p=>p.startsWith('/html/head/'));
