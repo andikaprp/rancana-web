@@ -64,11 +64,11 @@ try{
    await page.screenshot({path:path.join(root,'review-evidence',`${lang}-${route}-${size.width}.png`),fullPage:true});
    evidence.push(`${lang}/${route} @ ${size.width}: no overflow, assets and local links valid`);
   }
-  await page.goto(origin+'/id/');await page.locator('.articles-nav').click();assert.ok(page.url().endsWith('/id/articles'));
+  await page.goto(origin+'/id/');assert.equal(await page.locator('.articles-nav').count(),0);await page.locator('footer a[href*="articles"]').click();assert.ok(page.url().endsWith('/id/articles'));
   await page.locator('a[hreflang="en"]').first().click();assert.ok(page.url().endsWith('/en/articles'));
   assert.deepEqual(errors,[]);await page.close();
  }
  const robots=await fs.readFile(path.join(root,'robots.txt'),'utf8');assert.ok(robots.includes('Sitemap: https://rancana.id/sitemap.xml'));
- await fs.writeFile(path.join(root,'review-evidence/article-qa.txt'),evidence.join('\n')+'\nHeader → hub → locale switch passed.\n');
+ await fs.writeFile(path.join(root,'review-evidence/article-qa.txt'),evidence.join('\n')+'\nFooter → hub → locale switch passed.\n');
  console.log('PASS — 16 locale/viewport article checks, real assets, local navigation, schema and mobile overflow');
 }finally{await browser.close();server.close();}

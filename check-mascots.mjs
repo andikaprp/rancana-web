@@ -30,6 +30,8 @@ try{
   await page.evaluate(async()=>{for(const i of document.images)i.loading='eager';await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});
   assert.deepEqual(errors,[]);
   assert.equal(await page.locator('.hero-mascot').count(),2);
+  assert.equal(await page.locator('.site-header a[href*="articles"]').count(),0,'no top or sticky article link');
+  assert.equal(await page.locator('footer a[href*="articles"]').count(),1,'footer article link retained');
   assert.equal(await page.locator('.audience-icon[src*="option-3"]').count(),2);
   assert.equal(await page.locator('.audience-icon:not([alt=""])').count(),0);
   assert.ok(await page.locator('.audience-icon').evaluateAll(els=>els.every(i=>i.complete&&i.naturalWidth>0)));

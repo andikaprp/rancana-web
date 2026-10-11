@@ -13,7 +13,7 @@ for (const cls of ['hero-title', 'hero-sub-1', 'hero-sub-2', 'section-title', 's
   assert.match(tag[0], /data-id="[^"]+"/, `${cls} has no data-id copy`);
 }
 assert.match(index, /<title data-id="[^"]+"/, 'page title has no data-id copy');
-assert.equal((index.match(/data-id="/g) ?? []).length, 68, 'copy count changed — translate the new string, then bump this number');
+assert.equal((index.match(/data-id="/g) ?? []).length, 67, 'copy count changed — translate the new string, then bump this number');
 assert.match(index, /href="\/id\/privacy"/);
 assert.match(index, /href="\/id\/terms"/);
 assert.match(index, /href="\/id\/delete-account"/);
