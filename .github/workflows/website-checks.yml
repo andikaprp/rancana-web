@@ -42,10 +42,11 @@ jobs:
             review-evidence/header-ranca-motion.webm
             review-evidence/mascot-layout-report.json
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: header-ranca-context-preview
           path: |
-            review-evidence/header-ranca-sections.webm
+            review-evidence/*.webm
             review-evidence/header-context-*.png
   real-sdk:
     needs: consent-tests

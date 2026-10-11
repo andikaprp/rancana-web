@@ -144,6 +144,7 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  let lastEntry = -Infinity;
  let pendingEntry = false;
  let animationIsEntry = false;
+ let hasEntered = false;
  const canMove = () => mascotVisible && sectionVisible && !document.hidden && !reducedMotion.matches;
  const clearIdle = () => { clearTimeout(idleTimer); idleTimer = null; };
  const scheduleIdle = () => {
@@ -161,7 +162,7 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  const playMascot = (entry) => {
   if (!canMove() || animation) return;
   clearIdle();
-  if (entry) { pendingEntry = false; lastEntry = performance.now(); }
+  if (entry) { hasEntered = true; pendingEntry = false; lastEntry = performance.now(); }
   animationIsEntry = entry;
   const profile = gestures[activeKey];
   updateCue();
@@ -182,7 +183,10 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
    if (animation === current) { animation = null; cueAnimation = null; scheduleIdle(); }
   }).catch(() => {});
  };
- const syncMotion = () => { if (canMove()) scheduleIdle(); else stopMotion(); };
+ const syncMotion = () => {
+  if (canMove()) { if (!hasEntered) pendingEntry = true; scheduleIdle(); }
+  else stopMotion();
+ };
  const mascotObserver = new IntersectionObserver(entries => {
   mascotVisible = entries[0].isIntersecting;
   syncMotion();

@@ -21,7 +21,7 @@ const pageProfiles = {
 };
 
 function createHarness({pathname = '/id/', count = 6, initialSection = 0, height = 1080,
- initialReduced = false, initialHidden = false, initialVisible = true} = {}) {
+ initialReduced = false, initialHidden = false, initialVisible = true, notifyInitially = true} = {}) {
  let now = 0, nextTimer = 1, sectionSelector, cue;
  const timers = new Map(), observers = [], motions = [], active = new Set();
  const events = new Map(), documentEvents = new Map();
@@ -129,8 +129,10 @@ function createHarness({pathname = '/id/', count = 6, initialSection = 0, height
   now = end;
   await Promise.resolve(); await Promise.resolve(); await Promise.resolve();
  };
- visibility(initialVisible);
- if (initialSection !== null) enter(initialSection);
+ if (notifyInitially) {
+  visibility(initialVisible);
+  if (initialSection !== null) enter(initialSection);
+ }
  return {motions, active, mascot, cue, sections, advance, enter, leave, intersections, visibility, sectionObserver,
   mascotMotions: () => motions.filter(motion => motion.element === 'mascot'),
   cueMotions: () => motions.filter(motion => motion.element === 'cue'),
@@ -142,6 +144,23 @@ function createHarness({pathname = '/id/', count = 6, initialSection = 0, height
  };
 }
 const transforms = motion => motion.frames.map(frame => frame.transform);
+
+await test('section observer can fire before mascot visibility without dropping the initial entry', async () => {
+ const h = createHarness({notifyInitially: false});
+ h.enter(0);
+ await h.advance(100);
+ assert.equal(h.motions.length, 0, 'a visible section alone cannot start motion');
+ h.visibility(true);
+ await h.advance(0);
+ assert.deepEqual(h.mascotMotions().map(m => [m.time, m.kind, m.behavior, m.duration]),
+  [[100, 'entry', 'welcome', 700]], 'welcome starts immediately once both observers agree');
+ assert.deepEqual(h.cueMotions().map(m => [m.time, m.kind, m.cue]), [[100, 'entry', 'wave']]);
+ h.visibility(true); h.enter(0);
+ await h.advance(700);
+ assert.equal(h.mascotMotions().length, 1, 'duplicate observations do not repeat the initial entry');
+ await h.advance(5000);
+ assert.deepEqual(h.mascotMotions().map(m => [m.time, m.kind]), [[100, 'entry'], [5800, 'idle']]);
+});
 
 await test('semantic SVG cue is a decorative sibling of the intact mascot', () => {
  const h = createHarness();

@@ -42,13 +42,14 @@ try{
   });
   const signatures={entry:new Set(),idle:new Set()};
   for(const [selector,key,cue,label] of mapping){
+   console.log(`Checking contextual ${lang}/${key}`);
    await page.evaluate(({selector,label})=>{
     document.querySelector('#preview-label').textContent=label;
     const section=document.querySelector(selector),top=section.getBoundingClientRect().top+scrollY;
     scrollTo(0,Math.max(0,top-innerHeight*.22));
    },{selector,label});
    await page.waitForFunction(key=>document.querySelector('.brand-mark').dataset.rancaBehavior===key,key);
-   await page.waitForFunction(key=>window.mascotMotions.some(m=>m.key===key&&m.kind==='entry'),key);
+   await page.waitForFunction(key=>window.mascotMotions.some(m=>m.key===key&&m.kind==='entry'),key,{timeout:10000}).catch(async error=>{console.log(await page.evaluate(()=>({motions:window.mascotMotions,key:document.querySelector('.brand-mark').dataset.rancaBehavior,header:document.querySelector('.brand-mark').getBoundingClientRect().toJSON()})));throw error;});
    assert.equal(await page.locator('.ranca-cue').getAttribute('data-ranca-cue'),cue);
    const box=await page.locator('.site-header .brand').boundingBox();
    await page.waitForFunction(key=>window.mascotMotions.some(m=>m.key===key&&m.kind==='idle'),key,{timeout:12000});
