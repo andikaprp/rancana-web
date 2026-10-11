@@ -44,7 +44,7 @@ try{
    },scene);
    reports.push({lang,width,scene,...geometry});
    await page.screenshot({path:path.join(out,`${lang}-${width}-${scene}-bounds.png`)});assert.equal(geometry.overflow,false);assert.equal(geometry.wordUnchanged,true);assert.equal(geometry.pointerInert,true);
-   await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.companion-stage').evaluateAll(els=>els.reduce((n,e)=>n+e.getAnimations({subtree:true}).length,0)),0);
+   await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(()=>[...document.querySelectorAll('.companion-stage')].every(e=>e.dataset.motion==='reduced'));assert.equal(await page.locator('.companion-stage').evaluateAll(els=>els.reduce((n,e)=>n+e.getAnimations({subtree:true}).length,0)),0);
    await page.emulateMedia({reducedMotion:'no-preference'});
    await page.evaluate(()=>scrollTo(0,document.querySelector('#features').offsetTop));await page.waitForTimeout(250);
    assert.ok(await page.locator('.companion-stage').evaluateAll(els=>els.every(e=>e.dataset.motion==='paused')),'offscreen pause');
