@@ -274,7 +274,7 @@ try{
      }
     }
    }
-   await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+   await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
    await assertNeutral(page,`${lang}/${key}/${width} completed entry`);
    await page.waitForFunction(key=>window.mascotMotions.some(m=>m.key===key&&m.kind==='idle'),key,{timeout:12000});
    const idle=await firstBatch(page,key,'idle');
@@ -286,7 +286,7 @@ try{
    assert.ok(quiet>=2700&&quiet<4500,`${key}: 2.8 quiet seconds before idle (${quiet}ms)`);
    await page.waitForTimeout(650);await assertGeometry(page,width,`${lang}/${key}/${width} idle`);
    await page.locator('.site-header').screenshot({path:path.join(root,'review-evidence',`header-context-${lang}-${key}-${width}-idle.png`)});
-   await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+   await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
    assert.deepEqual(await page.locator('.site-header .brand').boundingBox(),pillBox,'completed idle keeps layout fixed');
    assert.deepEqual(await page.locator('.brand-name').boundingBox(),wordmarkBox,'completed idle keeps wordmark fixed');
    await assertNeutral(page,`${lang}/${key}/${width} completed idle`);
@@ -305,11 +305,11 @@ try{
   await scrollToSection(page,'#for-you');
   await page.waitForFunction(after=>window.mascotMotions.some(m=>m.key==='study'&&m.kind==='entry'&&m.time>after),repeatAfter);
   const repeatedEntry=await firstBatch(page,'study','entry',repeatAfter);
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   await assertNeutral(page,`${lang}/${width} repeated entry`);
   await page.waitForFunction(after=>window.mascotMotions.some(m=>m.key==='study'&&m.kind==='idle'&&m.time>after),repeatAfter,{timeout:10000});
   const repeatedIdle=await firstBatch(page,'study','idle',repeatAfter);
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   await assertNeutral(page,`${lang}/${width} repeated idle`);
   for(const [kind,motions] of [['entry',repeatedEntry],['idle',repeatedIdle]]){
    await assertFrameBoundaries(page,width,'study',kind,motions);
@@ -321,7 +321,7 @@ try{
    const after=repeatedIdle.at(-1).time;
    await page.waitForFunction(after=>window.mascotMotions.some(m=>m.key==='study'&&m.kind==='idle'&&m.time>after+100),after,{timeout:10000});
    const nextIdle=await firstBatch(page,'study','idle',after+100);
-   await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+   await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
    await assertFacialMotion(page,'study','idle',nextIdle);
    await assertNeutral(page,'continuing idle returns exactly to neutral');
   }
@@ -348,7 +348,7 @@ try{
   const afterCapture=await page.evaluate(()=>({time:performance.now(),face:window.faceGeometry()}));
   await page.waitForFunction(()=>window.faceGeometry()['eye-left'].bend>window.mascotNeutral['eye-left'].bend*.9,null,{polling:'raf'});
   await page.screenshot({clip,path:path.join(root,'review-evidence','header-ranca-svg-closeup-only-reopened-6x.png')});
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   await assertNeutral(page,'six-times detail capture completed entry');
   reports.push({artifact:'closeup-only',description:'Six-device-pixel crop of the actual integrated 44px SVG, separate from website screenshots; no labels, overlays, scaling or animation-clock changes to the page.',width:390,markWidth:44,deviceScaleFactor:6,closedFace:closed.face,afterBlinkCaptureFace:afterCapture.face,captureMs:afterCapture.time-closed.time});
   await page.close();
@@ -369,7 +369,7 @@ try{
    await page.waitForTimeout(400);
    await assertGeometry(page,320,`320px ${key} actual-size spot`);
    if(key==='study')await page.screenshot({path:path.join(root,'review-evidence','header-ranca-320-page.png')});
-   await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+   await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
    await assertNeutral(page,`320px ${key} completed entry`);
    const boundaries=await assertFrameBoundaries(page,320,key,'entry',entry),facial=await assertFacialMotion(page,key,'entry',entry);
    const hands=await assertRestingHands(page,key,'entry',entry);
@@ -390,7 +390,7 @@ try{
    const motion=entry.find(m=>m.target===`rig-${feature} path`);
    assert.ok(motion.frames.every(frame=>typeof frame.transform==='string'&&frame.d===undefined),`${feature}: unsupported CSS d uses the transform fallback`);
   }
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   await assertNeutral(page,'fallback completed entry');
   const samples=await batchFrames(page,'welcome','entry',entry),neutral=await page.evaluate(()=>window.mascotNeutral);
   for(const feature of ['eye-left','eye-right']){
@@ -400,7 +400,7 @@ try{
   }
   await page.waitForFunction(()=>window.mascotMotions.some(m=>m.kind==='idle'),null,{timeout:10000});
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   await assertNeutral(page,'reduced-motion cancellation restores transform fallback');
   await page.close();
  }
@@ -412,7 +412,7 @@ try{
   await page.waitForFunction(()=>window.mascotMotions.some(m=>m.target==='rig-eye-left path'));
   await page.waitForTimeout(650);
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   await assertNeutral(page,'live reduced motion cancels every facial change');
   const stopped=await page.evaluate(()=>window.mascotMotions.length);
   await scrollToSection(page,'#for-you');await page.waitForTimeout(4500);
@@ -421,7 +421,7 @@ try{
   await page.emulateMedia({reducedMotion:'no-preference'});
   await scrollToSection(page,'#faq');
   await page.waitForFunction(count=>window.mascotMotions.length>count,stopped,{timeout:10000});
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   await assertNeutral(page,'resumed expressions return to neutral');
   await page.close();
  }
@@ -474,7 +474,7 @@ try{
   if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
   await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';});
   await waitForPreviewBatch('welcome','entry',-1);
-  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
   assert.ok((await firstBatch(page,'welcome','entry')).every(m=>m.finished&&!m.cancelled),'the focused preview starts after a complete natural welcome entry');
   await assertNeutral(page,`${width}px focused preview ready after welcome`);
   for(const [selector,key] of [['#cta','download'],['#faq','question']]){
@@ -483,7 +483,7 @@ try{
    for(const kind of ['entry','idle']){
     await waitForPreviewBatch(key,kind,after);
     const motions=await firstBatch(page,key,kind,after);
-    await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+    await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
     const finished=await firstBatch(page,key,kind,after);
     assert.ok(finished.every(m=>m.finished&&!m.cancelled),`${key} ${kind}: the focused preview records the complete gesture`);
     await assertNeutral(page,`${key} ${kind} focused preview`);

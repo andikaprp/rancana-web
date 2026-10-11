@@ -72,3 +72,7 @@ Motion pauses offscreen, while the document is hidden and on `pagehide`, then re
 `node check-companion-motion.mjs --static` checks original asset hashes without launching a browser; it explicitly does not verify layout, lifecycle or playback. Use `COMPANION_REQUIRE_POSES=1` in the review workflow as the explicit final-art gate: all four actors must use the native raster/vector artwork, with no placeholders, intact original hashes, one visible body, one face and two hands each. Passing behavior tests does not replace visual review of the repaired body regions, expressions and hand shapes. No merge or deployment is authorized by this review.
 
 Current local verification: JavaScript syntax and both original asset hashes pass. Full real-browser assertions, pixel review and new recordings remain pending CI because this sandbox cannot launch Chromium. No visual/playback pass is implied.
+
+## Homepage browser feedback
+
+The audience section header flips between the existing backpack and graduation-cap artwork. The shared section controller selects it; reduced motion holds the backpack, and hidden/offscreen states pause it. Benefits introduce Cana wearing SVG sunglasses over the original artwork. Feature headings, 18px descriptions and 48px icons remain unscaled while decorative previews resize. After editing source HTML, run `python3 build-locales.py`. Run `node check-browser-comments.mjs` for ID/EN responsive and motion checks at 320, 390, 900 and 1341px (screenshots in the system temporary directory).

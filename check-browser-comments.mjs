@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict';
+import os from 'node:os';
+import fs from 'node:fs/promises';
+import http from 'node:http';
+import path from 'node:path';
+import {chromium} from 'playwright';
+const root=path.dirname(new URL(import.meta.url).pathname);
+const server=http.createServer(async(req,res)=>{
+ try{
+  let p=new URL(req.url,'http://localhost').pathname;
+  if(p.endsWith('/'))p+='index.html'; if(!path.extname(p))p+='.html';
+  const file=path.resolve(root,'.'+p);if(!file.startsWith(root+'/'))throw Error('path');
+  res.setHeader('Content-Type',({'.html':'text/html','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png'})[path.extname(file)]||'application/octet-stream');
+  res.end(await fs.readFile(file));
+ }catch{res.statusCode=404;res.end();}
+});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const origin=`http://127.0.0.1:${server.address().port}`;
+
+const browser = await chromium.launch({headless:true});
+try {
+ for (const width of [320,390,900,1341]) {
+  const page = await browser.newPage({viewport:{width,height:914}});
+  for (const lang of ['id','en']) {
+   await page.goto(`${origin}/${lang}/`);
+   const reject = page.locator('[data-consent-reject]');
+   if (await reject.isVisible()) await reject.click();
+   await page.locator('#features').scrollIntoViewIfNeeded();
+   await page.waitForTimeout(300);
+   const sizes = await page.locator('.card-head').evaluateAll(heads=>heads.map(head=>({text:parseFloat(getComputedStyle(head.querySelector('p')).fontSize),icon:head.querySelector('img').getBoundingClientRect().width,head:head.getBoundingClientRect().bottom,art:head.nextElementSibling.getBoundingClientRect().top})));
+   assert.equal(sizes.length,4);
+   for (const size of sizes) {assert.ok(size.text>=18);assert.ok(size.icon>=47);assert.ok(size.art>=size.head-1);}
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+   await page.locator('#features').screenshot({style:'.site-header{visibility:hidden}',path:`${os.tmpdir()}/rancana-features-${lang}-${width}.png`});
+   await page.locator('#benefits').screenshot({style:'.site-header{visibility:hidden}',path:`${os.tmpdir()}/rancana-benefits-${lang}-${width}.png`});
+   await page.evaluate(()=>scrollTo(0,document.querySelector('#for-you').offsetTop-innerHeight*.2));
+   await page.waitForTimeout(700);
+   const costume=page.locator('.study-costumes');
+   await costume.waitFor({state:'visible'});
+   assert.equal(await costume.locator('img').count(),2);
+   assert.ok(await costume.locator('img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0)));
+   assert.equal(await costume.evaluate(el=>getComputedStyle(el).animationName),'study-flip');
+   assert.equal(await costume.evaluate(el=>getComputedStyle(el).animationPlayState),'running');
+   for (const [name,time] of [['backpack',2000],['graduate',6000]]) {
+    await costume.evaluate((el,time)=>{const animation=el.getAnimations()[0];animation.pause();animation.currentTime=time;},time);
+    await page.locator('.site-header .brand').screenshot({path:`${os.tmpdir()}/rancana-header-${name}-${lang}-${width}.png`});
+   }
+   await page.emulateMedia({reducedMotion:'reduce'});
+   assert.equal(await costume.evaluate(el=>getComputedStyle(el).animationName),'none');
+   await page.emulateMedia({reducedMotion:'no-preference'});
+  }
+  await page.close();
+ }
+ console.log('PASS: ID/EN at 320, 390, 900 and 1341px; readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
+} finally {await browser.close();server.close();}
