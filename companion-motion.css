@@ -11,3 +11,5 @@
 .companion-stage .rig-eye-left,.companion-stage .rig-eye-right,.companion-stage .rig-smile{transform-box:fill-box;transform-origin:center}
 .preview-footer .footer-brand-row>.companion-stage{min-width:0;max-width:100%}
 @media(prefers-reduced-motion:reduce){.companion-stage *{animation:none!important;transition:none!important}}
+/* On small screens leave the flashcard and its button clear, even at 320px. */
+@media(max-width:899px){.hero-companion{width:min(27vw,205px);bottom:6px}}
