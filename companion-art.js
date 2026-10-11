@@ -53,8 +53,9 @@
   const face=make('g',{'data-companion-face':'','data-art-part':'face'},svg);
   const centers=green?[[321,222],[454,178]]:[[260,254],[420,207]];
   const eyes=centers.map(()=>make('path',{fill:'#fff'},face));
-  const brows=centers.map(()=>make('path',{...line,'stroke-width':9,d:'M-23 0 Q0 -13 23 0'},face));
+  const brows=centers.map(()=>make('path',{...line,'stroke-width':green?9:7,d:green?'M-23 0 Q0 -13 23 0':'M-18 0 Q0 -15 18 0'},face));
   const mouth=make('path',{fill:'#fff'},face);
+  const lashes=green?[]:centers.map(()=>make('path',{...line,'stroke-width':7,'data-companion-lash':''},face));
   const hands=['left','right'].map(side=>{
    const g=make('g',{'data-companion-hand':side,'data-art-part':'hand-'+side,transform:green?'':'translate(745 0) scale(-1 1)'},svg);
    const arm=make('path',line,g),hand=make('path',{...line,'stroke-width':10,d:palm},g);return {g,arm,hand};
@@ -72,17 +73,30 @@
     const aa=eyeSamples[eyeShape(a.eyes[i])],bb=eyeSamples[eyeShape(b.eyes[i])];
     eye.setAttribute('d',aa.map((p,j)=>`${j?'L':'M'}${lerp(p[0],bb[j][0],t).toFixed(2)} ${lerp(p[1],bb[j][1],t).toFixed(2)}`).join(' ')+'Z');
     eye.setAttribute('opacity',lerp(pose==='cover'?0:1,context.nextPose==='cover'?0:1,t).toFixed(3));
-    const [x,y]=centers[i];eye.setAttribute('transform',`translate(${x+gaze} ${y}) rotate(-8) scale(${green ? .86 : -.86} .86)`);
-    const brow=lerp(a.brow[i],b.brow[i],t);
-    brows[i].setAttribute('transform',`translate(${x+gaze} ${y-43}) rotate(${brow})`);
+    const [x,y]=centers[i];
+    const transform=`translate(${x+gaze} ${y}) rotate(-8) scale(${green ? .86 : -.92} ${green ? .86 : .98})`;
+    eye.setAttribute('transform',transform);
+    if(!green){
+     const open=i?[-26,-12,-38,-13,-41,-24,-19,-23,-26,-29,-24,-37]:[15,-16,27,-18,28,-29,9,-25,19,-29,17,-38];
+     const wink=i?[-29,0,-41,-4,-44,-14,-26,-4,-32,-11,-32,-22]:[21,-24,31,-26,32,-36,15,-33,23,-37,21,-44];
+     const from=a.eyes[i]==='wink'?wink:open,to=b.eyes[i]==='wink'?wink:open;
+     const points=from.map((value,index)=>lerp(value,to[index],t));
+     lashes[i].setAttribute('d',`M${points[0]} ${points[1]} Q${points[2]} ${points[3]} ${points[4]} ${points[5]} M${points[6]} ${points[7]} Q${points[8]} ${points[9]} ${points[10]} ${points[11]}`);
+     lashes[i].setAttribute('transform',transform);
+     lashes[i].setAttribute('opacity',eye.getAttribute('opacity'));
+    }
+    const brow=lerp(a.brow[i],b.brow[i],t)*(green?1:.55);
+    brows[i].setAttribute('transform',`translate(${x+gaze} ${y-(green?43:51)}) rotate(${brow})`);
     // Small rounded brows retain the school/college characters' playful expression.
     const ba=pose==='cover'?0:1,bbrow=context.nextPose==='cover'?0:1;
     brows[i].setAttribute('opacity',lerp(ba,bbrow,t).toFixed(3));
    });
    const mood=lerp(a.mouth,b.mouth,t),mx=green?390:351,my=green?282:307;
    const half=lerp(18,32,(mood+1)/2),depth=lerp(12,42,(mood+1)/2);
-   mouth.setAttribute('d',`M${-half} -3 Q0 8 ${half} -10 C${half} ${depth*.7} ${-half*.4} ${depth} ${-half} 12 Q${-half-3} 5 ${-half} -3Z`);
-   mouth.setAttribute('transform',`translate(${mx+gaze*.5} ${my}) rotate(-14)`);
+   mouth.setAttribute('d',green
+    ? `M${-half} -3 Q0 8 ${half} -10 C${half} ${depth*.7} ${-half*.4} ${depth} ${-half} 12 Q${-half-3} 5 ${-half} -3Z`
+    : `M${-half*.85} -4 Q0 8 ${half*.85} -4 C${half*.8} ${depth*.7} ${-half*.8} ${depth*.7} ${-half*.85} -4Z`);
+   mouth.setAttribute('transform',`translate(${mx+gaze*.5} ${my}) rotate(${green?-14:-8})`);
    hands.forEach(({arm,hand},i)=>{
     const key=i?'right':'left',v=a[key].map((q,j)=>lerp(q,b[key][j],t)),[x,y,angle,scale]=v;
     const start=i?[603,326]:[210,328];

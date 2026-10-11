@@ -84,3 +84,5 @@ Hero and footer faces and hands follow the school/college artwork: rounded three
 ## Website favicon
 
 The browser tab uses the static green Ranca artwork from the navbar, with SVG, 32px PNG and a 16/32/48/64px ICO fallback. All source and localized pages reference the current favicon URL; the root `favicon.ico` matches the asset fallback. `node check-seo.mjs` verifies the 33 page references, ICO entries and browser decoding. The app's icon and social preview remain separate assets.
+
+Chana's animated face has delicate brows, subtle curved lashes, slightly taller eyes and a smaller rounded smile. Her chevron wink remains. Lashes follow the eye morph and hide beneath covering hands. Reduced motion keeps this same face as a static ready pose; the original image remains the fallback if the renderer cannot load.

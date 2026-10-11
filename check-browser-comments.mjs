@@ -34,6 +34,8 @@ try {
     lower:eye.isPointInFill(new DOMPoint(7,23)),
     middle:eye.isPointInFill(new DOMPoint(7,0))
    }));
+   assert.equal(await page.locator('.hero-companion-cana [data-companion-lash]').count(),2);
+   assert.equal(await page.locator('.hero-companion-ranca [data-companion-lash]').count(),0);
    assert.ok(wink.height>60&&wink.tip&&wink.upper&&wink.lower&&!wink.middle,'Cana wink has two angled arms and an open center');
    await page.locator('.hero-companion-cana').screenshot({path:`${os.tmpdir()}/rancana-cana-wink-${lang}-${width}.png`});
    for (const [selector,times] of [['.hero-wrap',[0,1100,1400,4200]],['.footer-brand-row',[0,3000,6000,10000,14000]]]) {
@@ -48,6 +50,11 @@ try {
       const wrist=new DOMPoint(0,24).matrixTransform(hand.getCTM());
       return Math.hypot(tip.x-wrist.x,tip.y-wrist.y);
      }));
+     const lashes=await scene.locator('[data-companion-lash]').evaluateAll(lashes=>lashes.map(lash=>({
+      opacity:lash.getAttribute('opacity'),
+      eye:lash.parentElement.children[[...lash.parentElement.querySelectorAll('[data-companion-lash]')].indexOf(lash)].getAttribute('opacity')
+     })));
+     assert.ok(lashes.every(lash=>lash.opacity===lash.eye),'lashes follow blinking and disappear beneath covering hands');
      assert.equal(wrists.length,4);
      assert.ok(wrists.every(gap=>Number.isFinite(gap)&&gap<.1),'all four wrists stay joined to their arms through each pose');
     }
@@ -76,9 +83,14 @@ try {
    }
    await page.emulateMedia({reducedMotion:'reduce'});
    assert.equal(await costume.evaluate(el=>getComputedStyle(el).animationName),'none');
+   const cana=page.locator('.hero-companion-cana .companion-actor');
+   await page.waitForFunction(()=>document.querySelector('.hero-companion-cana .companion-actor')?.dataset.companionMotion==='reduced');
+   assert.equal(await cana.locator('.companion-art').isVisible(),true,'reduced motion retains Chana’s updated static face');
+   assert.equal(await cana.evaluate(el=>el.getAnimations({subtree:true}).length),0);
+   const rest=await cana.innerHTML();await page.waitForTimeout(100);assert.equal(await cana.innerHTML(),rest,'static expression remains still');
    await page.emulateMedia({reducedMotion:'no-preference'});
   }
   await page.close();
  }
- console.log('PASS: ID/EN at 320, 390, 900 and 1341px; rounded connected hands, chevron wink, readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
+ console.log('PASS: ID/EN at 320, 390, 900 and 1341px; soft Chana face and static reduced motion, rounded connected hands, chevron wink, readable copy/icons, no overflow, costumes loaded, flip and reduced motion.');
 } finally {await browser.close();server.close();}
