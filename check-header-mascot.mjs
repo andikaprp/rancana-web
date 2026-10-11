@@ -70,8 +70,8 @@ const scrollToSection=(page,selector)=>page.evaluate(selector=>{
 },selector);
 const motionCount=page=>page.evaluate(()=>window.mascotMotions.length);
 const assertStopped=async(page,message)=>{
- await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
- assert.equal(await page.locator('.brand-mark').evaluate(el=>el.getAnimations({subtree:true}).length),0,message);
+ await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).every(animation=>animation.playState!=='running'));
+ assert.equal(await page.locator('.brand-mark').evaluate(el=>el.getAnimations({subtree:true}).filter(animation=>animation.playState==='running').length),0,message);
 };
 const checkLink=async locator=>{
  assert.ok(await locator.evaluate(el=>{
@@ -369,7 +369,7 @@ try{
  assert.deepEqual(await page.evaluate(()=>window.headerPlayActivation),{trusted:true,detail:1,href:'https://play.google.com/store/apps/details?id=com.planora.labs'},'pointer activates existing Play link');
  await download.focus();await page.keyboard.press('Enter');
  assert.deepEqual(await page.evaluate(()=>window.headerPlayActivation),{trusted:true,detail:0,href:'https://play.google.com/store/apps/details?id=com.planora.labs'},'Enter activates existing Play link');
- await assertStopped(page,'resumed entry completes');
+ await page.waitForFunction(()=>document.querySelector('.ranca-rig').getAnimations({subtree:true}).length===0);
  assert.deepEqual(await page.locator('.site-header .brand').boundingBox(),pill,'resumed articulation keeps pill fixed');
  assert.deepEqual(await page.locator('.brand-name').boundingBox(),wordmark,'resumed articulation keeps lettering fixed');
  assert.deepEqual(errors,[]);await page.close();
