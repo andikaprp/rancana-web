@@ -71,14 +71,16 @@ const recordMotions=()=>{
   const pill=brand.getBoundingClientRect(),mark=brand.querySelector('.brand-mark'),wordmark=brand.querySelector('.brand-name'),word=wordmark.getBoundingClientRect();
   const wordmarkVisible=wordmark.getClientRects().length>0&&word.width>0;
   const box=mark.getBoundingClientRect(),header=brand.closest('.site-header').getBoundingClientRect();
-  // The rim is clipped to the cloud. Measure its fill and the original stroked paths,
-  // allowing the intentional SVG overflow while keeping every painted part in the pill.
-  const painted=[...mark.querySelectorAll('.rig-face path,.rig-hands path,.rig-body > use')].map(el=>{
+  // The trusted texture has transparent margins. The independently verified
+  // alpha bounds count as paint; the empty 741x532 image canvas does not.
+  const texture=mark.querySelector('.rig-body-texture'),matrix=texture.getScreenCTM();
+  const corners=[[103,16],[725,16],[725,516],[103,516]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(matrix));
+  const painted=[{left:Math.min(...corners.map(p=>p.x)),right:Math.max(...corners.map(p=>p.x)),top:Math.min(...corners.map(p=>p.y)),bottom:Math.max(...corners.map(p=>p.y))},...[...mark.querySelectorAll('.rig-face path,.rig-hands path')].map(el=>{
    const r=el.getBoundingClientRect(),m=el.getScreenCTM(),style=getComputedStyle(el);
    const stroke=style.stroke==='none'?0:parseFloat(style.strokeWidth)/2;
    const x=stroke*Math.hypot(m.a,m.c),y=stroke*Math.hypot(m.b,m.d);
    return {left:r.left-x,right:r.right+x,top:r.top-y,bottom:r.bottom+y};
-  });
+  })];
   const pillClearance=Math.min(...painted.flatMap(r=>[r.left-pill.left,pill.right-r.right,r.top-pill.top,pill.bottom-r.bottom]));
   // The compact, non-sticky 320px header intentionally hides its wordmark.
   const wordmarkClearance=Math.min(...painted.map(r=>(wordmarkVisible?word.left:pill.right)-r.right));

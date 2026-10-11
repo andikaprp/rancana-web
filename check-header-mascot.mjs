@@ -4,6 +4,9 @@ import http from 'node:http';
 import path from 'node:path';
 import {chromium} from 'playwright';
 const root=path.dirname(new URL(import.meta.url).pathname);
+const trustedBodySHA256='3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a';
+const previousSVG=await fs.readFile(path.join(root,'tests/fixtures/ranca-header-outlined.svg'),'utf8');
+const expectedFeaturePaths=[...previousSVG.matchAll(/<path\b[^>]*\sd="([^"]+)"/g)].slice(1).map(match=>match[1]);
 const server=http.createServer(async(req,res)=>{
  try{
   let p=new URL(req.url,'http://localhost').pathname;
@@ -85,21 +88,45 @@ try{
   await page.route('https://**/*',r=>r.abort());
   for(const file of pages){
    await page.goto(`${origin}/${lang}/${file}`);await page.evaluate(()=>document.fonts.ready);
-   const state=await page.locator('.site-header .brand-mark').evaluate(el=>{
+   const state=await page.locator('.site-header .brand-mark').evaluate(async el=>{
     const svg=el.querySelector('svg.ranca-rig'),css=getComputedStyle(el),pill=el.closest('.brand').getBoundingClientRect(),header=el.closest('.site-header').getBoundingClientRect(),word=el.parentElement.querySelector('.brand-name').getBoundingClientRect();
     const parts=['rig-body','rig-eye-left','rig-eye-right','rig-smile','rig-hand-left','rig-hand-right'];
-    // Include stroke paint, preserving the small intentional overflow around the 44/48px SVG wrapper.
-    const rects=[...svg.querySelectorAll('.rig-body > use,.rig-face path,.rig-hands path')].map(part=>{
+    const texture=svg.querySelector('image.rig-body-texture'),src=texture.getAttribute('href');
+    const image=new Image();image.src=src;await image.decode();
+    const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;
+    const context=canvas.getContext('2d');context.drawImage(image,0,0);
+    const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
+    let left=canvas.width,top=canvas.height,right=0,bottom=0;
+    for(let i=3;i<pixels.length;i+=4)if(pixels[i]){
+     const pixel=(i-3)/4,x=pixel%canvas.width,y=Math.floor(pixel/canvas.width);
+     left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x+1);bottom=Math.max(bottom,y+1);
+    }
+    const bytes=Uint8Array.from(atob(src.split(',')[1]),value=>value.charCodeAt(0));
+    const digest=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(value=>value.toString(16).padStart(2,'0')).join('');
+    // Measure the decoded nontransparent texture extent, while still including
+    // the exact white feature strokes and their intentional SVG overflow.
+    const matrix=texture.getScreenCTM();
+    const corners=[[left,top],[right,top],[right,bottom],[left,bottom]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(matrix));
+    const rects=[{left:Math.min(...corners.map(p=>p.x)),right:Math.max(...corners.map(p=>p.x)),top:Math.min(...corners.map(p=>p.y)),bottom:Math.max(...corners.map(p=>p.y))},...[...svg.querySelectorAll('.rig-face path,.rig-hands path')].map(part=>{
      const r=part.getBoundingClientRect(),m=part.getScreenCTM(),style=getComputedStyle(part);
      const stroke=style.stroke==='none'?0:parseFloat(style.strokeWidth)/2,x=stroke*Math.hypot(m.a,m.c),y=stroke*Math.hypot(m.b,m.d);
      return {left:r.left-x,right:r.right+x,top:r.top-y,bottom:r.bottom+y};
-    });
+    })];
     return {
      inline:el.dataset.rancaRig==='true'&&el.querySelectorAll('svg').length===1,
      background:css.backgroundImage,width:el.offsetWidth,height:el.offsetHeight,
      viewBox:svg.getAttribute('viewBox'),preservesAspect:svg.preserveAspectRatio.baseVal.meetOrSlice===1,
      complete:parts.every(name=>svg.querySelector(`.${name}`)),
-     noRaster:svg.querySelectorAll('image,foreignObject').length===0,
+     embeddedBody:{count:svg.querySelectorAll('image').length,format:src.startsWith('data:image/webp;base64,'),sha256:digest,
+      x:texture.getAttribute('x'),y:texture.getAttribute('y'),width:texture.getAttribute('width'),height:texture.getAttribute('height'),
+      decodedWidth:image.naturalWidth,decodedHeight:image.naturalHeight,alphaBounds:[left,top,right,bottom]},
+     isolated:svg.querySelectorAll('foreignObject,defs,use,filter,style,script,[id]').length===0&&
+      [...svg.querySelectorAll('*')].every(node=>[...node.attributes].every(attribute=>!/^on|^(?:filter|clip-path|mask)$/i.test(attribute.name)&&!attribute.value.includes('url(')))&&
+      [...svg.querySelectorAll('[href]')].every(node=>node===texture),
+     noBodyEffects:[svg.querySelector('.rig-body'),texture].every(node=>getComputedStyle(node).stroke==='none'&&getComputedStyle(node).filter==='none'),
+     bodyChildren:[...svg.querySelector('.rig-body').children].map(node=>node.getAttribute('class')),
+     featurePaths:[...svg.querySelectorAll('path')].map(node=>node.getAttribute('d')),
+     featureCounts:['rig-eye-left','rig-eye-right','rig-smile','rig-hand-left','rig-hand-right'].map(name=>svg.querySelectorAll('.'+name+' path').length),
      motion:el.getAnimations({subtree:true}).length,
      decorative:el.getAttribute('aria-hidden')==='true'&&svg.getAttribute('aria-hidden')==='true'&&svg.getAttribute('focusable')==='false',
      pointerInert:css.pointerEvents==='none'&&getComputedStyle(svg).pointerEvents==='none',
@@ -114,7 +141,9 @@ try{
    });
    assert.deepEqual(state,{
     inline:true,background:'none',width:width<900?44:48,height:width<900?32:35,
-    viewBox:'0 0 741 532',preservesAspect:true,complete:true,noRaster:true,motion:0,
+    viewBox:'0 0 741 532',preservesAspect:true,complete:true,
+    embeddedBody:{count:1,format:true,sha256:trustedBodySHA256,x:'0',y:'0',width:'741',height:'532',decodedWidth:741,decodedHeight:532,alphaBounds:[103,16,725,516]},
+    isolated:true,noBodyEffects:true,bodyChildren:['rig-body-texture','rig-face','rig-hands'],featurePaths:expectedFeaturePaths,featureCounts:[1,1,1,1,2],motion:0,
     decorative:true,pointerInert:true,name:'Rancana',pillHeight:48,headerHeight:48,
     unclipped:true,beforeWordmark:true,withinViewport:true,overflow:false,extraCues:0
    },`${lang}/${file} at ${width}`);
@@ -219,6 +248,63 @@ try{
   assert.equal(state.header.right,width-54,`safe-area ${width}: symmetric right gutter`);
   assert.equal(state.overflow,false,`safe-area ${width}: no overflow`);
   navigationReport.push({lang:'id',file:'index.html',width,safeArea:{top:38,left:54,right:8},...state});
+  await page.close();
+ }
+ // A legacy inline SVG may still carry the old IDs and ID-targeted styles.
+ // Neither its definitions nor its styles may alter the self-contained header.
+ {
+  const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
+  await page.route('https://**/*',r=>r.abort());
+  await page.goto(`${origin}/id/`);await page.evaluate(()=>document.fonts.ready);
+  await page.locator('.brand-mark .rig-body-texture').evaluate(async node=>{const image=new Image();image.src=node.getAttribute('href');await image.decode();});
+  const before=await page.locator('.site-header .brand').screenshot();
+  const stylesBefore=await page.locator('.brand-mark .ranca-rig *').evaluateAll(nodes=>nodes.map(node=>{
+   const style=getComputedStyle(node);return {tag:node.tagName,fill:style.fill,stroke:style.stroke,strokeWidth:style.strokeWidth,filter:style.filter,transform:style.transform};
+  }));
+  const isolation=await page.evaluate(previous=>{
+   const probe=document.createElement('div');probe.id='legacy-header-isolation-probe';
+   probe.style.cssText='position:fixed;left:-2000px;top:0;width:1px;height:1px;overflow:hidden;pointer-events:none';
+   probe.innerHTML='<style>#header-ranca-cloud{fill:#ff0000!important;stroke:#ff00ff!important;stroke-width:200!important}#header-ranca-jade stop{stop-color:#ff0000!important}</style>'+previous;
+   document.body.prepend(probe);
+   const header=document.querySelector('.brand-mark .ranca-rig');
+   const ids=[...document.querySelectorAll('[id]')].map(node=>node.id);
+   const localReferences=[...probe.querySelectorAll('*')].flatMap(node=>[...node.attributes].flatMap(attribute=>[
+    ...(attribute.name==='href'&&attribute.value.startsWith('#')?[attribute.value.slice(1)]:[]),
+    ...[...attribute.value.matchAll(/url\(#([^)]*)\)/g)].map(match=>match[1])
+   ]));
+   return {headerIDs:header.querySelectorAll('[id]').length,headerDefinitions:header.querySelectorAll('defs,use,filter').length,
+    headerLocalReferences:[...header.querySelectorAll('*')].some(node=>[...node.attributes].some(attribute=>attribute.value.includes('url(')||(attribute.name==='href'&&attribute.value.startsWith('#')))),
+    uniqueDocumentIDs:ids.length===new Set(ids).size,legacyIDs:probe.querySelectorAll('[id]').length,
+    legacyReferencesResolveLocally:localReferences.length>0&&localReferences.every(id=>probe.contains(document.getElementById(id)))};
+  },previousSVG);
+  assert.deepEqual(isolation,{headerIDs:0,headerDefinitions:0,headerLocalReferences:false,uniqueDocumentIDs:true,legacyIDs:7,legacyReferencesResolveLocally:true},
+   'the header introduces no IDs or references that can collide with another inline SVG');
+  assert.deepEqual(await page.locator('.brand-mark .ranca-rig *').evaluateAll(nodes=>nodes.map(node=>{
+   const style=getComputedStyle(node);return {tag:node.tagName,fill:style.fill,stroke:style.stroke,strokeWidth:style.strokeWidth,filter:style.filter,transform:style.transform};
+  })),stylesBefore,'legacy SVG ID-targeted styles leave every header body and feature style unchanged');
+  assert.deepEqual(await page.locator('.site-header .brand').screenshot(),before,'the complete header pill remains pixel-identical beside colliding legacy SVG definitions/styles');
+  report.push({artifact:'svg-id-style-isolation',...isolation});
+  await page.close();
+ }
+ // A separate review-only sheet compares the actual original, previous and new
+ // assets at a true 48px CSS width, then at six times that size. No labels or
+ // comparison assets are inserted into the website or its clean motion clips.
+ {
+  const page=await browser.newPage({viewport:{width:1050,height:480},deviceScaleFactor:1,reducedMotion:'reduce'});
+  await page.route('https://**/*',r=>r.abort());
+  const samples=[['Original static','assets/mascots/ranca-cloud.webp'],['Previous outline','tests/fixtures/ranca-header-outlined.svg'],['Restored texture','assets/mascots/ranca-header.svg']];
+  for(const scale of [1,6]){
+   await page.setViewportSize({width:1050,height:scale===1?240:430});
+   await page.setContent(`<!doctype html><html><head><meta charset="utf-8"><style>
+    *{box-sizing:border-box}body{margin:0;padding:28px;background:#f4f5f2;color:#172820;font:16px/1.4 Arial,sans-serif}
+    h1{font-size:22px;margin:0 0 6px}p{margin:0 0 24px;color:#526259}.samples{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    figure{margin:0;text-align:center}figcaption{margin-bottom:12px;font-weight:600}.surface{display:flex;align-items:center;justify-content:center;padding:16px;background:white;border-radius:18px;min-height:${scale===1?68:242}px}
+    img{display:block;width:${48*scale}px;height:${35*scale}px;object-fit:contain}
+   </style></head><body><h1>Ranca at rest</h1><p>${scale===1?'Actual desktop header scale: 48px wide.':'Six-times enlargement of the same 48px assets for texture and edge review.'} All three are shown on white.</p><div class="samples">${samples.map(([label,file])=>`<figure><figcaption>${label}</figcaption><div class="surface"><img alt="${label}" src="${origin}/${file}"></div></figure>`).join('')}</div></body></html>`);
+   await page.locator('img').evaluateAll(images=>Promise.all(images.map(image=>image.decode())));
+   assert.deepEqual(await page.locator('img').evaluateAll(images=>images.map(image=>[image.getBoundingClientRect().width,image.getBoundingClientRect().height])),Array(3).fill([48*scale,35*scale]));
+   await page.screenshot({path:path.join(root,'review-evidence',`header-ranca-rest-comparison-${scale===1?'actual-48px':'enlarged-6x'}.png`)});
+  }
   await page.close();
  }
  // With JavaScript disabled, the same complete SVG is the CSS fallback.

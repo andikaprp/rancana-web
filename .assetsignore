@@ -27,3 +27,5 @@ review-evidence/
 outputs/
 work/
 assets/social/SOURCES.txt
+
+tests/
