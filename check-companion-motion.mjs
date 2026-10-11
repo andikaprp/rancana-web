@@ -19,7 +19,7 @@ try{
   const page=await browser.newPage({viewport:{width,height:1000}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('https://**/*',r=>r.abort());await page.goto(`${origin}/${lang}/`);await settle(page);
   assert.equal(await page.locator('.companion-rig,.companion-stage').count(),0,'no rebuilt artwork or overlay wrappers');
   assert.equal(await page.locator('[data-companion-scene]').count(),4);
-  assert.ok(await page.locator('[data-companion-scene]').evaluateAll(els=>els.every(e=>e.tagName==='IMG'&&e.getAttribute('src')===`assets/mascots/${e.dataset.companionCharacter}-cloud.webp`&&getComputedStyle(e).filter==='none'&&getComputedStyle(e).opacity==='1')),'only intact original images');
+  assert.ok(await page.locator('[data-companion-scene]').evaluateAll(els=>els.every(e=>e.tagName==='IMG'&&new URL(e.src).pathname===`/assets/mascots/${e.dataset.companionCharacter}-cloud.webp`&&getComputedStyle(e).filter==='none'&&getComputedStyle(e).opacity==='1')),'only intact original images');
   for(const scene of ['present','dance']){
    await reveal(page,scene);await page.waitForFunction(scene=>[...document.querySelectorAll(`[data-companion-scene="${scene}"]`)].every(e=>e.dataset.companionMotion==='playing'),scene);
    const geometry=await page.evaluate(({scene,hulls})=>{
