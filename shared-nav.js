@@ -34,3 +34,60 @@ if (navSlot && heroDownload) {
  checkHeroPosition();
  navSlot.addEventListener('focusout', () => queueMicrotask(updateNavigation));
 }
+
+// Keep the full Ranca mascot lively without moving the header or its hit targets.
+const headerMascot = document.querySelector('.site-header .brand-mark');
+if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in window && headerMascot.animate) {
+ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+ let mascotVisible = false;
+ let sectionVisible = false;
+ let animation = null;
+ let idleTimer = null;
+ let lastEntry = -Infinity;
+ const canMove = () => mascotVisible && sectionVisible && !document.hidden && !reducedMotion.matches;
+ const clearIdle = () => { clearTimeout(idleTimer); idleTimer = null; };
+ const scheduleIdle = () => {
+  clearIdle();
+  if (canMove() && !animation) idleTimer = setTimeout(() => playMascot(false), 5000);
+ };
+ const stopMotion = () => {
+  clearIdle();
+  if (animation) { const previous = animation; animation = null; previous.cancel(); }
+ };
+ const playMascot = (entry) => {
+  if (!canMove() || animation) return;
+  clearIdle();
+  const movement = entry
+   ? ['translateY(0) rotate(0deg)', 'translateY(-2px) rotate(-6deg)', 'translateY(-1px) rotate(4deg)', 'translateY(0) rotate(0deg)']
+   : ['translateY(0) rotate(0deg)', 'translateY(-1.5px) rotate(-3deg)', 'translateY(0) rotate(0deg)'];
+  const current = headerMascot.animate(movement.map(transform => ({transform})), {
+   duration: entry ? 700 : 1100, easing: 'ease-in-out', iterations: 1
+  });
+  animation = current;
+  current.finished.then(() => {
+   if (animation === current) { animation = null; scheduleIdle(); }
+  }).catch(() => {});
+ };
+ const syncMotion = () => { if (canMove()) scheduleIdle(); else stopMotion(); };
+ const mascotObserver = new IntersectionObserver(entries => {
+  mascotVisible = entries[0].isIntersecting;
+  syncMotion();
+ });
+ mascotObserver.observe(headerMascot);
+ const visibleSections = new Set();
+ const sectionObserver = new IntersectionObserver(entries => {
+  let entering = false;
+  for (const entry of entries) {
+   if (entry.isIntersecting) { visibleSections.add(entry.target); entering = true; }
+   else visibleSections.delete(entry.target);
+  }
+  sectionVisible = visibleSections.size > 0;
+  if (!canMove()) { stopMotion(); return; }
+  if (entering && performance.now() - lastEntry >= 900 && !animation) {
+   lastEntry = performance.now(); playMascot(true);
+  } else if (!animation && idleTimer === null) scheduleIdle();
+ }, {rootMargin: '-15% 0px -45% 0px', threshold: 0});
+ document.querySelectorAll('main > .hero-wrap, main section, .resource-main > header, .resource-main > section').forEach(section => sectionObserver.observe(section));
+ document.addEventListener('visibilitychange', syncMotion);
+ reducedMotion.addEventListener('change', syncMotion);
+}

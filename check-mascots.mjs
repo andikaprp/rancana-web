@@ -51,7 +51,7 @@ try{
     whiteFooter:getComputedStyle(document.querySelector('.preview-footer')).backgroundColor==='rgb(255, 255, 255)',
     artwork:getComputedStyle(document.querySelector('.sheet-1')).backgroundImage.includes('flashcard-aurora-background.webp'),
     whiteRear:['.sheet-2','.sheet-3'].every(s=>getComputedStyle(document.querySelector(s)).backgroundColor==='rgb(255, 255, 255)'),
-    headerBrand:getComputedStyle(document.querySelector('.brand-mark')).backgroundImage.includes('app-icon-64.webp'),
+    headerBrand:getComputedStyle(document.querySelector('.brand-mark')).backgroundImage.includes('mascots/ranca-cloud.webp'),
     footerBrand:document.querySelector('.footer-brand-row').children[1].textContent==='Rancana'&&document.querySelectorAll('.preview-footer .wordmark-mark,.preview-footer .wordmark-glow').length===0,
     companionsAboveFade:parseInt(getComputedStyle(document.querySelector('.hero-companion')).zIndex)>parseInt(getComputedStyle(document.querySelector('.band-hero')).zIndex),
     paper:document.querySelector('.paper-hero').src.includes('paper.webp'),

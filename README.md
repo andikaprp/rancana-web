@@ -43,8 +43,16 @@ GitHub Actions also runs `node check-analytics-real.mjs`: it downloads the real 
 
 ## Ranca and Cana website artwork
 
-This draft previews the selected soft-gradient cloud Ranca and Cana, with their original white outlined faces and hands, in the homepage hero and shared white footer. The final download CTA remains text/button only. Production header/footer branding, favicons, wordmark, copy, paper and Aurora sheet artwork are retained.
+This draft previews the selected soft-gradient cloud Ranca and Cana, with their original white outlined faces and hands, in the homepage hero and shared white footer. The final download CTA remains text/button only. The header now reuses full Ranca beside the existing wordmark; favicons, copy, paper and Aurora sheet artwork are retained.
 
-The transparent cutouts come from the selected master image through background-only alpha cleanup, without identity regeneration. Two lossless WebPs total 345,588 bytes and are reused in both locations. The cutouts sit directly on the existing paper and white footer, without an added wash, colored shadow or glow. White outlined hands remain unchanged and can be faint on white. Images are decorative, dimensioned, pointer-inert and footer copies lazy-load. No mascot animation is added.
+The transparent cutouts come from the selected master image through background-only alpha cleanup, without identity regeneration. Two lossless WebPs total 345,588 bytes and are reused in both locations. The cutouts sit directly on the existing paper and white footer, without an added wash, colored shadow or glow. White outlined hands remain unchanged and can be faint on white. Images are decorative, dimensioned, pointer-inert and footer copies lazy-load. The header-only motion is described below; hero and footer artwork stays still.
 
-`node check-mascots.mjs` checks both languages at 320, 390, 768, 900, 1440 and 1920 px, validates non-overlapping links/CTA hit targets, image budgets, original branding, paper/Aurora sheet artwork and white footer, and saves hero/CTA/footer screenshots under `review-evidence/`. It runs in the existing `npm test` workflow. Review screenshots before publishing.
+`node check-mascots.mjs` checks both languages at 320, 390, 768, 900, 1440 and 1920 px, validates non-overlapping links/CTA hit targets, image budgets, selected header branding, paper/Aurora sheet artwork and white footer, and saves hero/CTA/footer screenshots under `review-evidence/`. It runs in the existing `npm test` workflow. Review screenshots before publishing.
+
+## Full Ranca header mascot
+
+The shared navbar uses the existing approved full 741 × 532 transparent Ranca image with `background-size: contain`, preserving both hands and the existing Rancana lettering. Its white pill and responsive wordmark visibility remain. No favicon, app icon, hero or footer artwork changes.
+
+The mascot gives a brief 700 ms tilt/bob when a section enters the reading area. While stopped there, a 1.1 s gentle idle bob follows a five-second pause. Only the mascot transforms: header layout and link targets stay fixed. Section triggers are throttled, animations do not overlap, and motion pauses when the mascot is offscreen, the document is hidden, or reduced motion is enabled.
+
+`check-header-mascot.mjs` covers every locale page at 320, 390 and 1440 px, full-image fit/loading, section entry, idle pauses, layout stability, reduced motion and visibility pause. Header screenshots join the existing CI artifacts.

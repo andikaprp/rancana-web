@@ -39,6 +39,7 @@ jobs:
           name: consent-mobile-screenshots
           path: |
             review-evidence/*.png
+            review-evidence/header-ranca-motion.webm
             review-evidence/mascot-layout-report.json
   real-sdk:
     needs: consent-tests

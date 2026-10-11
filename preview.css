@@ -146,3 +146,8 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 
 .audience-grid .audience-icon{display:block;width:144px;height:160px;object-fit:contain;margin-bottom:20px}
 @media(max-width:899px){.audience-grid .audience-icon{width:126px;height:140px;margin-bottom:16px}}
+
+/* Full approved Ranca on the existing white header pill; contain preserves both hands. */
+.site-header .brand{width:auto}
+.site-header .brand-mark{width:34px;height:26px;background:#fff url("assets/mascots/ranca-cloud.webp") center/contain no-repeat;border-radius:0;transform-origin:50% 65%}
+@media(max-width:899px){.site-header .brand-mark{width:32px;height:24px}}
