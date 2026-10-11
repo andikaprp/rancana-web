@@ -20,6 +20,7 @@ const browser=await chromium.launch({args:['--no-sandbox'],...(process.env.PLAYW
 await fs.mkdir(path.join(root,'review-evidence'),{recursive:true});
 const report=[];
 try{
+
  for(const lang of ['id','en'])for(const width of [320,390,768,900,1440,1920]){
   const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:'reduce'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -29,6 +30,9 @@ try{
   await page.evaluate(async()=>{for(const i of document.images)i.loading='eager';await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));});
   assert.deepEqual(errors,[]);
   assert.equal(await page.locator('.hero-mascot').count(),2);
+  assert.equal(await page.locator('.audience-icon[src*="option-3"]').count(),2);
+  assert.equal(await page.locator('.audience-icon:not([alt=""])').count(),0);
+  assert.ok(await page.locator('.audience-icon').evaluateAll(els=>els.every(i=>i.complete&&i.naturalWidth>0)));
   assert.equal(await page.locator('.closing-mascots').count(),0);
   assert.equal(await page.locator('.footer-mascots').count(),1);
   assert.equal(await page.locator('.footer-mascot').count(),2);
@@ -46,7 +50,7 @@ try{
     artwork:getComputedStyle(document.querySelector('.sheet-1')).backgroundImage.includes('flashcard-aurora-background.webp'),
     whiteRear:['.sheet-2','.sheet-3'].every(s=>getComputedStyle(document.querySelector(s)).backgroundColor==='rgb(255, 255, 255)'),
     headerBrand:getComputedStyle(document.querySelector('.brand-mark')).backgroundImage.includes('app-icon-64.webp'),
-    footerBrand:getComputedStyle(document.querySelector('.wordmark-mark')).maskImage.includes('logo.svg'),
+    footerBrand:document.querySelector('.footer-brand-row').children[1].textContent==='Rancana'&&document.querySelectorAll('.preview-footer .wordmark-mark,.preview-footer .wordmark-glow').length===0,
     companionsAboveFade:parseInt(getComputedStyle(document.querySelector('.hero-companion')).zIndex)>parseInt(getComputedStyle(document.querySelector('.band-hero')).zIndex),
     paper:document.querySelector('.paper-hero').src.includes('paper.webp'),
     noAddedBackdrop:[...document.querySelectorAll('.hero-companion,.footer-mascots')].every(el=>getComputedStyle(el).backgroundImage==='none'&&getComputedStyle(el,'::before').content==='none'),
@@ -59,6 +63,8 @@ try{
    assert.equal(await a.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),true,'CTA hit target');
   }
   await page.locator('.hero-wrap').screenshot({path:path.join(root,'review-evidence',`mascots-${lang}-hero-${width}.png`)});
+  if(width<900){assert.equal(await page.locator('.nav-download').isVisible(),false,'mobile sticky CTA removed');assert.ok((await page.locator('#cta').boundingBox()).height<500,'mobile final card compact');}
+  if(width===390||width===1440)await page.locator('#for-you').screenshot({path:path.join(root,'review-evidence',`audience-${lang}-${width}.png`)});
   await page.locator('#cta').screenshot({path:path.join(root,'review-evidence',`mascots-${lang}-cta-${width}.png`)});
   if(width===390||width===1440)await page.locator('.preview-footer').screenshot({path:path.join(root,'review-evidence',`mascots-${lang}-footer-${width}.png`)});
   report.push({lang,width,...state});await page.close();
