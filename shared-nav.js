@@ -75,7 +75,7 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  });
  mascotObserver.observe(headerMascot);
  const visibleSections = new Set();
- const sectionObserver = new IntersectionObserver(entries => {
+ const onSectionsChanged = entries => {
   let entering = false;
   for (const entry of entries) {
    if (entry.isIntersecting) { visibleSections.add(entry.target); entering = true; }
@@ -86,8 +86,18 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
   if (entering && performance.now() - lastEntry >= 900 && !animation) {
    lastEntry = performance.now(); playMascot(true);
   } else if (!animation && idleTimer === null) scheduleIdle();
- }, {rootMargin: '-15% 0px -45% 0px', threshold: 0});
- document.querySelectorAll('main > .hero-wrap, main section, .resource-main > header, .resource-main > section').forEach(section => sectionObserver.observe(section));
+ };
+ let sectionObserver;
+ let resizeFrame;
+ const observeSections = () => {
+  sectionObserver?.disconnect();
+  visibleSections.clear();
+  // Pixel margins use viewport height; IO percentage margins use viewport width.
+  sectionObserver = new IntersectionObserver(onSectionsChanged, {rootMargin: `-${Math.round(innerHeight * .15)}px 0px -${Math.round(innerHeight * .45)}px 0px`, threshold: 0});
+  document.querySelectorAll('main > .hero-wrap, main section, .resource-main .resource-hero').forEach(section => sectionObserver.observe(section));
+ };
+ observeSections();
+ addEventListener('resize', () => {cancelAnimationFrame(resizeFrame);resizeFrame = requestAnimationFrame(observeSections);});
  document.addEventListener('visibilitychange', syncMotion);
  reducedMotion.addEventListener('change', syncMotion);
 }
