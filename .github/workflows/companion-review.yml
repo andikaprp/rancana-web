@@ -18,6 +18,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: node check-companion-motion.mjs --storyboard-only
+        env:
+          COMPANION_REQUIRE_POSES: "1"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: companion-storyboard-preview
+          path: review-evidence/companion-motion/
       - run: node check-companion-motion.mjs
         env:
           COMPANION_REQUIRE_POSES: "1"

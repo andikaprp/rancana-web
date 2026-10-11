@@ -772,6 +772,14 @@ try {
   browser = await chromium.launch({args: ['--no-sandbox'], ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
     ? {executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH} : {})});
   await captureFooterStoryBeats();
+  if (process.argv.includes('--storyboard-only')) {
+    report.storyboardOnly = true;
+    await fs.writeFile(path.join(out, 'storyboard-report.json'), JSON.stringify(report.storyBeats, null, 2));
+    await browser.close();
+    await new Promise(resolve => server.close(resolve));
+    console.log('Captured actual-page story poses; full motion QA is a separate step.');
+    process.exit(0);
+  }
   for (const [label, width, height] of [['mobile', 393, 852], ['desktop', 1440, 1000]]) {
     for (const scene of Object.keys(scenes)) await recordNaturalVideo(label, width, height, scene);
   }
