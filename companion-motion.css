@@ -69,6 +69,9 @@
 .preview-footer .footer-brand-row[data-companion-scene-root] {
   position: relative;
   isolation: isolate;
+  /* Permanent stage clearance for discovery above the glyphs. Text and links
+     never animate; this space protects the copyright/social row at all widths. */
+  margin-top: clamp(64px, 10.4vw, 144px);
   pointer-events: none;
 }
 .preview-footer .footer-brand-row[data-companion-scene-root] .footer-mascot {

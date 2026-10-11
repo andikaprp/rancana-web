@@ -12,10 +12,12 @@
  const eyePaths={open:'M-4 -24 C-22 -29 -30 -10 -27 9 C-24 30 -7 38 9 28 C16 23 20 13 19 5 C8 14 -3 6 -3 -4 C-3 -14 5 -19 13 -12 C10 -19 4 -23 -4 -24Z',happy:'M-32 11 C-31 -22 16 -30 35 0 L23 9 C9 -10 -14 -5 -18 14Z',wink:'M-32 -2 C-12 10 12 8 29 -3 L32 10 C9 25 -14 23 -34 11Z'};
  const lerp=(a,b,t)=>a+(b-a)*t;
  const smooth=t=>t*t*(3-2*t);
+ const grip='M-20 -8 C-28 -14 -33 -4 -27 7 L-18 21 L-16 38 Q-14 48 -8 39 L-7 15 L-3 42 Q1 51 6 41 L7 14 L13 38 Q18 45 22 35 L22 7 Q20 -9 8 -12Z';
+ const point='M-22 12 Q-13 26 9 20 L21 12 Q27 6 20 1 L9 2 L56 -1 Q67 -2 65 -10 Q64 -16 54 -15 L3 -12 L-9 -24 Q-16 -33 -22 -26 Q-28 -21 -21 -12 L-22 0Z';
  const eyeSamples={};
  function samples(svg){
   if(Object.keys(eyeSamples).length)return;
-  for(const [name,d] of Object.entries(eyePaths)){
+  for(const [name,d] of Object.entries({...eyePaths,palm,grip,point})){
    const p=make('path',{d,visibility:'hidden'},svg),len=p.getTotalLength();
    let points=Array.from({length:64},(_,i)=>{const q=p.getPointAtLength(len*i/64);return[q.x,q.y];});
    // Match winding and topmost start points before morphing closed contours.
@@ -29,9 +31,11 @@
  const reach=a=>({left:[220,408,85,.72],right:[632+30*a,410-162*a,85-97*a,.85],eyes:['open','open'],brow:[0,0],mouth:0,gaze:0});
  function state(character,pose){
   const s=reach(({lift1:.33,lift2:.67,present:1,settle1:.67,settle2:.33,found:1})[pose]||0);
+  if(character==='cana')s.eyes=['wink','open'];
   if(pose==='present'||pose==='found'){s.eyes=character==='cana'?['wink','happy']:['happy','happy'];s.mouth=1;}
+  if(pose==='found'){if(character==='cana'){s.left=[210,211,-28,.8];s.right=[645,214,0,.8];}else{s.right=[648,248,-5,.85];}}
   if(pose==='search'){s.right=[440,145,175,.7];s.eyes=['open','open'];s.brow=[-16,15];s.mouth=-.5;s.gaze=character==='ranca'?6:-6;}
-  if(pose==='peek'){s.left=[230,382,40,.72];s.right=[557,382,140,.72];s.brow=[18,-18];s.mouth=-1;s.gaze=character==='ranca'?5:-5;}
+  if(pose==='peek'||pose==='duck'){s.left=[230,382,0,.72];s.right=[557,382,0,.72];s.eyes=pose==='duck'?['wink','wink']:['open','open'];s.brow=[18,-18];s.mouth=-1;s.gaze=character==='ranca'?5:-5;}
   if(pose==='cover'){s.left=[292,216,155,.78];s.right=[451,172,190,.78];s.eyes=['wink','wink'];s.mouth=.4;}
   return s;
  }
@@ -66,7 +70,7 @@
    eyes.forEach((eye,i)=>{
     const aa=eyeSamples[a.eyes[i]],bb=eyeSamples[b.eyes[i]];
     eye.setAttribute('d',aa.map((p,j)=>`${j?'L':'M'}${lerp(p[0],bb[j][0],t).toFixed(2)} ${lerp(p[1],bb[j][1],t).toFixed(2)}`).join(' ')+'Z');
-    const [x,y]=centers[i];eye.setAttribute('transform',`translate(${x+gaze} ${y}) rotate(-8) scale(.86)`);
+    const [x,y]=centers[i];eye.setAttribute('transform',`translate(${x+gaze} ${y}) rotate(-8) scale(${green ? .86 : -.86} .86)`);
     const brow=lerp(a.brow[i],b.brow[i],t);
     brows[i].setAttribute('transform',`translate(${x+gaze} ${y-43}) rotate(${brow})`);
     // Only searching/peeking has eyebrows; no extra facial markings at rest.
@@ -82,6 +86,9 @@
     const start=i?[603,326]:[210,328];
     const cx=i?Math.max(625,x+20):Math.min(120,x-20),cy=(start[1]+y)*.5;
     arm.setAttribute('d',`M${start[0]} ${start[1]} Q${cx} ${cy} ${x-8} ${y+8}`);
+    const handShape=p=>(p==='peek'||p==='duck')?'grip':p==='found'&&green&&i===1?'point':'palm';
+    const shapeA=eyeSamples[handShape(pose)],shapeB=eyeSamples[handShape(context.nextPose)];
+    hand.setAttribute('d',shapeA.map((p,j)=>`${j?'L':'M'}${lerp(p[0],shapeB[j][0],t).toFixed(2)} ${lerp(p[1],shapeB[j][1],t).toFixed(2)}`).join(' ')+'Z');
     hand.setAttribute('transform',`translate(${x} ${y}) rotate(${angle}) scale(${scale})`);
    });
    wrap.dataset.companionRenderedPose=pose;

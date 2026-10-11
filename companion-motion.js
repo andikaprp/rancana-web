@@ -24,7 +24,7 @@
   const failedPoses = new Set();
   const poseRequests = new Map();
   const poseNames = ['ready', 'lift1', 'lift2', 'present', 'settle1', 'settle2',
-    'search', 'peek', 'found', 'cover'];
+    'search', 'peek', 'found', 'cover', 'duck'];
   const intermediates = {
     lift1: ['ready', 'lift2', 'present'],
     lift2: ['lift1', 'present', 'ready'],
@@ -137,6 +137,8 @@
     const wordBox = word.getBoundingClientRect();
     const text = word.firstChild;
     const centers = [];
+    let leftEdge = wordBox.left - rowBox.left;
+    let rightEdge = leftEdge + wordBox.width;
     // Ranges measure the actual unchanged text, retaining its kerning and glyphs.
     // No split-letter recreation, duplicate text, or opaque rectangular cover.
     if (text?.nodeType === Node.TEXT_NODE && text.length >= 7) {
@@ -146,67 +148,60 @@
         range.setEnd(text, i + 1);
         const box = range.getBoundingClientRect();
         centers.push(box.left + box.width / 2 - rowBox.left);
+        if (i === 0) leftEdge = box.left - rowBox.left;
+        if (i === 6) rightEdge = box.left + box.width - rowBox.left;
       }
       range.detach();
     }
     if (centers.length !== 7) {
       for (let i = 0; i < 7; i++) centers[i] = wordBox.left - rowBox.left + wordBox.width * (i + .5) / 7;
     }
+    centers.leftEdge = leftEdge;
+    centers.rightEdge = rightEdge;
     return centers;
   }
 
   function footerTrack(item, glyphs, green) {
-    const image = item.element;
-    const width = image.offsetWidth;
-    const height = image.offsetHeight;
-    const base = image.offsetLeft + width / 2;
-    const at = (glyph, y, tilt, scale) =>
-      `translate(${(glyphs[glyph] - base).toFixed(3)}px, ${(y * height).toFixed(3)}px) rotate(${tilt}deg) scale(${scale})`;
-    // An 18-second two-act story. Rest -> Ranca searches / Cana hides and peeks ->
-    // found -> roles swap -> Cana searches / Ranca peeks -> found -> shared rest.
-    // Both actors remain behind the real foreground word, including open counters.
+    const element = item.element;
+    const width = element.offsetWidth;
+    const height = element.offsetHeight;
+    const base = element.offsetLeft + width / 2;
+    const at = (center, y, tilt, scale = .98) =>
+      `translate(${(center - base).toFixed(3)}px, ${(y * height).toFixed(3)}px) rotate(${tilt}deg) scale(${scale})`;
+    const side = base; // The searcher keeps the generous original outside slot.
+    const behindR = glyphs.leftEdge + width * .12;
+    const besideR = glyphs.leftEdge - width * .25;
+    const behindA = glyphs[6] + width * .1;
+    const rightFound = glyphs[6] + width * .35;
+    // Four readable held compositions, not two shrunken bodies sliding under text:
+    // 1. Ranca searches at left, Cana grips/peeks above the last a.
+    // 2. Both faces rise clearly above the letters for the discovery.
+    // 3. Ranca ducks behind R while Cana visibly covers her eyes and counts.
+    // 4. Cana searches from the right while Ranca peeks out beside R.
+    // Only the hider is concealed. Open glyph counters remain transparent.
     return green ? [
-      [0, neutral, 'ready'], [900, neutral, 'ready'],
-      [1650, at(0, 0, -4, .76), 'search'],
-      [2700, at(0, 0, -4, .76), 'search'],
-      [3400, at(1, 0, 4, .72), 'search'],
-      [4350, at(1, 0, 4, .72), 'search'],
-      [5050, at(2, -.03, -4, .72), 'search'],
-      [5650, at(2, -.03, -4, .72), 'search'],
-      [6200, at(3, -.12, 4, .8), 'found'],
-      [7150, at(3, -.12, 4, .8), 'found'],
-      [8150, at(0, 0, -5, .52), 'cover'],
-      [9900, at(0, 0, -5, .52), 'cover'],
-      [10500, at(0, -.2, -7, .6), 'peek'],
-      [11100, at(0, -.2, -7, .6), 'peek'],
-      [11500, at(0, 0, -5, .52), 'cover'],
-      [12400, at(0, 0, -5, .52), 'cover'],
-      [13050, at(0, -.2, -7, .64), 'peek'],
-      [13650, at(0, -.2, -7, .64), 'peek'],
-      [14100, at(0, -.12, -4, .8), 'found'],
-      [15000, at(0, -.12, -4, .8), 'found'],
-      [16100, neutral, 'ready'], [18000, neutral, 'ready']
+      [0, neutral, 'ready'], [600, neutral, 'ready'],
+      [1500, at(side, -.22, -4), 'search'],
+      [4500, at(side, -.22, -4), 'search'],
+      [5600, at(glyphs[2], -.56, 2), 'found'],
+      [7700, at(glyphs[2], -.56, 2), 'found'],
+      [9100, at(behindR, .01, -3, .9), 'duck'],
+      [11800, at(behindR, .01, -3, .9), 'duck'],
+      [13000, at(besideR, -.02, -3, .94), 'peek'],
+      [15800, at(besideR, -.02, -3, .94), 'peek'],
+      [16800, neutral, 'ready'], [18000, neutral, 'ready']
     ] : [
-      [0, neutral, 'ready'], [650, neutral, 'ready'],
-      [1500, at(5, 0, 5, .52), 'cover'],
-      [2350, at(5, 0, 5, .52), 'cover'],
-      [2950, at(5, -.2, 7, .6), 'peek'],
-      [3600, at(5, -.2, 7, .6), 'peek'],
-      [4000, at(5, 0, 5, .52), 'cover'],
-      [4750, at(5, 0, 5, .52), 'cover'],
-      [5300, at(5, -.2, 7, .64), 'peek'],
-      [5850, at(5, -.2, 7, .64), 'peek'],
-      [6200, at(5, -.12, -4, .8), 'found'],
-      [7150, at(5, -.12, -4, .8), 'found'],
-      [8050, at(5, 0, 4, .76), 'search'],
-      [8950, at(5, 0, 4, .76), 'search'],
-      [9900, at(4, 0, -4, .72), 'search'],
-      [11100, at(4, 0, -4, .72), 'search'],
-      [11900, at(3, -.03, 4, .72), 'search'],
-      [12850, at(3, -.03, 4, .72), 'search'],
-      [14100, at(2, -.12, -4, .8), 'found'],
-      [15000, at(2, -.12, -4, .8), 'found'],
-      [16100, neutral, 'ready'], [18000, neutral, 'ready']
+      [0, neutral, 'ready'], [600, neutral, 'ready'],
+      [1500, at(behindA, .01, 3, .9), 'duck'],
+      [2300, at(behindA, -.3, 3, .94), 'peek'],
+      [4500, at(behindA, -.3, 3, .94), 'peek'],
+      [5600, at(rightFound, -.56, -2), 'found'],
+      [7700, at(rightFound, -.56, -2), 'found'],
+      [9100, at(side, -.3, 2), 'cover'],
+      [11800, at(side, -.3, 2), 'cover'],
+      [13000, at(side, -.22, 4), 'search'],
+      [15800, at(side, -.22, 4), 'search'],
+      [16800, neutral, 'ready'], [18000, neutral, 'ready']
     ];
   }
 
@@ -300,9 +295,9 @@
     });
     const phase = scene.name === 'present'
       ? (time < 1400 || time >= 6850 ? 'ready' : 'present')
-      : time < 650 || time >= 16100 ? 'ready'
-      : time < 6200 ? 'ranca-searches' : time < 7150 ? 'found'
-      : time < 14100 ? 'cana-searches' : 'found';
+      : time < 600 || time >= 16800 ? 'ready'
+      : time < 5600 ? 'ranca-searches' : time < 7700 ? 'found'
+      : time < 13000 ? 'swap-roles' : 'cana-searches';
     if (scene.root.dataset.companionPhase !== phase) scene.root.dataset.companionPhase = phase;
   }
 

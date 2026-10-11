@@ -26,7 +26,7 @@ if (process.argv.includes('--static')) {
   process.exit(0);
 }
 await fs.mkdir(out, {recursive: true});
-const report = {originalHashes, responsive: [], lifecycle: [], failures: [], videos: [], complete: false};
+const report = {originalHashes, responsive: [], lifecycle: [], failures: [], headerIsolation: [], videos: [], complete: false};
 const bodyAssets = new Set();
 const server = http.createServer(async (req, res) => {
   try {
@@ -388,30 +388,69 @@ async function checkWordmarkOcclusion(page, lang, width, candidates) {
         return {left: word.left - row.left, right: word.right - row.left, top: word.top - row.top, bottom: word.bottom - row.top};
       });
       const pixels = await page.evaluate(async ({encoded, wordArea}) => {
-        let pixelWidth;
+        let pixelWidth, pixelHeight;
         const pictures = await Promise.all(encoded.map(async source => {
           const image = new Image(); image.src = `data:image/png;base64,${source}`; await image.decode();
-          pixelWidth = image.width;
+          pixelWidth = image.width; pixelHeight = image.height;
           const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
           const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
           return context.getImageData(0, 0, image.width, image.height).data;
         }));
         const [actual, word, background, actor] = pictures;
         const difference = (a, b, i) => Math.max(...[0, 1, 2].map(channel => Math.abs(a[i + channel] - b[i + channel])));
+        const neighborhood = (x, y, test) => {
+          if (x < 1 || y < 1 || x >= pixelWidth - 1 || y >= pixelHeight - 1) return false;
+          for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+            if (!test(((y + dy) * pixelWidth + x + dx) * 4)) return false;
+          }
+          return true;
+        };
         let hiddenByGlyph = 0, wrongGlyph = 0, visibleInGap = 0, wrongGap = 0;
+        const mismatches = [];
+
         for (let i = 0; i < actual.length; i += 4) {
           const x = (i / 4) % pixelWidth, y = Math.floor(i / 4 / pixelWidth);
           // Count only pixels INSIDE the real text box. Actor pixels outside
           // the lettering cannot falsely satisfy the transparent-gap test.
           if (x <= wordArea.left + 1 || x >= wordArea.right - 1 || y <= wordArea.top + 1 || y >= wordArea.bottom - 1) continue;
           if (difference(actor, background, i) < 12) continue;
-          const solidGlyph = [0, 1, 2].every(channel => Math.abs(word[i + channel] - 183) <= 1);
-          if (solidGlyph) { hiddenByGlyph++; if (difference(actual, word, i) > 3) wrongGlyph++; }
-          if (difference(word, background, i) <= 1) { visibleInGap++; if (difference(actual, actor, i) > 3) wrongGap++; }
+          // Baseline gray184 is not opaque: it can be a ~98.6%-covered
+          // antialiased edge over white. A colored actor correctly UNDER that
+          // edge can change it by >3 levels. Prove occlusion only inside a 3x3
+          // neighborhood of exact opaque gray183, and gap visibility only away
+          // from glyph edges. Keep the pixel comparison tolerance unchanged.
+          const solidGlyph = neighborhood(x, y, j => [0, 1, 2].every(channel => word[j + channel] === 183));
+          const clearGap = neighborhood(x, y, j => difference(word, background, j) <= 1);
+          if (solidGlyph) {
+            hiddenByGlyph++;
+            if (difference(actual, word, i) > 3) {
+              wrongGlyph++;
+              if (mismatches.length < 20) mismatches.push({kind: 'glyph', x, y,
+                actual: [...actual.slice(i, i + 3)], expected: [...word.slice(i, i + 3)]});
+            }
+          }
+          if (clearGap) {
+            visibleInGap++;
+            if (difference(actual, actor, i) > 3) {
+              wrongGap++;
+              if (mismatches.length < 20) mismatches.push({kind: 'gap', x, y,
+                actual: [...actual.slice(i, i + 3)], expected: [...actor.slice(i, i + 3)]});
+            }
+          }
         }
-        return {hiddenByGlyph, wrongGlyph, visibleInGap, wrongGap};
+        return {hiddenByGlyph, wrongGlyph, visibleInGap, wrongGap, mismatches};
       }, {encoded: images.map(buffer => buffer.toString('base64')), wordArea});
       best = {character, time: candidate.time, ...pixels};
+      if (pixels.hiddenByGlyph < 3 || pixels.visibleInGap < 3 ||
+          pixels.wrongGlyph > Math.max(1, pixels.hiddenByGlyph * .015) ||
+          pixels.wrongGap > Math.max(1, pixels.visibleInGap * .015)) {
+        // Retain all inputs on failure so a genuine z-order/mask regression can
+        // be distinguished from rasterization without loosening the assertion.
+        for (const [index, layer] of ['actual', 'word', 'background', 'actor'].entries()) {
+          await fs.writeFile(path.join(out, `${lang}-${width}-occlusion-${character}-${candidate.time}-${layer}.png`), images[index]);
+        }
+        await fs.writeFile(path.join(out, `${lang}-${width}-occlusion-${character}-${candidate.time}-pixels.json`), JSON.stringify(best, null, 2));
+      }
       if (pixels.hiddenByGlyph >= 3 && pixels.visibleInGap >= 3) {
         await fs.writeFile(path.join(out, `${lang}-${width}-occlusion-${character}.png`), images[0]);
         break;
@@ -597,6 +636,108 @@ async function checkInitialReducedAndUnsupported(lang) {
   }
 }
 
+async function checkHeaderIsolation(lang, width) {
+  // The existing header has its own animation controller. Compare its exact
+  // reduced-motion rest state, not screenshots taken at different gesture times.
+  const pages = [];
+  try {
+    for (const enabled of [true, false]) {
+      const page = await browser.newPage({viewport: {width, height: 1000}, reducedMotion: 'reduce'}), errors = [];
+      pages.push({page, enabled, errors});
+      page.on('pageerror', error => errors.push(error.message));
+      await page.route('https://**/*', route => route.abort());
+      if (!enabled) {
+        await page.route('**/companion-motion.css*', route => route.fulfill({contentType: 'text/css', body: ''}));
+        for (const script of ['companion-motion', 'companion-art']) {
+          await page.route(`**/${script}.js*`, route => route.fulfill({contentType: 'text/javascript', body: ''}));
+        }
+      }
+      await page.goto(`${origin}/${lang}/`);
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+        for (const image of document.images) image.loading = 'eager';
+        await Promise.all([...document.images].map(image => image.decode().catch(() => {})));
+      });
+      const reject = page.locator('[data-consent-reject]');
+      if (await reject.isVisible()) await reject.click();
+      await page.waitForFunction(() => !!document.querySelector('.site-header .brand-mark svg'));
+      if (enabled) await page.waitForFunction(() => [...document.querySelectorAll('[data-companion-scene-root]')]
+        .every(element => element.dataset.companionAssets && element.dataset.companionAssets !== 'loading'));
+    }
+    for (const state of ['top', 'sticky']) {
+      const captures = [];
+      for (const {page, enabled, errors} of pages) {
+        await page.evaluate(sticky => {
+          scrollTo({top: sticky ? 700 : 0, behavior: 'instant'});
+        }, state === 'sticky');
+        await page.waitForFunction(sticky => document.querySelector('.site-header').classList.contains('is-sticky') === sticky,
+          state === 'sticky');
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        const snapshot = await page.locator('.site-header').evaluate(header => ({
+          scroll: {x: scrollX, y: scrollY},
+          html: header.outerHTML,
+          nodes: [header, ...header.querySelectorAll('*')].map(element => {
+            const style = getComputedStyle(element);
+            return {tag: element.tagName, rect: element.getBoundingClientRect().toJSON(),
+              style: Object.fromEntries([...style].map(property => [property, style.getPropertyValue(property)]))};
+          }),
+          animations: header.getAnimations({subtree: true}).length,
+        }));
+        assert.equal(snapshot.animations, 0, 'header A/B uses the same reduced-motion rest state');
+        assert.deepEqual(errors, []);
+        const screenshot = await page.locator('.site-header').screenshot();
+        const prefix = `header-isolation-${lang}-${width}-${state}-${enabled ? 'enabled' : 'blocked'}`;
+        await fs.writeFile(path.join(out, `${prefix}.png`), screenshot);
+        captures.push({snapshot, screenshot, prefix});
+      }
+      // Save structured diagnostic input as well if a selector/style unexpectedly
+      // leaks into the header, before throwing away the comparison context.
+      if (JSON.stringify(captures[0].snapshot) !== JSON.stringify(captures[1].snapshot)) {
+        for (const capture of captures) await fs.writeFile(path.join(out, `${capture.prefix}.json`), JSON.stringify(capture.snapshot, null, 2));
+      }
+      assert.deepEqual(captures[0].snapshot, captures[1].snapshot,
+        `${lang}/${width}/${state}: companion code must not change header DOM, computed styles, geometry or scroll`);
+      assert.ok(captures[0].screenshot.equals(captures[1].screenshot),
+        `${lang}/${width}/${state}: same-state header screenshot must be pixel-identical with companion code enabled vs blocked`);
+      report.headerIsolation.push({lang, width, state, sameDOM: true, sameStylesAndBounds: true, identicalPixels: true,
+        sha256: crypto.createHash('sha256').update(captures[0].screenshot).digest('hex')});
+    }
+  } finally { await Promise.all(pages.map(({page}) => page.close())); }
+}
+
+async function captureFooterStoryBeats() {
+  const beats = [
+    {time: 3000, name: 'green-search-pink-peek', poses: ['search', 'peek']},
+    {time: 6500, name: 'found-together', poses: ['found', 'found']},
+    {time: 10500, name: 'green-duck-pink-count', poses: ['duck', 'cover']},
+    {time: 14500, name: 'pink-search-green-peek', poses: ['peek', 'search']},
+  ];
+  report.storyBeats = [];
+  for (const [label, width, height] of [['mobile', 393, 852], ['desktop', 1440, 1000]]) {
+    const {page, errors} = await openPage('id', width, {height});
+    try {
+      await reveal(page, 'hide-seek');
+      for (const beat of beats) {
+        await seek(page, 'hide-seek', beat.time);
+        const prefix = `${label}-story-${beat.time}-${beat.name}`;
+        await page.screenshot({path: path.join(out, `${prefix}.png`)});
+        const region = await page.locator(rootSelector('hide-seek')).evaluate(element => {
+          const box = element.getBoundingClientRect();
+          const top = Math.max(0, box.top - 160), left = Math.max(0, box.left);
+          return {x: left, y: top, width: Math.min(innerWidth - left, box.width),
+            height: Math.min(innerHeight, box.bottom + 16) - top};
+        });
+        await page.screenshot({path: path.join(out, `${prefix}-detail.png`), clip: region});
+        const poses = await page.locator(actorSelector('hide-seek')).evaluateAll(elements =>
+          elements.map(element => element.dataset.companionPose));
+        report.storyBeats.push({label, width, time: beat.time, name: beat.name, poses, file: `${prefix}.png`});
+        assert.deepEqual(poses, beat.poses, `${prefix}: requested held story beat`);
+      }
+      assert.deepEqual(errors, []);
+    } finally { await page.close(); }
+  }
+}
+
 async function recordNaturalVideo(label, width, height, scene) {
   const context = await browser.newContext({viewport: {width, height}, reducedMotion: 'no-preference',
     recordVideo: {dir: out, size: {width, height}}});
@@ -630,9 +771,11 @@ async function recordNaturalVideo(label, width, height, scene) {
 try {
   browser = await chromium.launch({args: ['--no-sandbox'], ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
     ? {executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH} : {})});
+  await captureFooterStoryBeats();
   for (const [label, width, height] of [['mobile', 393, 852], ['desktop', 1440, 1000]]) {
     for (const scene of Object.keys(scenes)) await recordNaturalVideo(label, width, height, scene);
   }
+  for (const lang of ['id', 'en']) for (const width of [320, 393, 1440]) await checkHeaderIsolation(lang, width);
   for (const lang of ['id', 'en']) for (const width of widths) {
     const {page, errors} = await openPage(lang, width);
     try {
