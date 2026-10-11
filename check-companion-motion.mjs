@@ -24,8 +24,10 @@ try{
     const items=[...document.querySelectorAll(`.companion-stage[data-scene="${scene}"]`)];
     const protectedEls=[...document.querySelectorAll('.hero-ctas a,.download-content a,.preview-footer a,.footer-brand-text')].map(el=>({name:el.className,rect:el.getBoundingClientRect()}));
     // The screenshot includes a faded white border. Protect its actual UI, not that decorative margin.
-    const phone=document.querySelector('.phone-center')?.getBoundingClientRect();
-    if(phone)for(const [name,x1,y1,x2,y2] of [['screen-content',.125,.07,.875,.80],['screen-add-button',.36,.825,.69,.895]])protectedEls.push({name,rect:{left:phone.left+phone.width*x1,right:phone.left+phone.width*x2,top:phone.top+phone.height*y1,bottom:phone.top+phone.height*y2}});
+    for(const screen of document.querySelectorAll('.hero .phone')){
+     const phone=screen.getBoundingClientRect();
+     for(const [name,x1,y1,x2,y2] of [['screen-content',.125,.07,.875,.80],['screen-add-button',.36,.825,.69,.895]])protectedEls.push({name:screen.className+' '+name,rect:{left:phone.left+phone.width*x1,right:phone.left+phone.width*x2,top:phone.top+phone.height*y1,bottom:phone.top+phone.height*y2}});
+    }
     const overlaps=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
     const problems=[];
     const initialWord=document.querySelector('.footer-brand-text').getBoundingClientRect().toJSON();

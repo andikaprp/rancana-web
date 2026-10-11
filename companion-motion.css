@@ -15,3 +15,5 @@
 @media(max-width:899px){.hero-companion{width:min(27vw,205px);bottom:6px}}
 /* Give dancing hands breathing room beside the wordmark on narrow footers. */
 @media(max-width:600px){.footer-brand-row .companion-stage>.companion-rig{inset:6%;width:88%;height:88%}}
+/* Leave the two side-theme screen cards visible during the inward offer. */
+@media(min-width:900px){.hero-companion{width:min(260px,18vw)}}
