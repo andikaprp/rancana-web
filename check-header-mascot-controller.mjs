@@ -4,7 +4,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 // Deterministic controller coverage; actual markup, layout and artwork are checked
-// in check-header-mascot.mjs. Each element owns its own WAAPI animation queue.
+// in check-header-mascot.mjs. Only the intact mascot may own a WAAPI animation.
 const code = await readFile(new URL('shared-nav.js', import.meta.url), 'utf8');
 const pageProfiles = {
  index: ['welcome', 'study', 'cards', 'confidence', 'download', 'question'],
@@ -22,8 +22,9 @@ const pageProfiles = {
 
 function createHarness({pathname = '/id/', count = 6, initialSection = 0, height = 1080,
  initialReduced = false, initialHidden = false, initialVisible = true, notifyInitially = true} = {}) {
- let now = 0, nextTimer = 1, sectionSelector, cue;
+ let now = 0, nextTimer = 1, sectionSelector;
  const timers = new Map(), observers = [], motions = [], active = new Set();
+ const createdNodes = [], insertions = [], textWrites = [];
  const events = new Map(), documentEvents = new Map();
  const on = (map, name, callback) => map.set(name, [...(map.get(name) || []), callback]);
  const emit = (map, name) => (map.get(name) || []).forEach(callback => callback());
@@ -32,29 +33,36 @@ function createHarness({pathname = '/id/', count = 6, initialSection = 0, height
   timers.set(id, {callback, at: now + Math.max(0, delay)});
   return id;
  };
- const makeElement = (tagName, name = tagName) => {
+ const makeElement = (tagName, name = tagName, initialText = '') => {
   const listeners = new Map();
   const element = {
    tagName, name, dataset: {}, attributes: {}, children: [], top: 0,
    setAttribute(key, value) { this.attributes[key] = value; },
-   append(child) { this.children.push(child); },
-   after(sibling) { this.nextElementSibling = sibling; sibling.previousElementSibling = this; },
+   append(...children) { insertions.push({element: name, method: 'append', children}); this.children.push(...children); },
+   appendChild(child) { this.append(child); return child; },
+   prepend(...children) { insertions.push({element: name, method: 'prepend', children}); this.children.unshift(...children); },
+   after(sibling) { insertions.push({element: name, method: 'after', sibling}); this.nextElementSibling = sibling; sibling.previousElementSibling = this; },
+   before(sibling) { insertions.push({element: name, method: 'before', sibling}); this.previousElementSibling = sibling; },
+   insertAdjacentElement(position, child) { insertions.push({element: name, method: 'insertAdjacentElement', position, child}); },
+   insertAdjacentHTML(position, value) { textWrites.push({element: name, property: 'insertAdjacentHTML', position, value}); },
+   insertAdjacentText(position, value) { textWrites.push({element: name, property: 'insertAdjacentText', position, value}); },
    getBoundingClientRect() { return {top: this.top, bottom: this.top + 700, height: 700}; },
    addEventListener: (name, callback) => on(listeners, name, callback),
    emit: name => emit(listeners, name),
    matches: selector => selector === '.article-card' && name.startsWith('section-') && Number(name.slice(8)) >= 1,
    animate(frames, options) {
+    assert.equal(name, 'mascot', 'only the full mascot animates; the wordmark and other header elements stay still');
     assert.equal([...active].filter(animation => animation.element === this).length, 0,
      `${name} animations never overlap on the same element`);
     const motion = {element: name, time: now, frames: JSON.parse(JSON.stringify(frames)),
      options: JSON.parse(JSON.stringify(options)), duration: options.duration,
-     behavior: mascot.dataset.rancaBehavior, cue: cue?.dataset.rancaCue,
+     behavior: mascot.dataset.rancaBehavior,
      kind: mascot.dataset.rancaMotion, cancelled: false};
     motions.push(motion);
     let resolve, reject, finished, state = 'running';
     const animation = {element: this,
-     // A cue's finished promise is never read by this controller. Create it lazily,
-     // as the platform does, so cancelling a cue does not invent a rejection.
+     // Model the platform's lazily accessed finished promise so cancellation
+     // does not invent an unobserved rejection.
      get finished() {
       if (!finished) finished = new Promise((yes, no) => {
        resolve = yes; reject = no;
@@ -76,9 +84,44 @@ function createHarness({pathname = '/id/', count = 6, initialSection = 0, height
     return animation;
    }
   };
+  for (const property of ['textContent', 'innerText', 'innerHTML', 'outerHTML']) {
+   let value = initialText;
+   Object.defineProperty(element, property, {
+    get: () => value,
+    set: next => { textWrites.push({element: name, property, value: next}); value = next; }
+   });
+  }
   return element;
  };
  const mascot = makeElement('span', 'mascot');
+ const wordmark = makeElement('span', 'wordmark', 'Rancana');
+ const brand = makeElement('a', 'brand');
+ const header = makeElement('header', 'header');
+ brand.children = [mascot, wordmark]; header.children = [brand];
+ mascot.nextElementSibling = wordmark; wordmark.previousElementSibling = mascot;
+ mascot.parentElement = brand; wordmark.parentElement = brand; brand.parentElement = header;
+ const headerElement = selector => {
+  if (selector.endsWith('.brand-mark')) return mascot;
+  if (selector.endsWith('.brand-name')) return wordmark;
+  if (selector.endsWith('.brand')) return brand;
+  if (selector === '.site-header') return header;
+  return null;
+ };
+ for (const element of [mascot, wordmark, brand, header]) {
+  element.querySelector = headerElement;
+  element.querySelectorAll = selector => selector.split(',').map(value => headerElement(value.trim())).filter(Boolean);
+ }
+ const assertMascotOnly = () => {
+  assert.deepEqual(createdNodes, [], 'the controller creates no side icons or other nodes');
+  assert.deepEqual(insertions, [], 'the controller inserts no side nodes');
+  assert.deepEqual(textWrites, [], 'the controller injects no status text or HTML');
+  assert.equal(mascot.children.length, 0, 'the approved full mascot is not redrawn or replaced');
+  assert.equal(mascot.nextElementSibling, wordmark, 'the wordmark remains directly after the mascot');
+  assert.deepEqual(brand.children, [mascot, wordmark], 'the original brand structure is preserved');
+  assert.equal(wordmark.textContent, 'Rancana', 'the wordmark text is unchanged');
+  assert.equal(motions.filter(motion => motion.element === 'wordmark').length, 0, 'the wordmark never animates');
+  assert.ok(motions.every(motion => motion.element === 'mascot'), 'every motion belongs only to the mascot');
+ };
  const sections = Array.from({length: count}, (_, index) => {
   const section = makeElement('section', `section-${index}`);
   section.id = `section-${index}`; section.top = index * 800;
@@ -88,10 +131,14 @@ function createHarness({pathname = '/id/', count = 6, initialSection = 0, height
   addEventListener: (name, callback) => on(events, `reduced:${name}`, callback)};
  const document = {
   hidden: initialHidden,
-  querySelector: selector => selector === '.site-header .brand-mark' ? mascot : null,
-  querySelectorAll: selector => { sectionSelector = selector; return sections; },
-  createElement: tag => { const element = makeElement(tag, tag === 'span' ? 'cue' : tag); if (tag === 'span') cue = element; return element; },
-  createElementNS: (namespace, tag) => { const element = makeElement(tag); element.namespaceURI = namespace; return element; },
+  querySelector: headerElement,
+  querySelectorAll: selector => {
+   if (!selector.includes('main')) return selector.split(',').map(value => headerElement(value.trim())).filter(Boolean);
+   sectionSelector = selector; return sections;
+  },
+  createElement: tag => { const element = makeElement(tag); createdNodes.push(element); return element; },
+  createElementNS: (namespace, tag) => { const element = makeElement(tag); element.namespaceURI = namespace; createdNodes.push(element); return element; },
+  createTextNode: value => { const element = makeElement('#text', '#text', value); createdNodes.push(element); return element; },
   addEventListener: (name, callback) => on(documentEvents, name, callback)
  };
  const context = {
@@ -128,14 +175,15 @@ function createHarness({pathname = '/id/', count = 6, initialSection = 0, height
   }
   now = end;
   await Promise.resolve(); await Promise.resolve(); await Promise.resolve();
+  assertMascotOnly();
  };
  if (notifyInitially) {
   visibility(initialVisible);
   if (initialSection !== null) enter(initialSection);
  }
- return {motions, active, mascot, cue, sections, advance, enter, leave, intersections, visibility, sectionObserver,
+ assertMascotOnly();
+ return {motions, active, mascot, wordmark, assertMascotOnly, sections, advance, enter, leave, intersections, visibility, sectionObserver,
   mascotMotions: () => motions.filter(motion => motion.element === 'mascot'),
-  cueMotions: () => motions.filter(motion => motion.element === 'cue'),
   sectionSelector: () => sectionSelector,
   scroll: () => emit(events, 'scroll'),
   resize: height => { context.innerHeight = height; emit(events, 'resize'); },
@@ -154,7 +202,6 @@ await test('section observer can fire before mascot visibility without dropping 
  await h.advance(0);
  assert.deepEqual(h.mascotMotions().map(m => [m.time, m.kind, m.behavior, m.duration]),
   [[100, 'entry', 'welcome', 700]], 'welcome starts immediately once both observers agree');
- assert.deepEqual(h.cueMotions().map(m => [m.time, m.kind, m.cue]), [[100, 'entry', 'wave']]);
  h.visibility(true); h.enter(0);
  await h.advance(700);
  assert.equal(h.mascotMotions().length, 1, 'duplicate observations do not repeat the initial entry');
@@ -162,23 +209,17 @@ await test('section observer can fire before mascot visibility without dropping 
  assert.deepEqual(h.mascotMotions().map(m => [m.time, m.kind]), [[100, 'entry'], [5800, 'idle']]);
 });
 
-await test('semantic SVG cue is a decorative sibling of the intact mascot', () => {
- const h = createHarness();
- assert.equal(h.mascot.nextElementSibling, h.cue);
- assert.equal(h.cue.className, 'ranca-cue');
- assert.equal(h.mascot.attributes['aria-hidden'], 'true');
- assert.equal(h.cue.attributes['aria-hidden'], 'true');
- assert.equal(h.mascot.children.length, 0, 'the approved mascot is not redrawn or replaced');
- assert.equal(h.cue.children.length, 1);
- const svg = h.cue.children[0];
- assert.equal(svg.tagName, 'svg');
- assert.equal(svg.namespaceURI, 'http://www.w3.org/2000/svg');
- assert.equal(svg.attributes.viewBox, '0 0 16 16');
- assert.equal(svg.attributes.fill, 'none');
- assert.equal(svg.attributes.stroke, 'currentColor');
- assert.equal(svg.children[0].tagName, 'path');
- assert.ok(svg.children[0].attributes.d.startsWith('M'));
- assert.equal(h.active.size, 2, 'mascot and cue animate concurrently as separate elements');
+await test('only the intact mascot animates, without side nodes, status text or wordmark motion', async () => {
+ for (const [page, profiles] of Object.entries(pageProfiles)) {
+  const h = createHarness({pathname: `/id/${page}`, count: profiles.length});
+  assert.equal(h.mascot.attributes['aria-hidden'], 'true', 'the mascot remains decorative');
+  assert.equal(h.active.size, 1, 'only one mascot entry animation is active');
+  for (const index of profiles.keys()) {
+   h.enter(index);
+   await h.advance(12000);
+   h.assertMascotOnly();
+  }
+ }
 });
 
 await test('all routes and locale aliases map their ordered sections to contextual behaviors', () => {
@@ -197,38 +238,32 @@ await test('all routes and locale aliases map their ordered sections to contextu
  assert.deepEqual(createHarness({pathname: '/unmapped', count: 2}).sections.map(section => section.dataset.rancaBehavior), ['document', 'document']);
 });
 
-await test('six homepage sections have distinct meaningful entry, idle and semantic cue motions', async () => {
+await test('six homepage sections have distinct meaningful mascot entry and idle motions', async () => {
  const expected = [
-  {key: 'welcome', cue: 'wave', entry: ['rotate(0deg)', 'rotate(-9deg)', 'rotate(7deg)', 'rotate(-4deg)', 'rotate(0deg)'], idle: ['rotate(0deg)', 'rotate(-4deg)', 'rotate(3deg)', 'rotate(0deg)']},
-  {key: 'study', cue: 'book', entry: ['translateX(0) rotate(0deg)', 'translateX(2px) rotate(7deg)', 'translateX(2px) rotate(7deg)', 'translateX(0) rotate(0deg)'], idle: ['rotate(0deg)', 'rotate(4deg)', 'rotate(4deg)', 'rotate(0deg)']},
-  {key: 'cards', cue: 'cards', entry: ['translateX(0) rotate(0deg)', 'translateX(-2px) rotate(-5deg)', 'translateX(2px) rotate(5deg)', 'translateX(0) rotate(0deg)'], idle: ['translateX(0)', 'translateX(-1px)', 'translateX(1px)', 'translateX(0)']},
-  {key: 'confidence', cue: 'check', entry: ['translateY(0) scale(1)', 'translateY(1.5px) scale(.96,1.02)', 'translateY(-1px) scale(1.02,.98)', 'translateY(0) scale(1)'], idle: ['scale(1)', 'scale(1.025)', 'scale(1)']},
-  {key: 'download', cue: 'download', entry: ['translateY(0)', 'translateY(3px)', 'translateY(0)', 'translateY(2px)', 'translateY(0)'], idle: ['translateY(0)', 'translateY(1.5px)', 'translateY(0)']},
-  {key: 'question', cue: 'question', entry: ['rotate(0deg)', 'rotate(-10deg)', 'rotate(-10deg)', 'rotate(3deg)', 'rotate(0deg)'], idle: ['rotate(0deg)', 'rotate(-6deg)', 'rotate(-6deg)', 'rotate(0deg)']}
+  {key: 'welcome', entry: ['rotate(0deg)', 'rotate(-9deg)', 'rotate(7deg)', 'rotate(-4deg)', 'rotate(0deg)'], idle: ['rotate(0deg)', 'rotate(-4deg)', 'rotate(3deg)', 'rotate(0deg)']},
+  {key: 'study', entry: ['translateX(0) rotate(0deg)', 'translateX(2px) rotate(7deg)', 'translateX(2px) rotate(7deg)', 'translateX(0) rotate(0deg)'], idle: ['rotate(0deg)', 'rotate(4deg)', 'rotate(4deg)', 'rotate(0deg)']},
+  {key: 'cards', entry: ['translateX(0) rotate(0deg)', 'translateX(-2px) rotate(-5deg)', 'translateX(2px) rotate(5deg)', 'translateX(0) rotate(0deg)'], idle: ['translateX(0)', 'translateX(-1px)', 'translateX(1px)', 'translateX(0)']},
+  {key: 'confidence', entry: ['translateY(0) scale(1)', 'translateY(1.5px) scale(.96,1.02)', 'translateY(-1px) scale(1.02,.98)', 'translateY(0) scale(1)'], idle: ['scale(1)', 'scale(1.025)', 'scale(1)']},
+  {key: 'download', entry: ['translateY(0)', 'translateY(3px)', 'translateY(0)', 'translateY(2px)', 'translateY(0)'], idle: ['translateY(0)', 'translateY(1.5px)', 'translateY(0)']},
+  {key: 'question', entry: ['rotate(0deg)', 'rotate(-10deg)', 'rotate(-10deg)', 'rotate(3deg)', 'rotate(0deg)'], idle: ['rotate(0deg)', 'rotate(-6deg)', 'rotate(-6deg)', 'rotate(0deg)']}
  ];
- const entrySequences = new Set(), idleSequences = new Set(), cueEntries = new Set(), cueIdles = new Set(), cuePaths = new Set();
+ const entrySequences = new Set(), idleSequences = new Set();
  for (const [index, profile] of expected.entries()) {
   const h = createHarness({initialSection: index});
   const entry = h.mascotMotions()[0];
   assert.equal(entry.behavior, profile.key); assert.equal(entry.kind, 'entry');
   assert.deepEqual(transforms(entry), profile.entry, `${profile.key} entry gesture`);
   assert.deepEqual(entry.options, {duration: 700, easing: 'ease-in-out', iterations: 1});
-  assert.equal(h.cue.dataset.rancaCue, profile.cue);
-  assert.equal(h.cueMotions()[0].duration, 700);
   entrySequences.add(JSON.stringify(entry.frames));
-  cueEntries.add(JSON.stringify(h.cueMotions()[0].frames));
-  cuePaths.add(h.cue.children[0].children[0].attributes.d);
   await h.advance(5699); assert.equal(h.mascotMotions().length, 1);
   await h.advance(1);
   const idle = h.mascotMotions()[1];
   assert.equal(idle.kind, 'idle'); assert.equal(idle.behavior, profile.key);
   assert.deepEqual(transforms(idle), profile.idle, `${profile.key} idle gesture`);
   assert.deepEqual(idle.options, {duration: 1100, easing: 'ease-in-out', iterations: 1});
-  assert.equal(h.cueMotions()[1].duration, 1100);
   idleSequences.add(JSON.stringify(idle.frames));
-  cueIdles.add(`${profile.cue}:${JSON.stringify(h.cueMotions()[1].frames)}`);
  }
- for (const [label, values] of Object.entries({entrySequences, idleSequences, cueEntries, cueIdles, cuePaths})) {
+ for (const [label, values] of Object.entries({entrySequences, idleSequences})) {
   assert.equal(values.size, 6, `all six homepage ${label} are distinct`);
  }
 });
@@ -239,7 +274,6 @@ for (const switchAt of [300, 750]) await test(`entry at ${switchAt}ms replays af
  await h.advance(899 - switchAt); assert.equal(h.mascotMotions().length, 1);
  await h.advance(1);
  assert.deepEqual(h.mascotMotions().map(m => [m.time, m.behavior, m.kind]), [[0, 'welcome', 'entry'], [900, 'study', 'entry']]);
- assert.deepEqual(h.cueMotions().map(m => m.time), [0, 900]);
 });
 
 await test('latest section wins while an entry is queued', async () => {
@@ -248,7 +282,6 @@ await test('latest section wins while an entry is queued', async () => {
  await h.advance(200); h.enter(2);
  await h.advance(400);
  assert.deepEqual(h.mascotMotions().map(m => m.behavior), ['welcome', 'cards']);
- assert.equal(h.cue.dataset.rancaCue, 'cards');
 });
 
 await test('returning to a previous section replays its original entry', async () => {
@@ -313,30 +346,27 @@ await test('entry during idle waits and replays with the latest section gesture'
   [[0, 'entry', 'welcome'], [5700, 'idle', 'welcome'], [6800, 'entry', 'study']]);
 });
 
-await test('scroll cancels both idle animations and resumes after stopping', async () => {
+await test('scroll cancels the mascot idle animation and resumes after stopping', async () => {
  const h = createHarness();
  await h.advance(5800); h.scroll();
  assert.equal(h.active.size, 0);
  assert.equal(h.mascotMotions().at(-1).cancelled, true);
- assert.equal(h.cueMotions().at(-1).cancelled, true);
  await h.advance(4999); assert.equal(h.mascotMotions().length, 2);
  await h.advance(1);
  assert.equal(h.mascotMotions()[2].time, 10800);
- assert.equal(h.cueMotions()[2].time, 10800);
 });
 
 await test('scroll preserves entry and each idle has a full pause after it finishes', async () => {
  const h = createHarness();
  await h.advance(100); h.scroll();
- assert.equal(h.active.size, 2);
+ assert.equal(h.active.size, 1);
  assert.equal(h.mascotMotions()[0].cancelled, false);
- assert.equal(h.cueMotions()[0].cancelled, false);
  await h.advance(11699); assert.equal(h.mascotMotions().length, 2);
  await h.advance(1);
  assert.deepEqual(h.mascotMotions().map(m => m.time), [0, 5700, 11800]);
 });
 
-for (const setting of ['hidden', 'reduced', 'visibility']) await test(`${setting} cancels mascot/cue and resumes idle without stale entry`, async () => {
+for (const setting of ['hidden', 'reduced', 'visibility']) await test(`${setting} cancels the mascot and resumes idle without stale entry`, async () => {
  const h = createHarness();
  await h.advance(100); h[setting](setting !== 'visibility');
  assert.equal(h.active.size, 0);
@@ -348,7 +378,6 @@ for (const setting of ['hidden', 'reduced', 'visibility']) await test(`${setting
  await h.advance(1);
  assert.equal(h.mascotMotions()[1].kind, 'idle');
  assert.equal(h.mascotMotions()[1].behavior, 'study');
- assert.equal(h.cueMotions()[1].cue, 'book');
 });
 
 await test('an initially reduced, hidden or offscreen page never starts motion', async () => {
@@ -378,7 +407,7 @@ await test('article cards activate contextual entries by pointer and keyboard', 
  assert.equal(h.mascotMotions().at(-1).behavior, 'task');
 });
 
-await test('policy gestures are quarter-amplitude with still cues and nine-second idle pauses', async () => {
+await test('policy gestures are quarter-amplitude with nine-second idle pauses', async () => {
  // Independent expected transforms for policy sections, including non-calm
  // gestures reused from other pages. This catches missed translate/scale axes.
  const expected = {
@@ -407,8 +436,6 @@ await test('policy gestures are quarter-amplitude with still cues and nine-secon
    assert.equal(h.mascotMotions()[1].duration, 1600, label);
    await h.advance(10599); assert.equal(h.mascotMotions().length, 2, `${label} pauses again after idle`);
    await h.advance(1); assert.equal(h.mascotMotions()[2].time, 20500, label);
-   assert.equal(h.cueMotions().length, 0, `${label} keeps its semantic cue still`);
-   assert.ok(h.cue.children[0].children[0].attributes.d, `${label} still has a cue path`);
   }
  }
 });
