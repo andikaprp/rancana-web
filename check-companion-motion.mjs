@@ -630,6 +630,9 @@ async function recordNaturalVideo(label, width, height, scene) {
 try {
   browser = await chromium.launch({args: ['--no-sandbox'], ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
     ? {executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH} : {})});
+  for (const [label, width, height] of [['mobile', 393, 852], ['desktop', 1440, 1000]]) {
+    for (const scene of Object.keys(scenes)) await recordNaturalVideo(label, width, height, scene);
+  }
   for (const lang of ['id', 'en']) for (const width of widths) {
     const {page, errors} = await openPage(lang, width);
     try {
@@ -666,9 +669,6 @@ try {
     await checkResizeContinuity(lang);
     await checkInitialReducedAndUnsupported(lang);
     for (const width of [393, 1440]) await checkFailures(lang, width);
-  }
-  for (const [label, width, height] of [['mobile', 393, 852], ['desktop', 1440, 1000]]) {
-    for (const scene of Object.keys(scenes)) await recordNaturalVideo(label, width, height, scene);
   }
   report.complete = true;
   report.nativeArtReady = report.responsive.every(entry => entry.artwork.every(actor => actor.art === 'native'));

@@ -331,8 +331,8 @@
       if (active !== scene.running) {
         const time = Number(scene.actors[0].animation.currentTime || 0);
         for (const item of scene.actors) {
-          item.animation.currentTime = time;
-          active ? item.animation.play() : item.animation.pause();
+          if (active) { item.animation.currentTime = time; item.animation.play(); }
+          else { item.animation.pause(); item.animation.currentTime = time; }
         }
         scene.running = active;
       }
