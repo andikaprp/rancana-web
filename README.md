@@ -80,3 +80,7 @@ The audience section header flips between the existing backpack and graduation-c
 Cana's closed eye uses a white chevron that points inward (`>` on her left eye) and morphs through the existing continuous eye animation. Ranca keeps the curved closed-eye shape. `check-browser-comments.mjs` verifies the chevron's two arms and open center in both languages and desktop/mobile sizes.
 
 Hero and footer faces and hands follow the school/college artwork: rounded three-finger hands, small brows, open bean-shaped eyes and fuller white smiles. Wrist endpoints follow each hand's transform so the animated arms stay connected. The responsive browser check verifies those joins in hero and footer poses, including transitions and hiding/counting poses.
+
+## Website favicon
+
+The browser tab uses the static green Ranca artwork from the navbar, with SVG, 32px PNG and a 16/32/48/64px ICO fallback. All source and localized pages reference the current favicon URL; the root `favicon.ico` matches the asset fallback. `node check-seo.mjs` verifies the 33 page references, ICO entries and browser decoding. The app's icon and social preview remain separate assets.

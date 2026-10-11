@@ -15,7 +15,7 @@ const server = http.createServer(async (req, res) => {
     if (!path.extname(name)) name += '.html';
     const file = path.resolve(root, '.' + name);
     if (!file.startsWith(root + '/')) throw Error('invalid path');
-    res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : 'application/octet-stream');
+    res.setHeader('Content-Type', file.endsWith('.svg') ? 'image/svg+xml' : file.endsWith('.png') ? 'image/png' : file.endsWith('.ico') ? 'image/x-icon' : file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : 'application/octet-stream');
     res.end(await fs.readFile(file));
   } catch { res.statusCode = 404; res.end(); }
 });
@@ -29,11 +29,26 @@ try {
   const rows = await page.evaluate(documents => documents.map(({file, source}) => {
     const doc = new DOMParser().parseFromString(source, 'text/html');
     const meta = key => doc.querySelector('meta[name="' + key + '"],meta[property="' + key + '"]')?.content;
-    return {file, title: doc.title, description: meta('description'), robots: meta('robots'), keywords: meta('keywords'), canonical: doc.querySelector('link[rel=canonical]')?.href, alternates: [...doc.querySelectorAll('link[hreflang]')].map(a => [a.hreflang, a.href]), ogTitle: meta('og:title'), ogDescription: meta('og:description'), schema: [...doc.querySelectorAll('script[type="application/ld+json"]')].map(s => JSON.parse(s.textContent)), links: [...doc.querySelectorAll('a[href]')].map(a => a.getAttribute('href'))};
+    return {file, icons: [...doc.querySelectorAll('link[rel=icon]')].map(icon=>icon.getAttribute('href')), title: doc.title, description: meta('description'), robots: meta('robots'), keywords: meta('keywords'), canonical: doc.querySelector('link[rel=canonical]')?.href, alternates: [...doc.querySelectorAll('link[hreflang]')].map(a => [a.hreflang, a.href]), ogTitle: meta('og:title'), ogDescription: meta('og:description'), schema: [...doc.querySelectorAll('script[type="application/ld+json"]')].map(s => JSON.parse(s.textContent)), links: [...doc.querySelectorAll('a[href]')].map(a => a.getAttribute('href'))};
   }), documents);
+  const ico=await fs.readFile(path.join(root,'assets/favicon.ico'));
+  assert.deepEqual(ico,await fs.readFile(path.join(root,'favicon.ico')),'root fallback uses the same current favicon');
+  assert.equal(ico.readUInt16LE(2),1);assert.equal(ico.readUInt16LE(4),4);
+  for(const [index,size] of [16,32,48,64].entries()){
+    const entry=6+index*16,offset=ico.readUInt32LE(entry+12);
+    assert.equal(ico[entry],size);assert.equal(ico[entry+1],size);
+    assert.ok(offset+ico.readUInt32LE(entry+8)<=ico.length);
+    assert.equal(ico.toString('hex',offset,offset+8),'89504e470d0a1a0a');
+  }
+  await page.goto(origin);
+  for(const file of ['assets/favicon.svg?v=ranca-1','assets/ranca-favicon-32.png','assets/favicon.ico?v=ranca-1']){
+    assert.ok(await page.evaluate(async file=>{const image=new Image();image.src=file;await image.decode();return image.naturalWidth>0&&image.naturalWidth===image.naturalHeight;},file),'browser decodes square favicon: '+file);
+  }
   const canonicalSet = new Set(rows.filter(r => r.file.includes('/')).map(r => r.canonical));
   for (const row of rows) {
     assert.ok(row.title && row.description, row.file);
+    const prefix=row.file.includes('/')?'../':'';
+    assert.deepEqual(row.icons,[prefix+'assets/favicon.svg?v=ranca-1',prefix+'assets/ranca-favicon-32.png',prefix+'assets/favicon.ico?v=ranca-1'],row.file+': current Ranca favicons');
     assert.equal(row.ogTitle, row.title); assert.equal(row.ogDescription, row.description);
     assert.equal(row.keywords, undefined); assert.ok(canonicalSet.has(row.canonical));
     assert.equal(row.alternates.length, 3);
