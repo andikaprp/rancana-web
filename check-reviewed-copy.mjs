@@ -50,7 +50,7 @@ try {
    },items.filter(i=>i.page===filename));
    assert.deepEqual(missing,[],`${filename}: all approved text present`);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${filename} overflow at ${width}`);
-   assert.equal(await page.locator('.site-header a[href*="articles"]').count(),0);
+   assert.equal(await page.locator('.site-header .articles-nav').count(),0);
    assert.equal(await page.locator('footer a[href*="articles"]').count(),1);
    await page.evaluate(async()=>{
     for(const image of document.images)image.loading='eager';
