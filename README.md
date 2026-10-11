@@ -59,10 +59,10 @@ The mascot now responds to each section’s meaning. Homepage: welcome greeting 
 
 `check-header-context.mjs` verifies every homepage profile, distinct entry/idle sequences, repeat entry, mascot-only reduced motion, and supporting-page mappings in both languages. Its actual browser recording shows the clean interface with no preview labels. Tests assert the absence of added icons/status text and verify that the wordmark stays still.
 
-## Hero presenters and footer dance (review prototype)
+## Original-art hero and footer motion (review)
 
-`companion-motion.js` adds independent body, arm, face and smile tracks to the large hero pair and footer pair. Header motion is untouched. Hero characters take turns offering the central app showcase; footer characters exchange short dance phrases, followed by quiet rests. Motion pauses offscreen and while the document is hidden, and cancels under reduced motion. Slots, controls, copy, colors and the stationary footer wordmark retain their layout.
+`companion-motion.js` moves the exact approved `ranca-cloud.webp` and `cana-cloud.webp` images intact. The hero pair take turns leaning toward the app showcase; the footer pair alternate small dance steps, tilts and bounces, with long rests. These are whole-image gestures, not independent arm or facial animation. No body cleanup, redraw, recoloring, texture replacement or feature overlays are used. The header controller is untouched.
 
-Artwork approval is pending: Ranca reuses the approved articulated header SVG at the larger sizes; Cana is a new code-native vector adaptation of the selected pink cloud (silhouette, rim, wink, smile and outlined hands), not the identical textured WebP. Existing original images remain in the document as no-script fallbacks. Review the real-page desktop/mobile recordings before approving these larger vector versions. This PR does not authorize production deployment.
+Motion pauses offscreen and while the document is hidden, and cancels under reduced motion. Existing image slots, controls, copy and stationary footer wordmark retain their layout. Narrow-screen sizing leaves clearance for the motion.
 
-`node check-companion-motion.mjs` validates ID/EN at 320/393/768/900/1440/1920 px, actual painted animation bounds against controls/wordmark, reduced motion, visibility pause and creates natural-speed page recordings. The separate companion review CI job uploads its report and video artifacts.
+`node check-companion-motion.mjs` checks the original asset hashes and image-only DOM, ID/EN at 320/393/768/900/1440/1920 px, transformed alpha bounds against the screen interfaces and footer wordmark, reduced motion and visibility pause. The companion review CI job uploads natural-speed actual-page desktop/mobile videos and the test report. No merge or deployment is authorized by this review.

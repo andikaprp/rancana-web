@@ -1,19 +1,7 @@
-/* Articulated review adaptation. Layout slots and original fallback art stay intact. */
-.companion-stage{position:relative;display:block;width:100%;aspect-ratio:741/532;pointer-events:none;user-select:none}
-.companion-stage[data-character="cana"]{aspect-ratio:745/528}
-.companion-stage>img{display:block;width:100%;height:100%;object-fit:contain}
-.companion-stage>.companion-rig{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.companion-stage.is-rigged>img{visibility:hidden}
-.companion-stage .rig-body{transform-box:view-box;transform-origin:50% 62%}
-.companion-stage .rig-face{transform-box:view-box;transform-origin:50% 46%}
-.companion-stage .rig-hand-left{transform-box:view-box;transform-origin:17% 61%}
-.companion-stage .rig-hand-right{transform-box:view-box;transform-origin:84% 61%}
-.companion-stage .rig-eye-left,.companion-stage .rig-eye-right,.companion-stage .rig-smile{transform-box:fill-box;transform-origin:center}
-.preview-footer .footer-brand-row>.companion-stage{min-width:0;max-width:100%}
-@media(prefers-reduced-motion:reduce){.companion-stage *{animation:none!important;transition:none!important}}
-/* On small screens leave the flashcard and its button clear, even at 320px. */
-@media(max-width:899px){.hero-companion{width:min(27vw,205px);bottom:6px}}
-/* Give dancing hands breathing room beside the wordmark on narrow footers. */
-@media(max-width:600px){.footer-brand-row .companion-stage>.companion-rig{inset:6%;width:88%;height:88%}}
-/* Leave the two side-theme screen cards visible during the inward offer. */
+/* Original artwork only. Its colors, texture, silhouette, face and hands are intact. */
+.hero-companion .hero-mascot,.preview-footer .footer-brand-row .footer-mascot{transform-origin:50% 62%;pointer-events:none;user-select:none}
+/* Leave the three app interfaces and mobile footer lettering clear through every lean. */
 @media(min-width:900px){.hero-companion{width:min(260px,18vw)}}
+@media(max-width:899px){.hero-companion{width:min(27vw,205px);bottom:6px}}
+@media(max-width:600px){.preview-footer .footer-brand-row .footer-mascot{width:88%;justify-self:center}}
+@media(prefers-reduced-motion:reduce){.hero-mascot,.footer-mascot{animation:none!important;transition:none!important}}
