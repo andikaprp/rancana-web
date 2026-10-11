@@ -14,7 +14,7 @@ const server=http.createServer(async(req,res)=>{
  }catch{res.statusCode=404;res.end();}
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
-const origin=`http://127.0.0.1:${server.address().port}`;
+const origin=process.env.SITE_BASE_URL || `http://127.0.0.1:${server.address().port}`;
 let browser;
 await fs.mkdir(path.join(root,'review-evidence'),{recursive:true});
 const mapping=[
@@ -233,7 +233,7 @@ try{
   const viewport={width,height:width<900?900:800};
   const page=await browser.newPage({viewport,reducedMotion:'no-preference',...(lang==='id'?{recordVideo:{dir:path.join(root,'review-evidence'),size:viewport}}:{})});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.route('https://**/*',r=>r.abort());
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());
   await page.addInitScript(recordMotions);
   await page.goto(`${origin}/${lang}/`);await page.evaluate(()=>document.fonts.ready);
   if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
@@ -334,7 +334,7 @@ try{
  // unchanged; these crops are deliberately separate from the clean page clips.
  {
   const page=await browser.newPage({viewport:{width:390,height:900},deviceScaleFactor:6,reducedMotion:'reduce'});
-  await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());await page.addInitScript(recordMotions);
   await page.goto(`${origin}/id/`);await page.evaluate(()=>document.fonts.ready);
   if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
   const mark=await page.locator('.site-header .brand-mark').boundingBox();
@@ -358,7 +358,7 @@ try{
  {
   const page=await browser.newPage({viewport:{width:320,height:900},reducedMotion:'no-preference'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());await page.addInitScript(recordMotions);
   await page.goto(`${origin}/id/`);await page.evaluate(()=>document.fonts.ready);
   if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
   await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';});
@@ -381,7 +381,7 @@ try{
  // fallback, and cancelling it also restores the unmodified approved curves.
  {
   const page=await browser.newPage({viewport:{width:390,height:900},reducedMotion:'no-preference'});
-  await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());await page.addInitScript(recordMotions);
   await page.addInitScript(()=>{const supports=CSS.supports.bind(CSS);CSS.supports=(...args)=>args[0]==='d'?false:supports(...args);});
   await page.goto(`${origin}/id/`);
   await page.waitForFunction(()=>window.mascotMotions.some(m=>m.target==='rig-eye-left path'));
@@ -407,7 +407,7 @@ try{
  // Live preference changes cancel morphs as well as transforms and queued idle.
  {
   const page=await browser.newPage({viewport:{width:390,height:900},reducedMotion:'no-preference'});
-  await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());await page.addInitScript(recordMotions);
   await page.goto(`${origin}/id/`);
   await page.waitForFunction(()=>window.mascotMotions.some(m=>m.target==='rig-eye-left path'));
   await page.waitForTimeout(650);
@@ -428,7 +428,7 @@ try{
  // Every supporting section retains its explicit semantic map in both languages.
  for(const lang of ['id','en']){
   const page=await browser.newPage({viewport:{width:390,height:900},reducedMotion:'reduce'});
-  await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());await page.addInitScript(recordMotions);
   for(const file of ['about','help','premium','articles','college-schedule','todo-guide','flashcard-guide','privacy','terms','delete-account']){
    await page.goto(`${origin}/${lang}/${file}.html`);
    assert.equal(await page.locator('.brand-mark > svg.ranca-rig').count(),1,`${file}: integrated SVG`);
@@ -452,7 +452,7 @@ try{
   const viewport={width,height:width<900?900:800};
   const page=await browser.newPage({viewport,reducedMotion:'no-preference',recordVideo:{dir:path.join(root,'review-evidence'),size:viewport}});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());await page.addInitScript(recordMotions);
   const waitForPreviewBatch=async(key,kind,after)=>{
    try{
     await page.waitForFunction(({key,kind,after})=>document.querySelector('.brand-mark').dataset.rancaBehavior===key&&window.mascotMotions.some(m=>m.key===key&&m.kind===kind&&m.time>after),{key,kind,after},{timeout:12000});

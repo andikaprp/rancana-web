@@ -1,0 +1,114 @@
+name: Verify published PR23
+on:
+  push:
+    branches: [verify/pr23-production-20261011]
+permissions:
+  contents: read
+jobs:
+  bytes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node check-pr23-production-bytes.mjs
+        env:
+          RELEASE_SHA: d289e92315f601045326f72536178e117c27ea6f
+          CLOUDFLARE_BUILD: ca79433c-a4cc-47a6-b916-b41f1926cabc
+          CLOUDFLARE_VERSION: bcbceae3-3e87-491f-a2b0-da0d9f97cea7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr23-production-served-bytes
+          path: review-evidence/production-pr23/
+  header-layout:
+    needs: bytes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-header-mascot.mjs
+        env:
+          SITE_BASE_URL: https://rancana.id
+          COMPANION_BASE_URL: https://rancana.id
+          COMPANION_REQUIRE_POSES: '1'
+          COMPANION_RELEASE_SHA: d289e92315f601045326f72536178e117c27ea6f
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr23-production-header-layout
+          path: |
+            review-evidence/header-ranca-*.png
+            review-evidence/header-ranca-motion.webm
+            review-evidence/header-ranca-layout-report.json
+            review-evidence/header-ranca-navigation-report.json
+  header-context:
+    needs: bytes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-header-context.mjs
+        env:
+          SITE_BASE_URL: https://rancana.id
+          COMPANION_BASE_URL: https://rancana.id
+          COMPANION_REQUIRE_POSES: '1'
+          COMPANION_RELEASE_SHA: d289e92315f601045326f72536178e117c27ea6f
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr23-production-header-context
+          path: |
+            review-evidence/*.webm
+            review-evidence/header-context-*.png
+            review-evidence/header-ranca-context-report.json
+  companion-motion:
+    needs: bytes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-companion-motion.mjs
+        env:
+          SITE_BASE_URL: https://rancana.id
+          COMPANION_BASE_URL: https://rancana.id
+          COMPANION_REQUIRE_POSES: '1'
+          COMPANION_RELEASE_SHA: d289e92315f601045326f72536178e117c27ea6f
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr23-production-companion-motion
+          path: |
+            review-evidence/companion-motion/

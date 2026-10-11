@@ -45,7 +45,9 @@ const server = http.createServer(async (req, res) => {
   }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-const origin = `http://127.0.0.1:${server.address().port}`;
+const origin = process.env.COMPANION_BASE_URL || `http://127.0.0.1:${server.address().port}`;
+report.origin = origin;
+report.releaseCommit = process.env.COMPANION_RELEASE_SHA || null;
 let browser;
 const actorSelector = scene => `[data-companion-scene="${scene}"]`;
 const rootSelector = scene => `[data-companion-scene-root="${scene}"]`;
@@ -55,7 +57,7 @@ async function openPage(lang, width, {height = 1000, ...options} = {}) {
   const page = await browser.newPage({viewport: {width, height}, reducedMotion: 'no-preference', ...options});
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.route('https://**/*', route => route.abort());
+  await page.route('https://**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
   await page.goto(`${origin}/${lang}/`);
   await settle(page);
   return {page, errors};
@@ -557,7 +559,7 @@ async function checkFailures(lang, width) {
   assert.ok(bodyAssets.size >= 2, 'normal-page verification must discover both repaired-body asset URLs');
   const page = await browser.newPage({viewport: {width, height: 1000}}), errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.route('https://**/*', route => route.abort());
+  await page.route('https://**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
   let failedRequests = 0;
   for (const source of bodyAssets) await page.route(`${origin}${source}`, route => { failedRequests++; return route.abort(); });
   try {
@@ -584,7 +586,7 @@ async function checkFailures(lang, width) {
   // layout slot and keep the other mascot, lettering and controls usable.
   const missing = await browser.newPage({viewport: {width, height: 1000}}), missingErrors = [];
   missing.on('pageerror', error => missingErrors.push(error.message));
-  await missing.route('https://**/*', route => route.abort());
+  await missing.route('https://**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
   await missing.route('**/companion-art.js*', route => route.abort());
   await missing.route('**/assets/mascots/ranca-cloud.webp', route => route.abort());
   await missing.route(`${origin}/${lang}/`, async route => {
@@ -614,7 +616,7 @@ async function checkInitialReducedAndUnsupported(lang) {
     const page = await browser.newPage({viewport: {width: 393, height: 852},
       reducedMotion: mode === 'reduced' ? 'reduce' : 'no-preference'}), errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.route('https://**/*', route => route.abort());
+    await page.route('https://**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
     if (mode === 'unsupported') await page.addInitScript(() => { delete window.IntersectionObserver; });
     try {
       await page.goto(`${origin}/${lang}/`); await settle(page);
@@ -690,7 +692,7 @@ async function checkHeaderIsolation(lang, width) {
       const page = await browser.newPage({viewport: {width, height: 1000}, reducedMotion: 'reduce'}), errors = [];
       pages.push({page, enabled, errors});
       page.on('pageerror', error => errors.push(error.message));
-      await page.route('https://**/*', route => route.abort());
+      await page.route('https://**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
       if (!enabled) {
         await page.route('**/companion-motion.css*', route => route.fulfill({contentType: 'text/css', body: ''}));
         for (const script of ['companion-motion', 'companion-art']) {
@@ -895,7 +897,7 @@ async function recordNaturalVideo(label, width, height, scene) {
   page.on('pageerror', error => errors.push(error.message));
   const video = page.video();
   try {
-    await page.route('https://**/*', route => route.abort());
+    await page.route('https://**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
     await page.goto(`${origin}/id/`); await settle(page); await reveal(page, scene);
     // No time seeking, forced poses, speed changes, or test UI in these videos.
     // Twenty seconds includes one whole 18-second hide-and-seek cycle.

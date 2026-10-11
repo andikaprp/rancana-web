@@ -17,7 +17,7 @@ const server=http.createServer(async(req,res)=>{
  }catch{res.statusCode=404;res.end();}
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
-const origin=`http://127.0.0.1:${server.address().port}`;
+const origin=process.env.SITE_BASE_URL || `http://127.0.0.1:${server.address().port}`;
 let browser;
 await fs.mkdir(path.join(root,'review-evidence'),{recursive:true});
 const report=[];
@@ -85,7 +85,9 @@ try{
  for(const lang of ['id','en'])for(const width of [320,390,1440]){
   const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:'reduce',deviceScaleFactor:2});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.route('https://**/*',r=>r.abort());
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());
+  // The outlined reference is review-only and intentionally excluded from deployment.
+  await page.route('**/tests/fixtures/ranca-header-outlined.svg',r=>r.fulfill({contentType:'image/svg+xml',body:previousSVG}));
   for(const file of pages){
    await page.goto(`${origin}/${lang}/${file}`);await page.evaluate(()=>document.fonts.ready);
    const state=await page.locator('.site-header .brand-mark').evaluate(async el=>{
@@ -236,7 +238,9 @@ try{
  // Asymmetric display cutouts use symmetric gutters, not a shifted visual center.
  for(const width of [320,390]){
   const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'});
-  await page.route('https://**/*',r=>r.abort());
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());
+  // The outlined reference is review-only and intentionally excluded from deployment.
+  await page.route('**/tests/fixtures/ranca-header-outlined.svg',r=>r.fulfill({contentType:'image/svg+xml',body:previousSVG}));
   const cdp=await page.context().newCDPSession(page);
   await cdp.send('Emulation.setSafeAreaInsetsOverride',{insets:{top:38,left:54,right:8,bottom:0}});
   await page.goto(`${origin}/id/`);await page.evaluate(()=>document.fonts.ready);
@@ -254,7 +258,9 @@ try{
  // Neither its definitions nor its styles may alter the self-contained header.
  {
   const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
-  await page.route('https://**/*',r=>r.abort());
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());
+  // The outlined reference is review-only and intentionally excluded from deployment.
+  await page.route('**/tests/fixtures/ranca-header-outlined.svg',r=>r.fulfill({contentType:'image/svg+xml',body:previousSVG}));
   await page.goto(`${origin}/id/`);await page.evaluate(()=>document.fonts.ready);
   await page.locator('.brand-mark .rig-body-texture').evaluate(async node=>{const image=new Image();image.src=node.getAttribute('href');await image.decode();});
   const before=await page.locator('.site-header .brand').screenshot();
@@ -291,7 +297,9 @@ try{
  // comparison assets are inserted into the website or its clean motion clips.
  {
   const page=await browser.newPage({viewport:{width:1050,height:480},deviceScaleFactor:1,reducedMotion:'reduce'});
-  await page.route('https://**/*',r=>r.abort());
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());
+  // The outlined reference is review-only and intentionally excluded from deployment.
+  await page.route('**/tests/fixtures/ranca-header-outlined.svg',r=>r.fulfill({contentType:'image/svg+xml',body:previousSVG}));
   const samples=[['Original static','assets/mascots/ranca-cloud.webp'],['Previous outline','tests/fixtures/ranca-header-outlined.svg'],['Restored texture','assets/mascots/ranca-header.svg']];
   for(const scale of [1,6]){
    await page.setViewportSize({width:1050,height:scale===1?240:430});
@@ -310,7 +318,9 @@ try{
  // With JavaScript disabled, the same complete SVG is the CSS fallback.
  for(const lang of ['id','en'])for(const width of [390,1440]){
   const page=await browser.newPage({javaScriptEnabled:false,viewport:{width,height:900}});
-  await page.route('https://**/*',r=>r.abort());
+  await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());
+  // The outlined reference is review-only and intentionally excluded from deployment.
+  await page.route('**/tests/fixtures/ranca-header-outlined.svg',r=>r.fulfill({contentType:'image/svg+xml',body:previousSVG}));
   await page.goto(`${origin}/${lang}/`);
   const fallback=await page.locator('.brand-mark').evaluate(async el=>{
    const style=getComputedStyle(el),src=style.backgroundImage.match(/url\(["']?([^"')]+)/)?.[1];
@@ -324,7 +334,9 @@ try{
  }
  const page=await browser.newPage({viewport:{width:1440,height:800},reducedMotion:'no-preference'});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.route('https://**/*',r=>r.abort());
+ await page.route('https://**/*',r=>new URL(r.request().url()).origin===origin ? r.continue() : r.abort());
+  // The outlined reference is review-only and intentionally excluded from deployment.
+  await page.route('**/tests/fixtures/ranca-header-outlined.svg',r=>r.fulfill({contentType:'image/svg+xml',body:previousSVG}));
  await page.addInitScript(()=>{
   window.mascotMotions=[];const animate=Element.prototype.animate;
   Element.prototype.animate=function(frames,options){
