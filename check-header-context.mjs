@@ -59,19 +59,28 @@ const recordMotions=()=>{
    }];
   }));
  };
+ // Measure hand articulation relative to the body, so the preserved body nod
+ // and tilt cannot be mistaken for an independently moving or raised hand.
+ window.handGeometry=()=>Object.fromEntries(['left','right'].map(side=>{
+  const hand=document.querySelector(`.site-header .rig-hand-${side}`),transform=getComputedStyle(hand).transform;
+  const matrix=new DOMMatrixReadOnly(transform);
+  return [side,{transform,x:matrix.e,y:matrix.f,angle:Math.atan2(matrix.b,matrix.a)*180/Math.PI}];
+ }));
  window.headerGeometry=()=>{
   const brand=document.querySelector('.site-header .brand');
   const pill=brand.getBoundingClientRect(),mark=brand.querySelector('.brand-mark'),wordmark=brand.querySelector('.brand-name'),word=wordmark.getBoundingClientRect();
   const wordmarkVisible=wordmark.getClientRects().length>0&&word.width>0;
   const box=mark.getBoundingClientRect(),header=brand.closest('.site-header').getBoundingClientRect();
-  // The rim is clipped to the cloud. Measure its fill and the original stroked paths,
-  // allowing the intentional SVG overflow while keeping every painted part in the pill.
-  const painted=[...mark.querySelectorAll('.rig-face path,.rig-hands path,.rig-body > use')].map(el=>{
+  // The trusted texture has transparent margins. The independently verified
+  // alpha bounds count as paint; the empty 741x532 image canvas does not.
+  const texture=mark.querySelector('.rig-body-texture'),matrix=texture.getScreenCTM();
+  const corners=[[103,16],[725,16],[725,516],[103,516]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(matrix));
+  const painted=[{left:Math.min(...corners.map(p=>p.x)),right:Math.max(...corners.map(p=>p.x)),top:Math.min(...corners.map(p=>p.y)),bottom:Math.max(...corners.map(p=>p.y))},...[...mark.querySelectorAll('.rig-face path,.rig-hands path')].map(el=>{
    const r=el.getBoundingClientRect(),m=el.getScreenCTM(),style=getComputedStyle(el);
    const stroke=style.stroke==='none'?0:parseFloat(style.strokeWidth)/2;
    const x=stroke*Math.hypot(m.a,m.c),y=stroke*Math.hypot(m.b,m.d);
    return {left:r.left-x,right:r.right+x,top:r.top-y,bottom:r.bottom+y};
-  });
+  })];
   const pillClearance=Math.min(...painted.flatMap(r=>[r.left-pill.left,pill.right-r.right,r.top-pill.top,pill.bottom-r.bottom]));
   // The compact, non-sticky 320px header intentionally hides its wordmark.
   const wordmarkClearance=Math.min(...painted.map(r=>(wordmarkVisible?word.left:pill.right)-r.right));
@@ -92,7 +101,7 @@ const recordMotions=()=>{
   frame=null;
   const mark=document.querySelector('.site-header .brand-mark');
   if(!mark||!batch)return;
-  window.mascotFrames.push({...batch,time:performance.now(),geometry:window.headerGeometry(),face:window.faceGeometry()});
+  window.mascotFrames.push({...batch,time:performance.now(),geometry:window.headerGeometry(),face:window.faceGeometry(),hands:window.handGeometry()});
   if(mark.getAnimations({subtree:true}).length)frame=requestAnimationFrame(sample);
  };
  const animate=Element.prototype.animate;
@@ -139,6 +148,36 @@ const assertNeutral=async(page,label)=>{
  assert.ok(state.transforms.every(transform=>transform==='none'),`${label}: every body/feature transform is removed`);
 };
 const batchFrames=(page,key,kind,motions)=>page.evaluate(({key,kind,start})=>window.mascotFrames.filter(frame=>frame.key===key&&frame.kind===kind&&Math.abs(frame.started-start)<100),{key,kind,start:motions[0].time});
+const assertRestingHands=async(page,key,kind,motions)=>{
+ if(!['download','question'].includes(key))return;
+ const hands=motions.filter(m=>m.target.startsWith('rig-hand-'));
+ const samples=await batchFrames(page,key,kind,motions);
+ assert.ok(samples.length>=8,`${key} ${kind}: resting-hand checks observe actual browser frames`);
+ if(key==='question'||kind==='idle'){
+  assert.deepEqual(hands,[],`${key} ${kind}: neither resting hand is an animation actor`);
+  for(const side of ['left','right'])assert.ok(samples.every(s=>s.hands[side].transform==='none'),`${key} ${kind}: ${side} hand stays at its exact resting pose while the body and face animate`);
+  return {restingHands:['left','right'],sampledFrames:samples.length};
+ }
+ assert.deepEqual(hands.map(m=>m.target),['rig-hand-right'],'Download entry animates only one guiding hand');
+ const frames=hands[0].frames.map(frame=>frame.transform);
+ assert.deepEqual(frames,[
+  'translate(0px,0px) rotate(0deg) scale(1)',
+  'translate(8px,12px) rotate(-6deg)',
+  'translate(8px,12px) rotate(-6deg)',
+  'translate(0px,0px) rotate(0deg) scale(1)'
+ ],'Download entry moves outward/down once, holds, and returns without pumping');
+ assert.ok(samples.every(s=>s.hands.left.transform==='none'),'Download entry leaves the other hand resting');
+ const observed=samples.map(s=>s.hands.right);
+ assert.ok(observed.every(h=>h.x>=-.01&&h.x<=8.01&&h.y>=-.01&&h.y<=12.01&&h.angle>=-6.01&&h.angle<=.01),'the rendered guiding hand stays outward and lowered, away from the cheek');
+ const held=observed.filter(h=>Math.abs(h.x-8)<.01&&Math.abs(h.y-12)<.01&&Math.abs(h.angle+6)<.01);
+ assert.ok(held.length>=3,'the single guiding pose is visibly held on multiple browser frames');
+ for(const axis of ['x','y']){
+  const values=observed.map(h=>h[axis]),peak=values.indexOf(Math.max(...values));
+  assert.ok(values.slice(1,peak+1).every((value,index)=>value>=values[index]-.05),`the rendered ${axis} motion never reverses before its held pose`);
+  assert.ok(values.slice(peak+1).every((value,index)=>value<=values[peak+index]+.05),`the rendered ${axis} motion returns only once, without repeated strokes`);
+ }
+ return {restingHands:['left'],guidingHand:'right',heldFrames:held.length,sampledFrames:samples.length};
+};
 const assertFacialMotion=async(page,key,kind,motions)=>{
  const samples=await batchFrames(page,key,kind,motions),neutral=await page.evaluate(()=>window.mascotNeutral);
  const details={};
@@ -256,7 +295,8 @@ try{
    assert.ok(finishedIdle.every(m=>m.finished&&!m.cancelled),`${key}: idle fully finishes`);
    const boundaries={entry:await assertFrameBoundaries(page,width,key,'entry',entry),idle:await assertFrameBoundaries(page,width,key,'idle',idle)};
    const facial={entry:await assertFacialMotion(page,key,'entry',entry),idle:await assertFacialMotion(page,key,'idle',idle)};
-   reports.push({lang,width,markWidth:width<900?44:48,key,entryParts:entry.map(m=>m.target),idleParts:idle.map(m=>m.target),entryDuration:1900,idleDuration:1400,quietMs:Math.round(quiet),boundaries,facial});
+   const hands={entry:await assertRestingHands(page,key,'entry',entry),idle:await assertRestingHands(page,key,'idle',idle)};
+   reports.push({lang,width,markWidth:width<900?44:48,key,entryParts:entry.map(m=>m.target),idleParts:idle.map(m=>m.target),entryDuration:1900,idleDuration:1400,quietMs:Math.round(quiet),boundaries,facial,hands});
   }
   assert.equal(signatures.entry.size,6,'six distinct articulated entry gestures');
   assert.equal(signatures.idle.size,6,'six distinct articulated idle gestures');
@@ -332,7 +372,8 @@ try{
    await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
    await assertNeutral(page,`320px ${key} completed entry`);
    const boundaries=await assertFrameBoundaries(page,320,key,'entry',entry),facial=await assertFacialMotion(page,key,'entry',entry);
-   reports.push({lang:'id',width:320,markWidth:44,key,spot:true,boundaries,facial});
+   const hands=await assertRestingHands(page,key,'entry',entry);
+   reports.push({lang:'id',width:320,markWidth:44,key,spot:true,boundaries,facial,hands});
   }
   assert.deepEqual(errors,[]);await page.close();
  }
@@ -404,6 +445,57 @@ try{
   }
   await page.close();
  }
+ // Focused, natural-speed actual-page previews of the reported Download/FAQ
+ // boundary. Each clip contains one full entry and idle for each section, with
+ // the unchanged 2.8-second quiet intervals and no labels, icons or clock edits.
+ for(const width of [1440,390]){
+  const viewport={width,height:width<900?900:800};
+  const page=await browser.newPage({viewport,reducedMotion:'no-preference',recordVideo:{dir:path.join(root,'review-evidence'),size:viewport}});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.route('https://**/*',r=>r.abort());await page.addInitScript(recordMotions);
+  const waitForPreviewBatch=async(key,kind,after)=>{
+   try{
+    await page.waitForFunction(({key,kind,after})=>document.querySelector('.brand-mark').dataset.rancaBehavior===key&&window.mascotMotions.some(m=>m.key===key&&m.kind===kind&&m.time>after),{key,kind,after},{timeout:12000});
+   }catch(error){
+    const diagnostic=await page.evaluate(()=>{
+     const mark=document.querySelector('.brand-mark');
+     return {time:performance.now(),scrollY,hidden:document.hidden,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,
+      activeBehavior:mark?.dataset.rancaBehavior,activeKind:mark?.dataset.rancaMotion,
+      animations:mark?.getAnimations({subtree:true}).map(animation=>({playState:animation.playState,currentTime:animation.currentTime})),
+      sections:['.hero-wrap','#cta','#faq'].map(selector=>{const element=document.querySelector(selector),rect=element.getBoundingClientRect();return {selector,top:rect.top,bottom:rect.bottom,behavior:element.dataset.rancaBehavior};}),
+      recentMotions:window.mascotMotions.slice(-24).map(({key,kind,target,time,finished,cancelled})=>({key,kind,target,time,finished,cancelled}))};
+    });
+    throw new Error(`Focused ${width}px preview timed out waiting for ${key}/${kind} after ${after}ms: ${JSON.stringify(diagnostic)}`,{cause:error});
+   }
+  };
+  // Start at a normal page load and let both observers establish the welcome
+  // entry. A hash load can scroll before the header/section observers agree.
+  await page.goto(`${origin}/id/`);await page.evaluate(()=>document.fonts.ready);
+  if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
+  await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';});
+  await waitForPreviewBatch('welcome','entry',-1);
+  await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+  assert.ok((await firstBatch(page,'welcome','entry')).every(m=>m.finished&&!m.cancelled),'the focused preview starts after a complete natural welcome entry');
+  await assertNeutral(page,`${width}px focused preview ready after welcome`);
+  for(const [selector,key] of [['#cta','download'],['#faq','question']]){
+   const after=await page.evaluate(()=>performance.now());
+   await scrollToSection(page,selector);
+   for(const kind of ['entry','idle']){
+    await waitForPreviewBatch(key,kind,after);
+    const motions=await firstBatch(page,key,kind,after);
+    await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+    const finished=await firstBatch(page,key,kind,after);
+    assert.ok(finished.every(m=>m.finished&&!m.cancelled),`${key} ${kind}: the focused preview records the complete gesture`);
+    await assertNeutral(page,`${key} ${kind} focused preview`);
+    const boundaries=await assertFrameBoundaries(page,width,key,kind,motions);
+    const facial=await assertFacialMotion(page,key,kind,motions),hands=await assertRestingHands(page,key,kind,motions);
+    reports.push({artifact:'download-faq-preview',lang:'id',width,key,kind,boundaries,facial,hands});
+   }
+  }
+  assert.deepEqual(errors,[]);
+  const video=page.video();await page.close();
+  await video.saveAs(path.join(root,'review-evidence',`header-ranca-download-faq-${width<900?'mobile':'desktop'}.webm`));
+ }
  await fs.writeFile(path.join(root,'review-evidence','header-ranca-context-report.json'),JSON.stringify(reports,null,2));
- console.log('PASS — six actual facial-morph entry/idle profiles in ID/EN at 390/1440px, 320px geometry spots, genuine quick eyelid close/reopen, reading gaze, thinking asymmetry, exact neutral return, repeated entry/idle, 2.8-second quiet periods, real-frame 44/48px checks, clean desktop/mobile videos, separate SVG closeups, reduced motion and semantic coverage');
+ console.log('PASS — six actual facial-morph entry/idle profiles in ID/EN at 390/1440px, 320px geometry spots, genuine quick eyelid close/reopen, reading gaze, thinking asymmetry, exact neutral return, repeated entry/idle, 2.8-second quiet periods, real-frame 44/48px checks, resting FAQ/idle hands and a single outward Download guide, clean desktop/mobile and focused Download/FAQ videos, separate SVG closeups, reduced motion and semantic coverage');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

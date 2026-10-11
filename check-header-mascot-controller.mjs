@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import test from 'node:test';
 import vm from 'node:vm';
+import {createHash} from 'node:crypto';
 
 // Deterministic controller coverage; actual markup, layout and artwork are checked
 // in check-header-mascot.mjs. Only the approved SVG and its named parts may animate.
@@ -17,6 +18,42 @@ const neutralPaths = {
  'rig-eye-right path': 'M417.8 201.0 C425.0 154.0 469.0 150.0 494.0 190.7',
  'rig-smile path': 'M345.2 275.4 C383.0 320.7 456.2 304.0 470.5 246.3'
 };
+const neutralHandPaths = [
+ 'M114.0 322.0 C87.5 314.8 70.5 279.7 57.5 255.3 C42.5 248.3 28.8 229.0 23.5 215.3 C20.6 208.2 27.4 203.6 32.8 207.2 L47.4 223.2 L40.1 201.0 C33.4 183.5 46.8 178.6 52.1 190.9 L66.9 216.0 L67.0 190.6 C66.0 177.1 81.1 176.9 82.4 188.8 L86.0 216.0 L95.4 204.0 C102.7 195.6 111.1 202.3 107.4 211.8 L94.9 241.5 C102.0 279.0 120.7 306.8 152.1 296.3',
+ 'M622.3 323.7 C639.4 350.1 654.1 382.5 662.0 410.3 C667.6 430.1 672.9 452.2 666.2 466.4 C662.5 474.1 651.5 475.0 653.5 464.0 L657.1 447.9',
+ 'M651.9 388.6 C649.2 409.4 636.7 417.9 623.7 423.2 C609.4 429.6 597.9 446.2 603.6 455.1 C608.1 462.1 615.5 455.8 619.0 448.5 L617.0 466.7 C615.1 481.2 629.0 482.6 631.6 468.8 L635.1 447.7 M631.6 468.8 C629.8 482.0 644.0 482.0 646.2 470.2 L649.6 448.6'
+];
+const trustedBodySHA256 = '3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a';
+
+await test('the body is exactly the approved embedded texture, with isolated unchanged facial and hand paths', async () => {
+ const images = [...approvedSVG.matchAll(/<image\b[^>]*\/>/g)];
+ assert.equal(images.length, 1, 'there is exactly one body image');
+ assert.match(images[0][0], /^<image class="rig-body-texture" x="0" y="0" width="741" height="532" preserveAspectRatio="xMidYMid meet" href="data:image\/webp;base64,[A-Za-z0-9+/]+=*"\/>$/,
+  'the only image is a full-size embedded WebP with no external references or image effects');
+ const body = Buffer.from(images[0][0].match(/base64,([^"\s]+)/)[1], 'base64');
+ assert.equal(createHash('sha256').update(body).digest('hex'), trustedBodySHA256, 'body bytes are the approved original-texture body');
+ assert.equal(body.toString('ascii', 0, 4), 'RIFF');
+ assert.equal(body.toString('ascii', 8, 16), 'WEBPVP8L', 'the trusted body is lossless WebP');
+ assert.equal(body[20], 0x2f);
+ const dimensions = body.readUInt32LE(21);
+ assert.deepEqual([(dimensions & 0x3fff) + 1, ((dimensions >>> 14) & 0x3fff) + 1], [741, 532]);
+ assert.doesNotMatch(approvedSVG, /<(?:defs|filter|clipPath|mask|use|foreignObject|style|script)\b|\s(?:id|filter|clip-path|mask|style|on\w+)\s*=|url\(/i,
+  'the header has no global IDs, references, filters, body outlines, foreign content or styles to collide with another inline SVG');
+ assert.deepEqual([...approvedSVG.matchAll(/(?:href|xlink:href)="([^"]+)"/g)].map(match => match[1]), [images[0][0].match(/href="([^"]+)"/)[1]],
+  'the texture is the sole reference and is self-contained');
+ assert.match(approvedSVG, /<g class="rig-body">\s*<image/, 'the body group has no fill, stroke or filter overrides');
+ const expectedPaths = [...Object.values(neutralPaths), ...neutralHandPaths];
+ assert.deepEqual([...approvedSVG.matchAll(/<path\b[^>]*\sd="([^"]+)"/g)].map(match => match[1]), expectedPaths,
+  'the only six paths are the exact original three facial and three hand paths, without duplicates');
+ for (const [group, width] of [['face', '15.5'], ['hands', '11.7']]) {
+  assert.ok(approvedSVG.includes(`<g fill="none" stroke="#ffffff" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" class="rig-${group}">`),
+   `${group} keeps its original white stroke geometry`);
+ }
+ const previous = await readFile(new URL('tests/fixtures/ranca-header-outlined.svg', import.meta.url), 'utf8');
+ assert.equal(approvedSVG.slice(approvedSVG.indexOf('<g fill="none"')), previous.slice(previous.indexOf('<g fill="none"')),
+  'the entire face/hand group subtree is byte-for-byte unchanged from the previous rig');
+});
+
 const calmProfiles = ['account', 'cloud', 'privacy', 'document', 'payment', 'backup', 'diagnostics', 'delete', 'fairness'];
 const pageProfiles = {
  index: ['welcome', 'study', 'cards', 'confidence', 'download', 'question'],
@@ -308,7 +345,7 @@ const expectedPoses={
  },
  download:{
   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,20px) rotate(0deg)','translate(0px,0px) rotate(0deg)','translate(0px,16px) rotate(0deg)',bodyNeutral],
-  '.rig-hand-right':[neutral,'translate(-90px,-100px) rotate(14deg)','translate(-90px,-15px) rotate(14deg)','translate(-90px,-90px) rotate(14deg)','translate(-90px,-10px) rotate(14deg)',neutral],
+  '.rig-hand-right':[neutral,'translate(8px,12px) rotate(-6deg)','translate(8px,12px) rotate(-6deg)',neutral],
   '.rig-eye-left':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)']
  },
@@ -316,8 +353,7 @@ const expectedPoses={
   '.rig-body':[bodyNeutral,'translate(-8px,0px) rotate(-9deg)','translate(-8px,0px) rotate(-9deg)','translate(8px,0px) rotate(6deg)',bodyNeutral],
   '.rig-eye-left':['translateY(0px)','translateY(-22px)','translateY(-22px)','translateY(6px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(9px)','translateY(9px)','translateY(-12px)','translateY(0px)'],
-  '.rig-smile':['scale(1)','scale(.8,.65)','scale(.8,.65)','scale(1)'],
-  '.rig-hand-right':[neutral,'translate(-15px,-5px) rotate(100deg)','translate(-15px,-5px) rotate(100deg)',neutral]
+  '.rig-smile':['scale(1)','scale(.8,.65)','scale(.8,.65)','scale(1)']
  }
 };
 const expectedIdles={
@@ -346,7 +382,6 @@ const expectedIdles={
  },
  download:{
   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,13px) rotate(0deg)',bodyNeutral],
-  '.rig-hand-right':[neutral,'translate(-75px,-85px) rotate(10deg)','translate(-75px,-25px) rotate(10deg)',neutral],
   '.rig-eye-left':['translateY(0px)','translateY(14px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(14px)','translateY(0px)']
  },
@@ -354,8 +389,7 @@ const expectedIdles={
   '.rig-body':[bodyNeutral,'translate(-5px,0px) rotate(-6deg)','translate(5px,0px) rotate(4deg)',bodyNeutral],
   '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(5px)','translateY(0px)'],
-  '.rig-smile':['scale(1)','scale(.9,.82)','scale(1)'],
-  '.rig-hand-right':[neutral,'translate(-10px,0px) rotate(85deg)','translate(-10px,0px) rotate(85deg)',neutral]
+  '.rig-smile':['scale(1)','scale(.9,.82)','scale(1)']
  }
 };
 
@@ -613,6 +647,46 @@ await test('six homepage sections have distinct independently articulated entry 
  }
 });
 
+// Keep this intent check separate from the complete independent pose fixtures.
+// A fixture refresh must not accidentally reintroduce cheek scratching or pumping.
+await test('Download guides outward once and FAQ keeps resting hands across entry, repeated idle and re-entry', async () => {
+ for (const locale of ['id', 'en']) for (const supportsPath of [true, false]) {
+  for (const [index, key] of [[4, 'download'], [5, 'question']]) {
+   const h = createHarness({pathname: `/${locale}/`, initialSection: index, supportsPath});
+   await h.advance(10300);
+   assert.deepEqual(h.gestureMotions().map(group => group.kind), ['entry', 'idle', 'idle'],
+    `${key} is checked through two uninterrupted idle cycles`);
+   assertNoEffects(h);
+   h.leave(); h.enter(index);
+   await h.advance(6100);
+   assert.deepEqual(h.gestureMotions().map(group => group.kind), ['entry', 'idle', 'idle', 'entry', 'idle'],
+    `${key} is checked after leaving and re-entering the same section`);
+   assertNoEffects(h);
+   for (const group of h.gestureMotions()) {
+    const hands = group.parts.filter(part => part.element.startsWith('rig-hand-'));
+    if (key === 'question' || group.kind === 'idle') {
+     assert.deepEqual(hands, [], `${key}/${group.kind} never animates either resting hand`);
+    } else {
+     assert.deepEqual(hands.map(part => part.element), ['rig-hand-right'], 'Download entry uses only one guiding hand');
+     const frames = transforms(hands[0]);
+     assert.equal(frames.length, 4, 'Download has one outward move, one held pose and one return, without pumping beats');
+     assert.equal(frames[0], neutral); assert.equal(frames.at(-1), neutral);
+     assert.equal(frames[1], frames[2], 'the middle frames hold the same pose rather than stroking up and down');
+     const pose = /^translate\((-?[\d.]+)px,(-?[\d.]+)px\) rotate\((-?[\d.]+)deg\)$/.exec(frames[1]);
+     assert.ok(pose, 'the guiding pose is a plain translation and rotation');
+     const [x, y, angle] = pose.slice(1).map(Number);
+     assert.ok(x > 0 && x <= 12 && y > 0 && y <= 16, 'the right hand moves slightly outward and down, away from the cheek');
+     assert.ok(angle < 0 && angle >= -10, 'the guiding hand never rotates up into a face-touching pose');
+    }
+    assert.deepEqual(partTransforms(group), (group.kind === 'entry' ? expectedPoses : expectedIdles)[key],
+     'all independent body and facial group fixtures remain unchanged');
+    assertRigidBody(group);
+    assertFacialFrames(group, supportsPath);
+   }
+  }
+ }
+});
+
 await test('every facial gesture genuinely closes both cubic eyelids and reopens them', async () => {
  for (const [index, key] of pageProfiles.index.entries()) {
   const h = createHarness({initialSection: index});
@@ -664,7 +738,7 @@ await test('reading and thinking expressions have distinct geometry alongside th
   const smile = pathParts(group).find(part => part.element === 'rig-smile path');
   assert.ok(curveBow(decodePath(smile.frames[1].d)) < .65 * curveBow(mouthShapes.open),
    'thinking has a substantially flatter mouth with fixed endpoints');
-  assert.ok(group.parts.some(part => part.element === 'rig-hand-right'), 'the thoughtful face is coordinated with a raised right hand');
+  assert.ok(group.parts.every(part => !part.element.startsWith('rig-hand-')), 'the thoughtful expression uses its face and tilt with both hands resting');
   assertRigidBody(group);
  }
 });
