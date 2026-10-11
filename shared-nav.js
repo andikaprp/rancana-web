@@ -111,8 +111,9 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
    '.rig-hand-right':[neutral,'translate(-32px,20px) rotate(14deg)',neutral]
   },
   download:{
+   // One low outward indication, then rest; never stroke a hand beside the cheek.
    '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,20px) rotate(0deg)','translate(0px,0px) rotate(0deg)','translate(0px,16px) rotate(0deg)',bodyNeutral],
-   '.rig-hand-right':[neutral,'translate(-90px,-100px) rotate(14deg)','translate(-90px,-15px) rotate(14deg)','translate(-90px,-90px) rotate(14deg)','translate(-90px,-10px) rotate(14deg)',neutral],
+   '.rig-hand-right':[neutral,'translate(8px,12px) rotate(-6deg)','translate(8px,12px) rotate(-6deg)',neutral],
    '.rig-eye-left':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)'],
    '.rig-eye-right':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)']
   },
@@ -149,7 +150,6 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
   },
   download:{
    '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,13px) rotate(0deg)',bodyNeutral],
-   '.rig-hand-right':[neutral,'translate(-75px,-85px) rotate(10deg)','translate(-75px,-25px) rotate(10deg)',neutral],
    '.rig-eye-left':['translateY(0px)','translateY(14px)','translateY(0px)'],
    '.rig-eye-right':['translateY(0px)','translateY(14px)','translateY(0px)']
   },
@@ -196,13 +196,9 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  Object.assign(idles.confidence,eyes([[0,0],[.22,.3],[.35,1],[.65,1],[.82,.2],[1,0]]),mouth(contented,[[0,0],[.3,.7],[.7,.7],[1,0]]));
  Object.assign(poses.download,eyes([[0,0],[.1,0],[.14,1],[.2,1],[.25,.2],[.8,.2],[1,0]]),mouth(cheerful,[[0,0],[.3,.55],[.75,.55],[1,0]]));
  Object.assign(idles.download,eyes([[0,0],[.2,.2],[.55,.2],[.6,1],[.68,1],[.75,.2],[1,0]]));
- // FAQ: one narrowed eye, a thoughtful mouth, raised curled hand, then a blink.
- Object.assign(poses.question,eyes([[0,0],[.23,.1],[.65,.1],[.73,1],[.79,1],[.86,0],[1,0]],[[0,0],[.23,.8],[.65,.8],[.73,1],[.79,1],[.86,0],[1,0]]),mouth(thinking,[[0,0],[.24,1],[.7,1],[1,0]]),{
-  '.rig-hand-right':[neutral,'translate(-15px,-5px) rotate(100deg)','translate(-15px,-5px) rotate(100deg)',neutral]
- });
- Object.assign(idles.question,eyes([[0,0],[.22,.15],[.55,.15],[.63,1],[.71,1],[.8,0],[1,0]],[[0,0],[.22,.75],[.55,.75],[.63,1],[.71,1],[.8,0],[1,0]]),mouth(thinking,[[0,0],[.3,.8],[.7,.8],[1,0]]),{
-  '.rig-hand-right':[neutral,'translate(-10px,0px) rotate(85deg)','translate(-10px,0px) rotate(85deg)',neutral]
- });
+ // FAQ: thoughtful eyes and a head tilt; both hands rest away from the face.
+ Object.assign(poses.question,eyes([[0,0],[.23,.1],[.65,.1],[.73,1],[.79,1],[.86,0],[1,0]],[[0,0],[.23,.8],[.65,.8],[.73,1],[.79,1],[.86,0],[1,0]]),mouth(thinking,[[0,0],[.24,1],[.7,1],[1,0]]));
+ Object.assign(idles.question,eyes([[0,0],[.22,.15],[.55,.15],[.63,1],[.71,1],[.8,0],[1,0]],[[0,0],[.22,.75],[.55,.75],[.63,1],[.71,1],[.8,0],[1,0]]),mouth(thinking,[[0,0],[.3,.8],[.7,.8],[1,0]]));
 
  headerMascot.setAttribute('aria-hidden','true');
  const pageName = location.pathname.replace(/\/$/,'').split('/').pop()?.replace(/\.html$/,'') || 'index';

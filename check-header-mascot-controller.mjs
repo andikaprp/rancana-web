@@ -308,7 +308,7 @@ const expectedPoses={
  },
  download:{
   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,20px) rotate(0deg)','translate(0px,0px) rotate(0deg)','translate(0px,16px) rotate(0deg)',bodyNeutral],
-  '.rig-hand-right':[neutral,'translate(-90px,-100px) rotate(14deg)','translate(-90px,-15px) rotate(14deg)','translate(-90px,-90px) rotate(14deg)','translate(-90px,-10px) rotate(14deg)',neutral],
+  '.rig-hand-right':[neutral,'translate(8px,12px) rotate(-6deg)','translate(8px,12px) rotate(-6deg)',neutral],
   '.rig-eye-left':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)']
  },
@@ -316,8 +316,7 @@ const expectedPoses={
   '.rig-body':[bodyNeutral,'translate(-8px,0px) rotate(-9deg)','translate(-8px,0px) rotate(-9deg)','translate(8px,0px) rotate(6deg)',bodyNeutral],
   '.rig-eye-left':['translateY(0px)','translateY(-22px)','translateY(-22px)','translateY(6px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(9px)','translateY(9px)','translateY(-12px)','translateY(0px)'],
-  '.rig-smile':['scale(1)','scale(.8,.65)','scale(.8,.65)','scale(1)'],
-  '.rig-hand-right':[neutral,'translate(-15px,-5px) rotate(100deg)','translate(-15px,-5px) rotate(100deg)',neutral]
+  '.rig-smile':['scale(1)','scale(.8,.65)','scale(.8,.65)','scale(1)']
  }
 };
 const expectedIdles={
@@ -346,7 +345,6 @@ const expectedIdles={
  },
  download:{
   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,13px) rotate(0deg)',bodyNeutral],
-  '.rig-hand-right':[neutral,'translate(-75px,-85px) rotate(10deg)','translate(-75px,-25px) rotate(10deg)',neutral],
   '.rig-eye-left':['translateY(0px)','translateY(14px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(14px)','translateY(0px)']
  },
@@ -354,8 +352,7 @@ const expectedIdles={
   '.rig-body':[bodyNeutral,'translate(-5px,0px) rotate(-6deg)','translate(5px,0px) rotate(4deg)',bodyNeutral],
   '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
   '.rig-eye-right':['translateY(0px)','translateY(5px)','translateY(0px)'],
-  '.rig-smile':['scale(1)','scale(.9,.82)','scale(1)'],
-  '.rig-hand-right':[neutral,'translate(-10px,0px) rotate(85deg)','translate(-10px,0px) rotate(85deg)',neutral]
+  '.rig-smile':['scale(1)','scale(.9,.82)','scale(1)']
  }
 };
 
@@ -613,6 +610,46 @@ await test('six homepage sections have distinct independently articulated entry 
  }
 });
 
+// Keep this intent check separate from the complete independent pose fixtures.
+// A fixture refresh must not accidentally reintroduce cheek scratching or pumping.
+await test('Download guides outward once and FAQ keeps resting hands across entry, repeated idle and re-entry', async () => {
+ for (const locale of ['id', 'en']) for (const supportsPath of [true, false]) {
+  for (const [index, key] of [[4, 'download'], [5, 'question']]) {
+   const h = createHarness({pathname: `/${locale}/`, initialSection: index, supportsPath});
+   await h.advance(10300);
+   assert.deepEqual(h.gestureMotions().map(group => group.kind), ['entry', 'idle', 'idle'],
+    `${key} is checked through two uninterrupted idle cycles`);
+   assertNoEffects(h);
+   h.leave(); h.enter(index);
+   await h.advance(6100);
+   assert.deepEqual(h.gestureMotions().map(group => group.kind), ['entry', 'idle', 'idle', 'entry', 'idle'],
+    `${key} is checked after leaving and re-entering the same section`);
+   assertNoEffects(h);
+   for (const group of h.gestureMotions()) {
+    const hands = group.parts.filter(part => part.element.startsWith('rig-hand-'));
+    if (key === 'question' || group.kind === 'idle') {
+     assert.deepEqual(hands, [], `${key}/${group.kind} never animates either resting hand`);
+    } else {
+     assert.deepEqual(hands.map(part => part.element), ['rig-hand-right'], 'Download entry uses only one guiding hand');
+     const frames = transforms(hands[0]);
+     assert.equal(frames.length, 4, 'Download has one outward move, one held pose and one return, without pumping beats');
+     assert.equal(frames[0], neutral); assert.equal(frames.at(-1), neutral);
+     assert.equal(frames[1], frames[2], 'the middle frames hold the same pose rather than stroking up and down');
+     const pose = /^translate\((-?[\d.]+)px,(-?[\d.]+)px\) rotate\((-?[\d.]+)deg\)$/.exec(frames[1]);
+     assert.ok(pose, 'the guiding pose is a plain translation and rotation');
+     const [x, y, angle] = pose.slice(1).map(Number);
+     assert.ok(x > 0 && x <= 12 && y > 0 && y <= 16, 'the right hand moves slightly outward and down, away from the cheek');
+     assert.ok(angle < 0 && angle >= -10, 'the guiding hand never rotates up into a face-touching pose');
+    }
+    assert.deepEqual(partTransforms(group), (group.kind === 'entry' ? expectedPoses : expectedIdles)[key],
+     'all independent body and facial group fixtures remain unchanged');
+    assertRigidBody(group);
+    assertFacialFrames(group, supportsPath);
+   }
+  }
+ }
+});
+
 await test('every facial gesture genuinely closes both cubic eyelids and reopens them', async () => {
  for (const [index, key] of pageProfiles.index.entries()) {
   const h = createHarness({initialSection: index});
@@ -664,7 +701,7 @@ await test('reading and thinking expressions have distinct geometry alongside th
   const smile = pathParts(group).find(part => part.element === 'rig-smile path');
   assert.ok(curveBow(decodePath(smile.frames[1].d)) < .65 * curveBow(mouthShapes.open),
    'thinking has a substantially flatter mouth with fixed endpoints');
-  assert.ok(group.parts.some(part => part.element === 'rig-hand-right'), 'the thoughtful face is coordinated with a raised right hand');
+  assert.ok(group.parts.every(part => !part.element.startsWith('rig-hand-')), 'the thoughtful expression uses its face and tilt with both hands resting');
   assertRigidBody(group);
  }
 });
