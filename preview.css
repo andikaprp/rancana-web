@@ -151,3 +151,7 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .site-header .brand{width:auto}
 .site-header .brand-mark{width:34px;height:26px;background:#fff url("assets/mascots/ranca-cloud.webp") center/contain no-repeat;border-radius:0;transform-origin:50% 65%}
 @media(max-width:899px){.site-header .brand-mark{width:32px;height:24px}}
+
+/* A fixed, unobtrusive semantic cue beside Ranca; it never covers the mascot. */
+.site-header .ranca-cue{position:static;display:grid;place-items:center;flex:none;width:14px;height:16px;color:#236c50;pointer-events:none;transform-origin:center}
+.site-header .ranca-cue svg{display:block;width:14px;height:14px;overflow:visible}
