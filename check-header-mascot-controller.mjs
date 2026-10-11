@@ -224,56 +224,108 @@ function createHarness({pathname = '/id/', count = 6, initialSection = 0, height
 const transforms = motion => motion.frames.map(frame => frame.transform);
 const partTransforms = group => Object.fromEntries(group.parts.map(part => [`.${part.element}`, transforms(part)]));
 
-// Independent fixtures preserve the approved prototype's six semantic gestures.
+// Independent fixtures lock the stronger, coordinated six semantic gestures.
+// These are deliberately declared here rather than read from controller source.
 const neutral='translate(0px,0px) rotate(0deg) scale(1)';
+const bodyNeutral='translate(0px,0px) rotate(0deg)';
 const expectedPoses={
  welcome:{
-  '.rig-hand-left':[neutral,'translate(65px,-12px) rotate(35deg)','translate(65px,-12px) rotate(57deg)','translate(65px,-12px) rotate(22deg)','translate(65px,-12px) rotate(48deg)',neutral],
-  '.rig-eye-left':['translateY(0px)','translateY(-8px)','translateY(0px)'],
-  '.rig-eye-right':['translateY(0px)','translateY(-8px)','translateY(0px)'],
-  '.rig-smile':['scale(1)','scale(1.06,1.1)','scale(1)']
+  '.rig-body':[bodyNeutral,'translate(0px,-18px) rotate(-6deg)','translate(0px,-10px) rotate(5deg)','translate(0px,-8px) rotate(-3deg)',bodyNeutral],
+  '.rig-hand-left':[neutral,'translate(80px,-20px) rotate(38deg)','translate(80px,-20px) rotate(70deg)','translate(80px,-20px) rotate(12deg)','translate(80px,-20px) rotate(62deg)',neutral],
+  '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+  '.rig-eye-right':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+  '.rig-smile':['scale(1)','scale(1.12,1.2)','scale(1)']
  },
  study:{
-  '.rig-eye-left':['translate(0px,0px)','translate(12px,4px)','translate(12px,4px)','translate(-9px,8px)','translate(-9px,8px)','translate(0px,0px)'],
-  '.rig-eye-right':['translate(0px,0px)','translate(12px,4px)','translate(12px,4px)','translate(-9px,8px)','translate(-9px,8px)','translate(0px,0px)'],
-  '.rig-hand-left':[neutral,'translate(65px,30px) rotate(-14deg)','translate(65px,30px) rotate(-14deg)',neutral],
-  '.rig-smile':['scale(1)','scale(.96,.9)','scale(1)']
+  '.rig-body':[bodyNeutral,'translate(12px,0px) rotate(7deg)','translate(12px,0px) rotate(7deg)','translate(-10px,0px) rotate(-5deg)','translate(-10px,0px) rotate(-5deg)',bodyNeutral],
+  '.rig-eye-left':['translate(0px,0px)','translate(24px,7px)','translate(24px,7px)','translate(-20px,12px)','translate(-20px,12px)','translate(0px,0px)'],
+  '.rig-eye-right':['translate(0px,0px)','translate(24px,7px)','translate(24px,7px)','translate(-20px,12px)','translate(-20px,12px)','translate(0px,0px)'],
+  '.rig-hand-left':[neutral,'translate(75px,35px) rotate(-24deg)','translate(75px,35px) rotate(-24deg)',neutral],
+  '.rig-smile':['scale(1)','scale(.93,.82)','scale(1)']
  },
  cards:{
-  '.rig-hand-left':[neutral,'translate(100px,20px) rotate(22deg)','translate(65px,40px) rotate(-3deg)',neutral,neutral],
-  '.rig-hand-right':[neutral,neutral,'translate(-85px,-65px) rotate(14deg)','translate(-50px,-30px) rotate(-9deg)',neutral],
-  '.rig-eye-left':['translateX(0px)','translateX(-12px)','translateX(12px)','translateX(12px)','translateX(0px)'],
-  '.rig-eye-right':['translateX(0px)','translateX(-12px)','translateX(12px)','translateX(12px)','translateX(0px)']
+  '.rig-body':[bodyNeutral,'translate(-18px,0px) rotate(-4deg)','translate(18px,0px) rotate(4deg)','translate(18px,0px) rotate(4deg)',bodyNeutral],
+  '.rig-hand-left':[neutral,'translate(130px,15px) rotate(32deg)','translate(80px,50px) rotate(-10deg)',neutral,neutral],
+  '.rig-hand-right':[neutral,neutral,'translate(-110px,-85px) rotate(24deg)','translate(-65px,-30px) rotate(-18deg)',neutral],
+  '.rig-eye-left':['translateX(0px)','translateX(-22px)','translateX(22px)','translateX(22px)','translateX(0px)'],
+  '.rig-eye-right':['translateX(0px)','translateX(-22px)','translateX(22px)','translateX(22px)','translateX(0px)']
  },
  confidence:{
-  '.rig-eye-left':['scaleY(1)','scaleY(.35)','scaleY(.35)','scaleY(1)'],
-  '.rig-eye-right':['scaleY(1)','scaleY(.35)','scaleY(.35)','scaleY(1)'],
-  '.rig-smile':['scale(1)','scale(1.06,.85)','scale(1.06,.85)','scale(1)'],
-  '.rig-hand-left':[neutral,'translate(20px,14px) rotate(-8deg)',neutral],
-  '.rig-hand-right':[neutral,'translate(-18px,12px) rotate(7deg)',neutral]
+  '.rig-body':[bodyNeutral,'translate(0px,16px) rotate(0deg)','translate(0px,-10px) rotate(0deg)',bodyNeutral],
+  '.rig-eye-left':['scaleY(1)','scaleY(.2)','scaleY(.2)','scaleY(1)'],
+  '.rig-eye-right':['scaleY(1)','scaleY(.2)','scaleY(.2)','scaleY(1)'],
+  '.rig-smile':['scale(1)','scale(1.13,.76)','scale(1.13,.76)','scale(1)'],
+  '.rig-hand-left':[neutral,'translate(36px,24px) rotate(-16deg)',neutral],
+  '.rig-hand-right':[neutral,'translate(-32px,20px) rotate(14deg)',neutral]
  },
  download:{
-  '.rig-hand-right':[neutral,'translate(-70px,-75px) rotate(8deg)','translate(-70px,-30px) rotate(8deg)','translate(-70px,-65px) rotate(8deg)','translate(-70px,-25px) rotate(8deg)',neutral],
-  '.rig-eye-left':['translateY(0px)','translateY(13px)','translateY(13px)','translateY(0px)'],
-  '.rig-eye-right':['translateY(0px)','translateY(13px)','translateY(13px)','translateY(0px)']
+  '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,20px) rotate(0deg)','translate(0px,0px) rotate(0deg)','translate(0px,16px) rotate(0deg)',bodyNeutral],
+  '.rig-hand-right':[neutral,'translate(-90px,-100px) rotate(14deg)','translate(-90px,-15px) rotate(14deg)','translate(-90px,-90px) rotate(14deg)','translate(-90px,-10px) rotate(14deg)',neutral],
+  '.rig-eye-left':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)'],
+  '.rig-eye-right':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)']
  },
  question:{
-  '.rig-body':['rotate(0deg)','rotate(-4deg)','rotate(-4deg)','rotate(0deg)'],
-  '.rig-eye-left':['translateY(0px) scaleY(1)','translateY(-12px) scaleY(1.14)','translateY(-12px) scaleY(1.14)','translateY(0px) scaleY(1)'],
-  '.rig-eye-right':['translateY(0px) scaleY(1)','translateY(5px) scaleY(.65)','translateY(5px) scaleY(.65)','translateY(0px) scaleY(1)'],
-  '.rig-smile':['scale(1)','scale(.88,.8)','scale(.88,.8)','scale(1)']
+  '.rig-body':[bodyNeutral,'translate(-8px,0px) rotate(-9deg)','translate(-8px,0px) rotate(-9deg)','translate(8px,0px) rotate(6deg)',bodyNeutral],
+  '.rig-eye-left':['translateY(0px) scaleY(1)','translateY(-22px) scaleY(1.25)','translateY(-22px) scaleY(1.25)','translateY(6px) scaleY(.7)','translateY(0px) scaleY(1)'],
+  '.rig-eye-right':['translateY(0px) scaleY(1)','translateY(9px) scaleY(.4)','translateY(9px) scaleY(.4)','translateY(-12px) scaleY(1.15)','translateY(0px) scaleY(1)'],
+  '.rig-smile':['scale(1)','scale(.8,.65)','scale(.8,.65)','scale(1)']
  }
 };
 const expectedIdles={
- welcome:{'.rig-hand-left':[neutral,'translate(50px,-8px) rotate(34deg)','translate(50px,-8px) rotate(46deg)',neutral]},
- study:{'.rig-eye-left':['translateX(0px)','translateX(7px)','translateX(-5px)','translateX(0px)'],'.rig-eye-right':['translateX(0px)','translateX(7px)','translateX(-5px)','translateX(0px)']},
- cards:{'.rig-hand-left':[neutral,'translate(70px,20px) rotate(16deg)',neutral],'.rig-eye-left':['translateX(0px)','translateX(-7px)','translateX(0px)'],'.rig-eye-right':['translateX(0px)','translateX(-7px)','translateX(0px)']},
- confidence:{'.rig-eye-left':['scaleY(1)','scaleY(.55)','scaleY(1)'],'.rig-eye-right':['scaleY(1)','scaleY(.55)','scaleY(1)'],'.rig-smile':['scale(1)','scale(1.025,.95)','scale(1)']},
- download:{'.rig-hand-right':[neutral,'translate(-55px,-65px) rotate(5deg)','translate(-55px,-35px) rotate(5deg)',neutral],'.rig-eye-left':['translateY(0px)','translateY(7px)','translateY(0px)'],'.rig-eye-right':['translateY(0px)','translateY(7px)','translateY(0px)']},
- question:{'.rig-eye-left':['translateY(0px)','translateY(-7px)','translateY(0px)'],'.rig-eye-right':['scaleY(1)','scaleY(.8)','scaleY(1)']}
+ welcome:{
+  '.rig-body':[bodyNeutral,'translate(0px,-10px) rotate(-4deg)','translate(0px,-6px) rotate(4deg)',bodyNeutral],
+  '.rig-hand-left':[neutral,'translate(70px,-15px) rotate(28deg)','translate(70px,-15px) rotate(62deg)','translate(70px,-15px) rotate(22deg)',neutral],
+  '.rig-smile':['scale(1)','scale(1.07,1.12)','scale(1)']
+ },
+ study:{
+  '.rig-body':[bodyNeutral,'translate(8px,0px) rotate(4deg)','translate(-6px,0px) rotate(-3deg)',bodyNeutral],
+  '.rig-eye-left':['translateX(0px)','translateX(16px)','translateX(-13px)','translateX(0px)'],
+  '.rig-eye-right':['translateX(0px)','translateX(16px)','translateX(-13px)','translateX(0px)']
+ },
+ cards:{
+  '.rig-body':[bodyNeutral,'translate(-12px,0px) rotate(-3deg)','translate(12px,0px) rotate(3deg)',bodyNeutral],
+  '.rig-hand-left':[neutral,'translate(95px,18px) rotate(25deg)',neutral,neutral],
+  '.rig-hand-right':[neutral,neutral,'translate(-70px,-55px) rotate(18deg)',neutral],
+  '.rig-eye-left':['translateX(0px)','translateX(-15px)','translateX(15px)','translateX(0px)'],
+  '.rig-eye-right':['translateX(0px)','translateX(-15px)','translateX(15px)','translateX(0px)']
+ },
+ confidence:{
+  '.rig-body':[bodyNeutral,'translate(0px,10px) rotate(0deg)','translate(0px,-5px) rotate(0deg)',bodyNeutral],
+  '.rig-eye-left':['scaleY(1)','scaleY(.35)','scaleY(1)'],
+  '.rig-eye-right':['scaleY(1)','scaleY(.35)','scaleY(1)'],
+  '.rig-smile':['scale(1)','scale(1.07,.86)','scale(1)']
+ },
+ download:{
+  '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,13px) rotate(0deg)',bodyNeutral],
+  '.rig-hand-right':[neutral,'translate(-75px,-85px) rotate(10deg)','translate(-75px,-25px) rotate(10deg)',neutral],
+  '.rig-eye-left':['translateY(0px)','translateY(14px)','translateY(0px)'],
+  '.rig-eye-right':['translateY(0px)','translateY(14px)','translateY(0px)']
+ },
+ question:{
+  '.rig-body':[bodyNeutral,'translate(-5px,0px) rotate(-6deg)','translate(5px,0px) rotate(4deg)',bodyNeutral],
+  '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+  '.rig-eye-right':['scaleY(1)','scaleY(.55)','scaleY(1)'],
+  '.rig-smile':['scale(1)','scale(.9,.82)','scale(1)']
+ }
 };
 
-
+function assertRigidBody(group) {
+ const bodies = group.parts.filter(part => part.element === 'rig-body');
+ assert.equal(bodies.length, 1, `${group.behavior}/${group.kind} animates the body once`);
+ const values = transforms(bodies[0]);
+ assert.equal(values[0], bodyNeutral, 'body begins neutral');
+ assert.equal(values.at(-1), bodyNeutral, 'body returns neutral');
+ assert.ok(values.some(value => value !== bodyNeutral), 'body gesture is perceptible rather than static');
+ for (const value of values) {
+  const match = /^translate\((-?[\d.]+)px,(-?[\d.]+)px\) rotate\((-?[\d.]+)deg\)$/.exec(value);
+  assert.ok(match, 'body only translates and rotates; no scaling, skew or silhouette distortion');
+  const [x, y, angle] = match.slice(1).map(Number);
+  assert.ok([x, y, angle].every(Number.isFinite), 'body values are finite');
+  assert.ok(Math.hypot(x, y) <= 20, 'body travel stays within 20 SVG units');
+  assert.ok(Math.abs(angle) <= 9, 'body rotation stays within nine degrees');
+ }
+ return values;
+}
 
 // Supporting-only gestures keep their existing whole-SVG transformations.
 const expectedFallback = {
@@ -302,8 +354,8 @@ await test('section observer can fire before mascot visibility without dropping 
  h.visibility(true); h.enter(0);
  await h.advance(1900);
  assert.equal(h.gestureMotions().length, 1, 'duplicate observations do not repeat the initial entry');
- await h.advance(5000);
- assert.deepEqual(h.gestureMotions().map(m => [m.time, m.kind]), [[100, 'entry'], [7000, 'idle']]);
+ await h.advance(2800);
+ assert.deepEqual(h.gestureMotions().map(m => [m.time, m.kind]), [[100, 'entry'], [4800, 'idle']]);
 });
 
 await test('only the approved rig animates, with no side nodes, status text or wordmark motion', async () => {
@@ -315,12 +367,24 @@ await test('only the approved rig animates, with no side nodes, status text or w
    const articulated = !policy && expectedPoses[key];
    assert.equal(h.active.size, articulated ? Object.keys(articulated).length : 1,
     `${page}/${key} has one coordinated gesture with the expected independent parts`);
-   await h.advance(12000);
+   const calm = policy || calmProfiles.includes(key);
+   const entryDuration = articulated ? 1900 : calm ? 900 : 700;
+   const idleDuration = articulated ? 1400 : calm ? 1600 : 1100;
+   const pause = calm ? 9000 : articulated ? 2800 : 5000;
+   await h.advance(entryDuration + pause - 1);
+   assert.equal(h.gestureMotions().length, 1, `${page}/${key} waits its full ${pause}ms quiet pause`);
+   await h.advance(1);
+   assert.equal(h.gestureMotions()[1].time, entryDuration + pause, `${page}/${key} first idle time`);
+   await h.advance(idleDuration + pause - 1);
+   assert.equal(h.gestureMotions().length, 2, `${page}/${key} preserves the pause after idle completion`);
+   await h.advance(1);
+   assert.equal(h.gestureMotions()[2].time, entryDuration + idleDuration + 2 * pause, `${page}/${key} repeated idle time`);
    h.assertMascotOnly();
    for (const group of h.gestureMotions()) {
     const entry = group.kind === 'entry';
     if (articulated) {
      assert.deepEqual(partTransforms(group), (entry ? expectedPoses : expectedIdles)[key], `${page}/${key} ${group.kind}`);
+     assertRigidBody(group);
      assert.equal(group.duration, entry ? 1900 : 1400);
     } else {
      assert.deepEqual(group.parts.map(part => part.element), ['ranca-rig'], `${page}/${key} uses the whole SVG fallback`);
@@ -350,12 +414,14 @@ await test('all routes and locale aliases map their ordered sections to contextu
 
 await test('six homepage sections have distinct independently articulated entry and idle gestures', async () => {
  const entrySequences = new Set(), idleSequences = new Set(), animatedParts = new Set();
+ const entryBodies = new Set(), idleBodies = new Set();
  for (const [index, key] of pageProfiles.index.entries()) {
   const h = createHarness({initialSection: index});
   const entry = h.gestureMotions()[0];
   assert.equal(entry.behavior, key); assert.equal(entry.kind, 'entry');
   assert.deepEqual(partTransforms(entry), expectedPoses[key], `${key} entry gesture`);
-  assert.ok(entry.parts.length >= 3, `${key} articulates its face and limbs separately`);
+  entryBodies.add(JSON.stringify(assertRigidBody(entry)));
+  assert.ok(entry.parts.length >= 4, `${key} coordinates its body with independent face and limb motion`);
   for (const part of entry.parts) {
    assert.deepEqual(part.options, {duration: 1900, easing: 'ease-in-out', iterations: 1});
    assert.equal(part.time, 0, 'all parts start together');
@@ -364,21 +430,22 @@ await test('six homepage sections have distinct independently articulated entry 
   }
   assert.ok(new Set(entry.parts.map(part => JSON.stringify(part.frames))).size > 1, 'parts move independently rather than repeating one whole-mascot transform');
   entrySequences.add(JSON.stringify(partTransforms(entry)));
-  await h.advance(6899); assert.equal(h.gestureMotions().length, 1);
+  await h.advance(4699); assert.equal(h.gestureMotions().length, 1);
   await h.advance(1);
   const idle = h.gestureMotions()[1];
   assert.equal(idle.kind, 'idle'); assert.equal(idle.behavior, key);
   assert.deepEqual(partTransforms(idle), expectedIdles[key], `${key} idle gesture`);
+  idleBodies.add(JSON.stringify(assertRigidBody(idle)));
   for (const part of idle.parts) {
    assert.deepEqual(part.options, {duration: 1400, easing: 'ease-in-out', iterations: 1});
-   assert.equal(part.time, 6900, 'idle waits five seconds after the complete entry');
+   assert.equal(part.time, 4700, 'idle waits 2.8 seconds after the complete entry');
    assert.equal(part.frames[0].transform, part.frames.at(-1).transform, 'idle restores each neutral part');
   }
   idleSequences.add(JSON.stringify(partTransforms(idle)));
  }
  assert.deepEqual([...animatedParts].sort(), rigNames.filter(name => name !== 'ranca-rig').sort(),
   'both eyes, smile, both hands and body each have independent animations');
- for (const [label, values] of Object.entries({entrySequences, idleSequences})) {
+ for (const [label, values] of Object.entries({entrySequences, idleSequences, entryBodies, idleBodies})) {
   assert.equal(values.size, 6, `all six homepage ${label} are distinct`);
  }
 });
@@ -387,6 +454,7 @@ for (const switchAt of [300, 750]) await test(`entry at ${switchAt}ms waits for 
  for (const scenario of [
   {pathname: '/id/', first: 0, next: 1, replay: 1900, keys: ['welcome', 'study']},
   {pathname: '/id/', first: 0, next: 1, replay: 2400, completionLag: {'rig-smile': 500}, keys: ['welcome', 'study']},
+  {pathname: '/id/', first: 0, next: 1, replay: 2600, completionLag: {'rig-body': 700}, keys: ['welcome', 'study']},
   {pathname: '/id/about', first: 1, next: 2, replay: 900, keys: ['purpose', 'contact']}
  ]) {
   const h = createHarness({pathname: scenario.pathname, initialSection: scenario.first, completionLag: scenario.completionLag});
@@ -450,53 +518,59 @@ await test('height-based 30%/69% margins rebuild once after a burst of resizes',
  assert.deepEqual(h.sectionObserver().targets, h.sections);
 });
 
-await test('continuous scrolling debounces idle for a full five seconds', async () => {
+await test('continuous scrolling debounces articulated idle for a full 2.8 seconds', async () => {
  const h = createHarness();
  await h.advance(1900);
  for (let i = 0; i < 24; i++) { await h.advance(250); h.scroll(); }
  assert.equal(h.gestureMotions().length, 1);
- await h.advance(4999); assert.equal(h.gestureMotions().length, 1);
+ await h.advance(2799); assert.equal(h.gestureMotions().length, 1);
  await h.advance(1);
- assert.equal(h.gestureMotions()[1].time, 12900);
+ assert.equal(h.gestureMotions()[1].time, 10700);
  assert.equal(h.gestureMotions()[1].kind, 'idle');
 });
 
 await test('entry during idle waits and replays with the latest section gesture', async () => {
  const h = createHarness();
- await h.advance(7000); h.enter(1);
+ await h.advance(4800); h.enter(1);
  await h.advance(1299); assert.equal(h.gestureMotions().length, 2);
  await h.advance(1);
  assert.deepEqual(h.gestureMotions().map(m => [m.time, m.kind, m.behavior]),
-  [[0, 'entry', 'welcome'], [6900, 'idle', 'welcome'], [8300, 'entry', 'study']]);
+  [[0, 'entry', 'welcome'], [4700, 'idle', 'welcome'], [6100, 'entry', 'study']]);
 });
 
 await test('scroll cancels every idle part and resumes after stopping', async () => {
  for (const index of pageProfiles.index.keys()) {
   const h = createHarness({initialSection: index});
-  await h.advance(7000); h.scroll();
+  await h.advance(4800); h.scroll();
   assert.equal(h.active.size, 0);
   assert.ok(h.gestureMotions().at(-1).parts.every(part => part.cancelled), 'every active idle part is cancelled');
-  await h.advance(4999); assert.equal(h.gestureMotions().length, 2);
+  await h.advance(2799); assert.equal(h.gestureMotions().length, 2);
   await h.advance(1);
-  assert.equal(h.gestureMotions()[2].time, 12000);
+  assert.equal(h.gestureMotions()[2].time, 7600);
  }
 });
 
 await test('scroll preserves entry and each idle has a full pause after it finishes', async () => {
- const h = createHarness();
- await h.advance(100); h.scroll();
- assert.equal(h.active.size, Object.keys(expectedPoses.welcome).length);
- assert.ok(h.gestureMotions()[0].parts.every(part => !part.cancelled));
- await h.advance(13199); assert.equal(h.gestureMotions().length, 2);
- await h.advance(1);
- assert.deepEqual(h.gestureMotions().map(m => m.time), [0, 6900, 13300]);
+ for (const {completionLag, expectedTimes} of [
+  {completionLag: {}, expectedTimes: [0, 4700, 8900]},
+  {completionLag: {'rig-body': 500}, expectedTimes: [0, 5200, 9900]}
+ ]) {
+  const h = createHarness({completionLag});
+  await h.advance(100); h.scroll();
+  assert.equal(h.active.size, Object.keys(expectedPoses.welcome).length);
+  assert.ok(h.gestureMotions()[0].parts.every(part => !part.cancelled));
+  await h.advance(expectedTimes[2] - 101); assert.equal(h.gestureMotions().length, 2);
+  await h.advance(1);
+  assert.deepEqual(h.gestureMotions().map(m => m.time), expectedTimes,
+   'the full quiet pause begins only after the last part, including a late body, finishes');
+ }
 });
 
 for (const setting of ['hidden', 'reduced', 'visibility']) await test(`${setting} cancels every rig part and resumes idle without stale entry`, async () => {
  for (const [index, key] of pageProfiles.index.entries()) {
   for (const phase of ['entry', 'idle']) {
    const h = createHarness({initialSection: index});
-   await h.advance(phase === 'entry' ? 100 : 7000);
+   await h.advance(phase === 'entry' ? 100 : 4800);
    const interrupted = h.gestureMotions().at(-1), count = h.gestureMotions().length;
    assert.equal(interrupted.kind, phase);
    h[setting](setting !== 'visibility');
@@ -506,7 +580,7 @@ for (const setting of ['hidden', 'reduced', 'visibility']) await test(`${setting
    h.enter(nextIndex); await h.advance(10000);
    assert.equal(h.gestureMotions().length, count, 'no motion while blocked');
    h[setting](setting === 'visibility');
-   await h.advance(4999); assert.equal(h.gestureMotions().length, count);
+   await h.advance(2799); assert.equal(h.gestureMotions().length, count);
    await h.advance(1);
    assert.equal(h.gestureMotions().at(-1).kind, 'idle');
    assert.equal(h.gestureMotions().at(-1).behavior, pageProfiles.index[nextIndex]);

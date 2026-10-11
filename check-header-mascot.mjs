@@ -42,9 +42,14 @@ try{
   for(const file of pages){
    await page.goto(`${origin}/${lang}/${file}`);await page.evaluate(()=>document.fonts.ready);
    const state=await page.locator('.site-header .brand-mark').evaluate(el=>{
-    const svg=el.querySelector('svg.ranca-rig'),css=getComputedStyle(el),pill=el.closest('.brand').getBoundingClientRect(),header=el.closest('.site-header').getBoundingClientRect();
+    const svg=el.querySelector('svg.ranca-rig'),css=getComputedStyle(el),pill=el.closest('.brand').getBoundingClientRect(),header=el.closest('.site-header').getBoundingClientRect(),word=el.parentElement.querySelector('.brand-name').getBoundingClientRect();
     const parts=['rig-body','rig-eye-left','rig-eye-right','rig-smile','rig-hand-left','rig-hand-right'];
-    const rects=[...svg.querySelectorAll('.rig-body > use,.rig-face path,.rig-hands path')].map(part=>part.getBoundingClientRect());
+    // Include stroke paint, preserving the small intentional overflow around the 44/48px SVG wrapper.
+    const rects=[...svg.querySelectorAll('.rig-body > use,.rig-face path,.rig-hands path')].map(part=>{
+     const r=part.getBoundingClientRect(),m=part.getScreenCTM(),style=getComputedStyle(part);
+     const stroke=style.stroke==='none'?0:parseFloat(style.strokeWidth)/2,x=stroke*Math.hypot(m.a,m.c),y=stroke*Math.hypot(m.b,m.d);
+     return {left:r.left-x,right:r.right+x,top:r.top-y,bottom:r.bottom+y};
+    });
     return {
      inline:el.dataset.rancaRig==='true'&&el.querySelectorAll('svg').length===1,
      background:css.backgroundImage,width:el.offsetWidth,height:el.offsetHeight,
@@ -57,6 +62,7 @@ try{
      name:el.parentElement.querySelector('.brand-name').textContent,
      pillHeight:pill.height,headerHeight:header.height,
      unclipped:rects.every(r=>r.left>=pill.left-1&&r.right<=pill.right+1&&r.top>=pill.top-1&&r.bottom<=pill.bottom+1),
+     beforeWordmark:word.width===0||rects.every(r=>r.right<=word.left+1),
      withinViewport:header.left>=0&&header.right<=innerWidth,
      overflow:document.documentElement.scrollWidth>innerWidth,
      extraCues:document.querySelectorAll('.ranca-cue,#preview-label').length
@@ -66,7 +72,7 @@ try{
     inline:true,background:'none',width:width<900?44:48,height:width<900?32:35,
     viewBox:'0 0 741 532',preservesAspect:true,complete:true,noRaster:true,motion:0,
     decorative:true,pointerInert:true,name:'Rancana',pillHeight:48,headerHeight:48,
-    unclipped:true,withinViewport:true,overflow:false,extraCues:0
+    unclipped:true,beforeWordmark:true,withinViewport:true,overflow:false,extraCues:0
    },`${lang}/${file} at ${width}`);
    for(const link of await page.locator('.site-header a:visible').all())await checkLink(link);
    assert.deepEqual(errors,[],`${lang}/${file}: browser errors`);
@@ -132,6 +138,7 @@ try{
  await scrollToSection(page,'#for-you');
  await page.waitForFunction(()=>window.mascotMotions.some(m=>m.key==='study'&&m.kind==='entry'&&m.duration===1900));
  assert.ok(await page.locator('.brand-mark').evaluate(el=>el.getAnimations({subtree:true}).length>=3),'multiple articulated parts are active');
+ assert.ok(await page.locator('.brand-mark .rig-body').evaluate(el=>el.getAnimations().length===1),'whole-body position participates in the gesture');
  await page.emulateMedia({reducedMotion:'reduce'});await assertStopped(page,'reduced motion cancels every active part');
  let stopped=await motionCount(page);
  await scrollToSection(page,'#features');await page.waitForTimeout(5500);

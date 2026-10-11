@@ -73,52 +73,89 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
   delete: {calm:true, entry:['rotate(0deg)','rotate(-1deg)','rotate(0deg)'], idle:['translateY(0)','translateY(.4px)','translateY(0)']},
   fairness: {calm:true, entry:['rotate(-1deg)','rotate(1deg)','rotate(0deg)'], idle:['rotate(0deg)','rotate(.5deg)','rotate(-.5deg)','rotate(0deg)']}
  };
+ // Every gesture coordinates body posture with independently animated features.
+ // Body transforms are rigid: no squash/stretch or silhouette redraw.
  const neutral='translate(0px,0px) rotate(0deg) scale(1)';
+ const bodyNeutral='translate(0px,0px) rotate(0deg)';
  const poses={
   welcome:{
-   '.rig-hand-left':[neutral,'translate(65px,-12px) rotate(35deg)','translate(65px,-12px) rotate(57deg)','translate(65px,-12px) rotate(22deg)','translate(65px,-12px) rotate(48deg)',neutral],
-   '.rig-eye-left':['translateY(0px)','translateY(-8px)','translateY(0px)'],
-   '.rig-eye-right':['translateY(0px)','translateY(-8px)','translateY(0px)'],
-   '.rig-smile':['scale(1)','scale(1.06,1.1)','scale(1)']
+   '.rig-body':[bodyNeutral,'translate(0px,-18px) rotate(-6deg)','translate(0px,-10px) rotate(5deg)','translate(0px,-8px) rotate(-3deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(80px,-20px) rotate(38deg)','translate(80px,-20px) rotate(70deg)','translate(80px,-20px) rotate(12deg)','translate(80px,-20px) rotate(62deg)',neutral],
+   '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+   '.rig-smile':['scale(1)','scale(1.12,1.2)','scale(1)']
   },
   study:{
-   '.rig-eye-left':['translate(0px,0px)','translate(12px,4px)','translate(12px,4px)','translate(-9px,8px)','translate(-9px,8px)','translate(0px,0px)'],
-   '.rig-eye-right':['translate(0px,0px)','translate(12px,4px)','translate(12px,4px)','translate(-9px,8px)','translate(-9px,8px)','translate(0px,0px)'],
-   '.rig-hand-left':[neutral,'translate(65px,30px) rotate(-14deg)','translate(65px,30px) rotate(-14deg)',neutral],
-   '.rig-smile':['scale(1)','scale(.96,.9)','scale(1)']
+   '.rig-body':[bodyNeutral,'translate(12px,0px) rotate(7deg)','translate(12px,0px) rotate(7deg)','translate(-10px,0px) rotate(-5deg)','translate(-10px,0px) rotate(-5deg)',bodyNeutral],
+   '.rig-eye-left':['translate(0px,0px)','translate(24px,7px)','translate(24px,7px)','translate(-20px,12px)','translate(-20px,12px)','translate(0px,0px)'],
+   '.rig-eye-right':['translate(0px,0px)','translate(24px,7px)','translate(24px,7px)','translate(-20px,12px)','translate(-20px,12px)','translate(0px,0px)'],
+   '.rig-hand-left':[neutral,'translate(75px,35px) rotate(-24deg)','translate(75px,35px) rotate(-24deg)',neutral],
+   '.rig-smile':['scale(1)','scale(.93,.82)','scale(1)']
   },
   cards:{
-   '.rig-hand-left':[neutral,'translate(100px,20px) rotate(22deg)','translate(65px,40px) rotate(-3deg)',neutral,neutral],
-   '.rig-hand-right':[neutral,neutral,'translate(-85px,-65px) rotate(14deg)','translate(-50px,-30px) rotate(-9deg)',neutral],
-   '.rig-eye-left':['translateX(0px)','translateX(-12px)','translateX(12px)','translateX(12px)','translateX(0px)'],
-   '.rig-eye-right':['translateX(0px)','translateX(-12px)','translateX(12px)','translateX(12px)','translateX(0px)']
+   '.rig-body':[bodyNeutral,'translate(-18px,0px) rotate(-4deg)','translate(18px,0px) rotate(4deg)','translate(18px,0px) rotate(4deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(130px,15px) rotate(32deg)','translate(80px,50px) rotate(-10deg)',neutral,neutral],
+   '.rig-hand-right':[neutral,neutral,'translate(-110px,-85px) rotate(24deg)','translate(-65px,-30px) rotate(-18deg)',neutral],
+   '.rig-eye-left':['translateX(0px)','translateX(-22px)','translateX(22px)','translateX(22px)','translateX(0px)'],
+   '.rig-eye-right':['translateX(0px)','translateX(-22px)','translateX(22px)','translateX(22px)','translateX(0px)']
   },
   confidence:{
-   '.rig-eye-left':['scaleY(1)','scaleY(.35)','scaleY(.35)','scaleY(1)'],
-   '.rig-eye-right':['scaleY(1)','scaleY(.35)','scaleY(.35)','scaleY(1)'],
-   '.rig-smile':['scale(1)','scale(1.06,.85)','scale(1.06,.85)','scale(1)'],
-   '.rig-hand-left':[neutral,'translate(20px,14px) rotate(-8deg)',neutral],
-   '.rig-hand-right':[neutral,'translate(-18px,12px) rotate(7deg)',neutral]
+   '.rig-body':[bodyNeutral,'translate(0px,16px) rotate(0deg)','translate(0px,-10px) rotate(0deg)',bodyNeutral],
+   '.rig-eye-left':['scaleY(1)','scaleY(.2)','scaleY(.2)','scaleY(1)'],
+   '.rig-eye-right':['scaleY(1)','scaleY(.2)','scaleY(.2)','scaleY(1)'],
+   '.rig-smile':['scale(1)','scale(1.13,.76)','scale(1.13,.76)','scale(1)'],
+   '.rig-hand-left':[neutral,'translate(36px,24px) rotate(-16deg)',neutral],
+   '.rig-hand-right':[neutral,'translate(-32px,20px) rotate(14deg)',neutral]
   },
   download:{
-   '.rig-hand-right':[neutral,'translate(-70px,-75px) rotate(8deg)','translate(-70px,-30px) rotate(8deg)','translate(-70px,-65px) rotate(8deg)','translate(-70px,-25px) rotate(8deg)',neutral],
-   '.rig-eye-left':['translateY(0px)','translateY(13px)','translateY(13px)','translateY(0px)'],
-   '.rig-eye-right':['translateY(0px)','translateY(13px)','translateY(13px)','translateY(0px)']
+   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,20px) rotate(0deg)','translate(0px,0px) rotate(0deg)','translate(0px,16px) rotate(0deg)',bodyNeutral],
+   '.rig-hand-right':[neutral,'translate(-90px,-100px) rotate(14deg)','translate(-90px,-15px) rotate(14deg)','translate(-90px,-90px) rotate(14deg)','translate(-90px,-10px) rotate(14deg)',neutral],
+   '.rig-eye-left':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)']
   },
   question:{
-   '.rig-body':['rotate(0deg)','rotate(-4deg)','rotate(-4deg)','rotate(0deg)'],
-   '.rig-eye-left':['translateY(0px) scaleY(1)','translateY(-12px) scaleY(1.14)','translateY(-12px) scaleY(1.14)','translateY(0px) scaleY(1)'],
-   '.rig-eye-right':['translateY(0px) scaleY(1)','translateY(5px) scaleY(.65)','translateY(5px) scaleY(.65)','translateY(0px) scaleY(1)'],
-   '.rig-smile':['scale(1)','scale(.88,.8)','scale(.88,.8)','scale(1)']
+   '.rig-body':[bodyNeutral,'translate(-8px,0px) rotate(-9deg)','translate(-8px,0px) rotate(-9deg)','translate(8px,0px) rotate(6deg)',bodyNeutral],
+   '.rig-eye-left':['translateY(0px) scaleY(1)','translateY(-22px) scaleY(1.25)','translateY(-22px) scaleY(1.25)','translateY(6px) scaleY(.7)','translateY(0px) scaleY(1)'],
+   '.rig-eye-right':['translateY(0px) scaleY(1)','translateY(9px) scaleY(.4)','translateY(9px) scaleY(.4)','translateY(-12px) scaleY(1.15)','translateY(0px) scaleY(1)'],
+   '.rig-smile':['scale(1)','scale(.8,.65)','scale(.8,.65)','scale(1)']
   }
  };
  const idles={
-  welcome:{'.rig-hand-left':[neutral,'translate(50px,-8px) rotate(34deg)','translate(50px,-8px) rotate(46deg)',neutral]},
-  study:{'.rig-eye-left':['translateX(0px)','translateX(7px)','translateX(-5px)','translateX(0px)'],'.rig-eye-right':['translateX(0px)','translateX(7px)','translateX(-5px)','translateX(0px)']},
-  cards:{'.rig-hand-left':[neutral,'translate(70px,20px) rotate(16deg)',neutral],'.rig-eye-left':['translateX(0px)','translateX(-7px)','translateX(0px)'],'.rig-eye-right':['translateX(0px)','translateX(-7px)','translateX(0px)']},
-  confidence:{'.rig-eye-left':['scaleY(1)','scaleY(.55)','scaleY(1)'],'.rig-eye-right':['scaleY(1)','scaleY(.55)','scaleY(1)'],'.rig-smile':['scale(1)','scale(1.025,.95)','scale(1)']},
-  download:{'.rig-hand-right':[neutral,'translate(-55px,-65px) rotate(5deg)','translate(-55px,-35px) rotate(5deg)',neutral],'.rig-eye-left':['translateY(0px)','translateY(7px)','translateY(0px)'],'.rig-eye-right':['translateY(0px)','translateY(7px)','translateY(0px)']},
-  question:{'.rig-eye-left':['translateY(0px)','translateY(-7px)','translateY(0px)'],'.rig-eye-right':['scaleY(1)','scaleY(.8)','scaleY(1)']}
+  welcome:{
+   '.rig-body':[bodyNeutral,'translate(0px,-10px) rotate(-4deg)','translate(0px,-6px) rotate(4deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(70px,-15px) rotate(28deg)','translate(70px,-15px) rotate(62deg)','translate(70px,-15px) rotate(22deg)',neutral],
+   '.rig-smile':['scale(1)','scale(1.07,1.12)','scale(1)']
+  },
+  study:{
+   '.rig-body':[bodyNeutral,'translate(8px,0px) rotate(4deg)','translate(-6px,0px) rotate(-3deg)',bodyNeutral],
+   '.rig-eye-left':['translateX(0px)','translateX(16px)','translateX(-13px)','translateX(0px)'],
+   '.rig-eye-right':['translateX(0px)','translateX(16px)','translateX(-13px)','translateX(0px)']
+  },
+  cards:{
+   '.rig-body':[bodyNeutral,'translate(-12px,0px) rotate(-3deg)','translate(12px,0px) rotate(3deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(95px,18px) rotate(25deg)',neutral,neutral],
+   '.rig-hand-right':[neutral,neutral,'translate(-70px,-55px) rotate(18deg)',neutral],
+   '.rig-eye-left':['translateX(0px)','translateX(-15px)','translateX(15px)','translateX(0px)'],
+   '.rig-eye-right':['translateX(0px)','translateX(-15px)','translateX(15px)','translateX(0px)']
+  },
+  confidence:{
+   '.rig-body':[bodyNeutral,'translate(0px,10px) rotate(0deg)','translate(0px,-5px) rotate(0deg)',bodyNeutral],
+   '.rig-eye-left':['scaleY(1)','scaleY(.35)','scaleY(1)'],
+   '.rig-eye-right':['scaleY(1)','scaleY(.35)','scaleY(1)'],
+   '.rig-smile':['scale(1)','scale(1.07,.86)','scale(1)']
+  },
+  download:{
+   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,13px) rotate(0deg)',bodyNeutral],
+   '.rig-hand-right':[neutral,'translate(-75px,-85px) rotate(10deg)','translate(-75px,-25px) rotate(10deg)',neutral],
+   '.rig-eye-left':['translateY(0px)','translateY(14px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(14px)','translateY(0px)']
+  },
+  question:{
+   '.rig-body':[bodyNeutral,'translate(-5px,0px) rotate(-6deg)','translate(5px,0px) rotate(4deg)',bodyNeutral],
+   '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+   '.rig-eye-right':['scaleY(1)','scaleY(.55)','scaleY(1)'],
+   '.rig-smile':['scale(1)','scale(.9,.82)','scale(1)']
+  }
  };
  
  headerMascot.setAttribute('aria-hidden','true');
@@ -165,7 +202,7 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  const scheduleIdle = () => {
   clearIdle();
   if (!canMove() || animation) return;
-  const delay = pendingEntry ? Math.max(0, 900 - (performance.now() - lastEntry)) : ((readingPolicy || gestures[activeKey].calm) ? 9000 : 5000);
+  const delay = pendingEntry ? Math.max(0, 900 - (performance.now() - lastEntry)) : ((readingPolicy || gestures[activeKey].calm) ? 9000 : poses[activeKey] ? 2800 : 5000);
   idleTimer = setTimeout(() => playMascot(pendingEntry), delay);
  };
  const stopMotion = () => {
