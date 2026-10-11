@@ -22,7 +22,7 @@ jobs:
           path: review-evidence/sitemap-http-report.json
   consent-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -51,6 +51,7 @@ jobs:
             review-evidence/header-ranca-*.png
             review-evidence/header-ranca-context-report.json
             review-evidence/header-ranca-layout-report.json
+            review-evidence/header-ranca-navigation-report.json
   real-sdk:
     needs: consent-tests
     runs-on: ubuntu-latest

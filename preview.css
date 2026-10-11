@@ -142,6 +142,20 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
  .download-content{padding:12px 8px}
  .site-header .nav-download{display:none!important}
  .site-header .nav-slot{width:auto;min-width:0}
+ /* Symmetric safe-area gutters keep the sticky pill centered in the viewport. */
+ .site-header.is-sticky{
+  --mobile-nav-gutter:max(24px,env(safe-area-inset-left,0px),env(safe-area-inset-right,0px));
+  top:max(24px,env(safe-area-inset-top,0px));
+  width:calc(100% - var(--mobile-nav-gutter) - var(--mobile-nav-gutter));
+  justify-content:center;
+ }
+ .site-header.is-sticky .nav-slot:not(:focus-within){display:none}
+ /* Preserve the split layout while a keyboard user still owns the language control. */
+ .site-header.is-sticky .nav-slot:focus-within{margin-left:auto}
+}
+@media(max-width:380px){
+ /* The centered pill has room for its name; the focus-preserved split layout does not. */
+ .site-header.is-sticky:not(:has(.nav-slot:focus-within)) .brand-name{display:block}
 }
 
 .audience-grid .audience-icon{display:block;width:144px;height:160px;object-fit:contain;margin-bottom:20px}
@@ -158,5 +172,6 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .site-header .rig-eye-left{transform-origin:320px 220px}
 .site-header .rig-eye-right{transform-origin:456px 185px}
 .site-header .rig-smile{transform-origin:408px 276px}
+.site-header .rig-eye-left path,.site-header .rig-eye-right path,.site-header .rig-smile path{transform-box:fill-box;transform-origin:center}
 @media(max-width:899px){.site-header .brand-mark{width:44px;height:32px}}
 @media(prefers-reduced-motion:reduce){.site-header .ranca-rig *{animation:none!important;transition:none!important}}
