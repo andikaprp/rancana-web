@@ -146,3 +146,17 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 
 .audience-grid .audience-icon{display:block;width:144px;height:160px;object-fit:contain;margin-bottom:20px}
 @media(max-width:899px){.audience-grid .audience-icon{width:126px;height:140px;margin-bottom:16px}}
+
+/* Approved articulated Ranca: larger detail within the same 48px header pill. */
+.site-header .brand{width:auto;padding-top:6px;padding-bottom:6px}
+.site-header .brand-mark{width:48px;height:35px;background:#fff url("assets/mascots/ranca-header.svg") center/contain no-repeat;border-radius:0;transform-origin:50% 65%;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.site-header .brand-mark[data-ranca-rig="true"]{background-image:none}
+.site-header .brand-mark .ranca-rig{width:100%;height:auto;display:block;overflow:visible;pointer-events:none;transform-origin:50% 65%}
+.site-header .rig-body{transform-origin:370px 266px}
+.site-header .rig-hand-left{transform-origin:152px 296px}
+.site-header .rig-hand-right{transform-origin:622px 324px}
+.site-header .rig-eye-left{transform-origin:320px 220px}
+.site-header .rig-eye-right{transform-origin:456px 185px}
+.site-header .rig-smile{transform-origin:408px 276px}
+@media(max-width:899px){.site-header .brand-mark{width:44px;height:32px}}
+@media(prefers-reduced-motion:reduce){.site-header .ranca-rig *{animation:none!important;transition:none!important}}

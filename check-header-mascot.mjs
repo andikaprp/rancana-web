@@ -1,0 +1,170 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import http from 'node:http';
+import path from 'node:path';
+import {chromium} from 'playwright';
+const root=path.dirname(new URL(import.meta.url).pathname);
+const server=http.createServer(async(req,res)=>{
+ try{
+  let p=new URL(req.url,'http://localhost').pathname;
+  if(p.endsWith('/'))p+='index.html'; if(!path.extname(p))p+='.html';
+  const file=path.resolve(root,'.'+p);if(!file.startsWith(root+'/'))throw Error('path');
+  res.setHeader('Content-Type',({'.html':'text/html','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png'})[path.extname(file)]||'application/octet-stream');
+  res.end(await fs.readFile(file));
+ }catch{res.statusCode=404;res.end();}
+});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const origin=`http://127.0.0.1:${server.address().port}`;
+let browser;
+await fs.mkdir(path.join(root,'review-evidence'),{recursive:true});
+const report=[];
+const scrollToSection=(page,selector)=>page.evaluate(selector=>{
+ const el=document.querySelector(selector);scrollTo(0,Math.max(0,el.getBoundingClientRect().top+scrollY-innerHeight*.22));
+},selector);
+const motionCount=page=>page.evaluate(()=>window.mascotMotions.length);
+const assertStopped=async(page,message)=>{
+ await page.waitForFunction(()=>document.querySelector('.brand-mark').getAnimations({subtree:true}).length===0);
+ assert.equal(await page.locator('.brand-mark').evaluate(el=>el.getAnimations({subtree:true}).length),0,message);
+};
+const checkLink=async locator=>{
+ assert.ok(await locator.evaluate(el=>{
+  const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));
+ }),'header link remains pointer reachable');
+ await locator.focus();assert.ok(await locator.evaluate(el=>document.activeElement===el),'header link remains focusable');
+};
+try{
+ browser=await chromium.launch({args:['--no-sandbox'],...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}:{})});
+ const pages=(await fs.readdir(path.join(root,'id'))).filter(f=>f.endsWith('.html'));
+ for(const lang of ['id','en'])for(const width of [320,390,1440]){
+  const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:'reduce',deviceScaleFactor:2});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.route('https://**/*',r=>r.abort());
+  for(const file of pages){
+   await page.goto(`${origin}/${lang}/${file}`);await page.evaluate(()=>document.fonts.ready);
+   const state=await page.locator('.site-header .brand-mark').evaluate(el=>{
+    const svg=el.querySelector('svg.ranca-rig'),css=getComputedStyle(el),pill=el.closest('.brand').getBoundingClientRect(),header=el.closest('.site-header').getBoundingClientRect();
+    const parts=['rig-body','rig-eye-left','rig-eye-right','rig-smile','rig-hand-left','rig-hand-right'];
+    const rects=[...svg.querySelectorAll('.rig-body > use,.rig-face path,.rig-hands path')].map(part=>part.getBoundingClientRect());
+    return {
+     inline:el.dataset.rancaRig==='true'&&el.querySelectorAll('svg').length===1,
+     background:css.backgroundImage,width:el.offsetWidth,height:el.offsetHeight,
+     viewBox:svg.getAttribute('viewBox'),preservesAspect:svg.preserveAspectRatio.baseVal.meetOrSlice===1,
+     complete:parts.every(name=>svg.querySelector(`.${name}`)),
+     noRaster:svg.querySelectorAll('image,foreignObject').length===0,
+     motion:el.getAnimations({subtree:true}).length,
+     decorative:el.getAttribute('aria-hidden')==='true'&&svg.getAttribute('aria-hidden')==='true'&&svg.getAttribute('focusable')==='false',
+     pointerInert:css.pointerEvents==='none'&&getComputedStyle(svg).pointerEvents==='none',
+     name:el.parentElement.querySelector('.brand-name').textContent,
+     pillHeight:pill.height,headerHeight:header.height,
+     unclipped:rects.every(r=>r.left>=pill.left-1&&r.right<=pill.right+1&&r.top>=pill.top-1&&r.bottom<=pill.bottom+1),
+     withinViewport:header.left>=0&&header.right<=innerWidth,
+     overflow:document.documentElement.scrollWidth>innerWidth,
+     extraCues:document.querySelectorAll('.ranca-cue,#preview-label').length
+    };
+   });
+   assert.deepEqual(state,{
+    inline:true,background:'none',width:width<900?44:48,height:width<900?32:35,
+    viewBox:'0 0 741 532',preservesAspect:true,complete:true,noRaster:true,motion:0,
+    decorative:true,pointerInert:true,name:'Rancana',pillHeight:48,headerHeight:48,
+    unclipped:true,withinViewport:true,overflow:false,extraCues:0
+   },`${lang}/${file} at ${width}`);
+   for(const link of await page.locator('.site-header a:visible').all())await checkLink(link);
+   assert.deepEqual(errors,[],`${lang}/${file}: browser errors`);
+   if(file==='index.html'||file==='about.html')await page.locator('.site-header').screenshot({path:path.join(root,'review-evidence',`header-ranca-${lang}-${file.replace('.html','')}-${width}.png`)});
+   if(file==='index.html'&&lang==='id'&&width===390){
+    if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
+    await page.locator('body').click({position:{x:3,y:300}});
+    await page.screenshot({path:path.join(root,'review-evidence','header-ranca-mobile-page.png')});
+   }
+   report.push({lang,file,width,...state});
+  }
+  // The full mascot stays inside the supporting-page home link's hit target.
+  await page.goto(`${origin}/${lang}/about.html`);
+  if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
+  const mascotTarget=await page.locator('.site-header .brand-mark').boundingBox();
+  await Promise.all([page.waitForURL(`${origin}/${lang}/`),page.mouse.click(mascotTarget.x+mascotTarget.width/2,mascotTarget.y+mascotTarget.height/2)]);
+  await page.goto(`${origin}/${lang}/about.html`);
+  await page.locator('.site-header .brand').focus();
+  await Promise.all([page.waitForURL(`${origin}/${lang}/`),page.keyboard.press('Enter')]);
+  // Real keyboard and pointer navigation, on the local test origin only.
+  await page.goto(`${origin}/${lang}/`);
+  if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
+  await page.evaluate(()=>{document.body.tabIndex=-1;document.body.focus();document.body.removeAttribute('tabindex');});
+  await page.keyboard.press('Tab');
+  assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('hreflang')),'id','first header language is keyboard reachable');
+  await page.keyboard.press('Tab');
+  assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('hreflang')),'en','second header language is keyboard reachable');
+  const keyboardLocale=lang==='id'?'en':'id';
+  if(keyboardLocale==='id')await page.keyboard.press('Shift+Tab');
+  await Promise.all([page.waitForURL(`${origin}/${keyboardLocale}/`),page.keyboard.press('Enter')]);
+  await Promise.all([page.waitForURL(`${origin}/${lang}/`),page.locator(`.site-header .lang-btn[hreflang="${lang}"]`).click()]);
+  await page.close();
+ }
+ // With JavaScript disabled, the same complete SVG is the CSS fallback.
+ for(const lang of ['id','en'])for(const width of [390,1440]){
+  const page=await browser.newPage({javaScriptEnabled:false,viewport:{width,height:900}});
+  await page.route('https://**/*',r=>r.abort());
+  await page.goto(`${origin}/${lang}/`);
+  const fallback=await page.locator('.brand-mark').evaluate(async el=>{
+   const style=getComputedStyle(el),src=style.backgroundImage.match(/url\(["']?([^"')]+)/)?.[1];
+   const image=new Image();image.src=src;await image.decode();
+   return {src,fit:style.backgroundSize,ratio:image.naturalWidth/image.naturalHeight,width:el.offsetWidth,height:el.offsetHeight,pillHeight:el.closest('.brand').getBoundingClientRect().height,inline:el.querySelectorAll('svg').length};
+  });
+  assert.ok(fallback.src.endsWith('/assets/mascots/ranca-header.svg'));
+  assert.equal(fallback.fit,'contain');assert.equal(fallback.ratio,741/532);
+  assert.equal(fallback.width,width<900?44:48);assert.equal(fallback.height,width<900?32:35);assert.equal(fallback.pillHeight,48);assert.equal(fallback.inline,0);
+  await page.close();
+ }
+ const page=await browser.newPage({viewport:{width:1440,height:800},reducedMotion:'no-preference'});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.route('https://**/*',r=>r.abort());
+ await page.addInitScript(()=>{
+  window.mascotMotions=[];const animate=Element.prototype.animate;
+  Element.prototype.animate=function(frames,options){
+   const mark=this.closest('.site-header .brand-mark');
+   if(mark)window.mascotMotions.push({key:mark.dataset.rancaBehavior,kind:mark.dataset.rancaMotion,target:this.getAttribute('class'),time:performance.now(),duration:options.duration});
+   return animate.call(this,frames,options);
+  };
+ });
+ await page.goto(`${origin}/id/`);
+ if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
+ await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';});
+ await scrollToSection(page,'#for-you');
+ await page.waitForFunction(()=>window.mascotMotions.some(m=>m.key==='study'&&m.kind==='entry'&&m.duration===1900));
+ assert.ok(await page.locator('.brand-mark').evaluate(el=>el.getAnimations({subtree:true}).length>=3),'multiple articulated parts are active');
+ await page.emulateMedia({reducedMotion:'reduce'});await assertStopped(page,'reduced motion cancels every active part');
+ let stopped=await motionCount(page);
+ await scrollToSection(page,'#features');await page.waitForTimeout(5500);
+ assert.equal(await motionCount(page),stopped,'reduced motion stops entry and idle');
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await scrollToSection(page,'#benefits');
+ await page.waitForFunction(n=>window.mascotMotions.length>n,stopped,{timeout:10000});
+ await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});document.dispatchEvent(new Event('visibilitychange'));});
+ await assertStopped(page,'hidden document cancels every active part');stopped=await motionCount(page);
+ await scrollToSection(page,'#cta');await page.waitForTimeout(5500);
+ assert.equal(await motionCount(page),stopped,'hidden document stops entry and idle');
+ await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,get:()=>false});document.dispatchEvent(new Event('visibilitychange'));});
+ await scrollToSection(page,'#faq');
+ await page.waitForFunction(n=>window.mascotMotions.length>n,stopped,{timeout:10000});
+ await page.evaluate(()=>{document.querySelector('.site-header').style.display='none';});
+ await assertStopped(page,'offscreen header cancels every active part');stopped=await motionCount(page);
+ await page.waitForTimeout(5500);assert.equal(await motionCount(page),stopped,'offscreen mascot stays paused');
+ await page.evaluate(()=>{document.querySelector('.site-header').style.display='';});
+ await scrollToSection(page,'#for-you');
+ await page.waitForFunction(n=>window.mascotMotions.length>n,stopped,{timeout:10000});
+ const pill=await page.locator('.site-header .brand').boundingBox(),wordmark=await page.locator('.brand-name').boundingBox();
+ const download=page.locator('.site-header .nav-download');await download.waitFor({state:'visible'});await page.waitForTimeout(250);
+ await checkLink(download);
+ // Prevent leaving the local page; real pointer/Enter events must still reach the CTA.
+ await download.evaluate(el=>el.addEventListener('click',event=>{event.preventDefault();window.headerPlayActivation={trusted:event.isTrusted,detail:event.detail,href:el.href};}));
+ await download.click();
+ assert.deepEqual(await page.evaluate(()=>window.headerPlayActivation),{trusted:true,detail:1,href:'https://play.google.com/store/apps/details?id=com.planora.labs'},'pointer activates existing Play link');
+ await download.focus();await page.keyboard.press('Enter');
+ assert.deepEqual(await page.evaluate(()=>window.headerPlayActivation),{trusted:true,detail:0,href:'https://play.google.com/store/apps/details?id=com.planora.labs'},'Enter activates existing Play link');
+ await assertStopped(page,'resumed entry completes');
+ assert.deepEqual(await page.locator('.site-header .brand').boundingBox(),pill,'resumed articulation keeps pill fixed');
+ assert.deepEqual(await page.locator('.brand-name').boundingBox(),wordmark,'resumed articulation keeps lettering fixed');
+ assert.deepEqual(errors,[]);await page.close();
+ await fs.writeFile(path.join(root,'review-evidence','header-ranca-layout-report.json'),JSON.stringify(report,null,2));
+ console.log(`PASS — articulated SVG on ${report.length} locale/page/viewport views, 48px header, no-JS fallback, keyboard/pointer links, reduced motion, hidden/offscreen cancellation and resume`);
+}finally{await browser?.close();await new Promise(r=>server.close(r));}
