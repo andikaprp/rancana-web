@@ -32,7 +32,10 @@ if (navSlot && heroDownload) {
  addEventListener('hashchange', scheduleCheck);
  document.querySelectorAll('.lang-btn').forEach(button => button.addEventListener('click', scheduleCheck));
  checkHeroPosition();
- navSlot.addEventListener('focusout', () => queueMicrotask(updateNavigation));
+ navSlot.addEventListener('focusout', event => {
+  if (navSlot.contains(event.relatedTarget)) return;
+  requestAnimationFrame(updateNavigation);
+ });
 }
 
 // Keep the full Ranca mascot lively without moving the header or its hit targets.
@@ -73,54 +76,134 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
   delete: {calm:true, entry:['rotate(0deg)','rotate(-1deg)','rotate(0deg)'], idle:['translateY(0)','translateY(.4px)','translateY(0)']},
   fairness: {calm:true, entry:['rotate(-1deg)','rotate(1deg)','rotate(0deg)'], idle:['rotate(0deg)','rotate(.5deg)','rotate(-.5deg)','rotate(0deg)']}
  };
+ // Every gesture coordinates body posture with independently animated features.
+ // Body transforms are rigid: no squash/stretch or silhouette redraw.
  const neutral='translate(0px,0px) rotate(0deg) scale(1)';
+ const bodyNeutral='translate(0px,0px) rotate(0deg)';
  const poses={
   welcome:{
-   '.rig-hand-left':[neutral,'translate(65px,-12px) rotate(35deg)','translate(65px,-12px) rotate(57deg)','translate(65px,-12px) rotate(22deg)','translate(65px,-12px) rotate(48deg)',neutral],
-   '.rig-eye-left':['translateY(0px)','translateY(-8px)','translateY(0px)'],
-   '.rig-eye-right':['translateY(0px)','translateY(-8px)','translateY(0px)'],
-   '.rig-smile':['scale(1)','scale(1.06,1.1)','scale(1)']
+   '.rig-body':[bodyNeutral,'translate(0px,-18px) rotate(-6deg)','translate(0px,-10px) rotate(5deg)','translate(0px,-8px) rotate(-3deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(80px,-20px) rotate(38deg)','translate(80px,-20px) rotate(70deg)','translate(80px,-20px) rotate(12deg)','translate(80px,-20px) rotate(62deg)',neutral],
+   '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+   '.rig-smile':['scale(1)','scale(1.12,1.2)','scale(1)']
   },
   study:{
-   '.rig-eye-left':['translate(0px,0px)','translate(12px,4px)','translate(12px,4px)','translate(-9px,8px)','translate(-9px,8px)','translate(0px,0px)'],
-   '.rig-eye-right':['translate(0px,0px)','translate(12px,4px)','translate(12px,4px)','translate(-9px,8px)','translate(-9px,8px)','translate(0px,0px)'],
-   '.rig-hand-left':[neutral,'translate(65px,30px) rotate(-14deg)','translate(65px,30px) rotate(-14deg)',neutral],
-   '.rig-smile':['scale(1)','scale(.96,.9)','scale(1)']
+   '.rig-body':[bodyNeutral,'translate(10px,12px) rotate(5deg)','translate(10px,12px) rotate(5deg)','translate(-8px,12px) rotate(-4deg)','translate(-8px,12px) rotate(-4deg)',bodyNeutral],
+   '.rig-eye-left':['translate(0px,0px)','translate(24px,28px)','translate(24px,28px)','translate(-20px,28px)','translate(-20px,28px)','translate(0px,0px)'],
+   '.rig-eye-right':['translate(0px,0px)','translate(24px,28px)','translate(24px,28px)','translate(-20px,28px)','translate(-20px,28px)','translate(0px,0px)'],
+   '.rig-hand-left':[neutral,'translate(75px,35px) rotate(-24deg)','translate(75px,35px) rotate(-24deg)',neutral],
+   '.rig-smile':['scale(1)','scale(.93,.82)','scale(1)']
   },
   cards:{
-   '.rig-hand-left':[neutral,'translate(100px,20px) rotate(22deg)','translate(65px,40px) rotate(-3deg)',neutral,neutral],
-   '.rig-hand-right':[neutral,neutral,'translate(-85px,-65px) rotate(14deg)','translate(-50px,-30px) rotate(-9deg)',neutral],
-   '.rig-eye-left':['translateX(0px)','translateX(-12px)','translateX(12px)','translateX(12px)','translateX(0px)'],
-   '.rig-eye-right':['translateX(0px)','translateX(-12px)','translateX(12px)','translateX(12px)','translateX(0px)']
+   '.rig-body':[bodyNeutral,'translate(-18px,0px) rotate(-4deg)','translate(18px,0px) rotate(4deg)','translate(18px,0px) rotate(4deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(130px,15px) rotate(32deg)','translate(80px,50px) rotate(-10deg)',neutral,neutral],
+   '.rig-hand-right':[neutral,neutral,'translate(-110px,-85px) rotate(24deg)','translate(-65px,-30px) rotate(-18deg)',neutral],
+   '.rig-eye-left':['translateX(0px)','translateX(-22px)','translateX(22px)','translateX(22px)','translateX(0px)'],
+   '.rig-eye-right':['translateX(0px)','translateX(-22px)','translateX(22px)','translateX(22px)','translateX(0px)']
   },
   confidence:{
-   '.rig-eye-left':['scaleY(1)','scaleY(.35)','scaleY(.35)','scaleY(1)'],
-   '.rig-eye-right':['scaleY(1)','scaleY(.35)','scaleY(.35)','scaleY(1)'],
-   '.rig-smile':['scale(1)','scale(1.06,.85)','scale(1.06,.85)','scale(1)'],
-   '.rig-hand-left':[neutral,'translate(20px,14px) rotate(-8deg)',neutral],
-   '.rig-hand-right':[neutral,'translate(-18px,12px) rotate(7deg)',neutral]
+   '.rig-body':[bodyNeutral,'translate(0px,16px) rotate(0deg)','translate(0px,-10px) rotate(0deg)',bodyNeutral],
+   '.rig-eye-left':['translateY(0px)','translateY(8px)','translateY(8px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(8px)','translateY(8px)','translateY(0px)'],
+   '.rig-smile':['scale(1)','scale(1.13,.76)','scale(1.13,.76)','scale(1)'],
+   '.rig-hand-left':[neutral,'translate(36px,24px) rotate(-16deg)',neutral],
+   '.rig-hand-right':[neutral,'translate(-32px,20px) rotate(14deg)',neutral]
   },
   download:{
-   '.rig-hand-right':[neutral,'translate(-70px,-75px) rotate(8deg)','translate(-70px,-30px) rotate(8deg)','translate(-70px,-65px) rotate(8deg)','translate(-70px,-25px) rotate(8deg)',neutral],
-   '.rig-eye-left':['translateY(0px)','translateY(13px)','translateY(13px)','translateY(0px)'],
-   '.rig-eye-right':['translateY(0px)','translateY(13px)','translateY(13px)','translateY(0px)']
+   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,20px) rotate(0deg)','translate(0px,0px) rotate(0deg)','translate(0px,16px) rotate(0deg)',bodyNeutral],
+   '.rig-hand-right':[neutral,'translate(-90px,-100px) rotate(14deg)','translate(-90px,-15px) rotate(14deg)','translate(-90px,-90px) rotate(14deg)','translate(-90px,-10px) rotate(14deg)',neutral],
+   '.rig-eye-left':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(22px)','translateY(22px)','translateY(0px)']
   },
   question:{
-   '.rig-body':['rotate(0deg)','rotate(-4deg)','rotate(-4deg)','rotate(0deg)'],
-   '.rig-eye-left':['translateY(0px) scaleY(1)','translateY(-12px) scaleY(1.14)','translateY(-12px) scaleY(1.14)','translateY(0px) scaleY(1)'],
-   '.rig-eye-right':['translateY(0px) scaleY(1)','translateY(5px) scaleY(.65)','translateY(5px) scaleY(.65)','translateY(0px) scaleY(1)'],
-   '.rig-smile':['scale(1)','scale(.88,.8)','scale(.88,.8)','scale(1)']
+   '.rig-body':[bodyNeutral,'translate(-8px,0px) rotate(-9deg)','translate(-8px,0px) rotate(-9deg)','translate(8px,0px) rotate(6deg)',bodyNeutral],
+   '.rig-eye-left':['translateY(0px)','translateY(-22px)','translateY(-22px)','translateY(6px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(9px)','translateY(9px)','translateY(-12px)','translateY(0px)'],
+   '.rig-smile':['scale(1)','scale(.8,.65)','scale(.8,.65)','scale(1)']
   }
  };
  const idles={
-  welcome:{'.rig-hand-left':[neutral,'translate(50px,-8px) rotate(34deg)','translate(50px,-8px) rotate(46deg)',neutral]},
-  study:{'.rig-eye-left':['translateX(0px)','translateX(7px)','translateX(-5px)','translateX(0px)'],'.rig-eye-right':['translateX(0px)','translateX(7px)','translateX(-5px)','translateX(0px)']},
-  cards:{'.rig-hand-left':[neutral,'translate(70px,20px) rotate(16deg)',neutral],'.rig-eye-left':['translateX(0px)','translateX(-7px)','translateX(0px)'],'.rig-eye-right':['translateX(0px)','translateX(-7px)','translateX(0px)']},
-  confidence:{'.rig-eye-left':['scaleY(1)','scaleY(.55)','scaleY(1)'],'.rig-eye-right':['scaleY(1)','scaleY(.55)','scaleY(1)'],'.rig-smile':['scale(1)','scale(1.025,.95)','scale(1)']},
-  download:{'.rig-hand-right':[neutral,'translate(-55px,-65px) rotate(5deg)','translate(-55px,-35px) rotate(5deg)',neutral],'.rig-eye-left':['translateY(0px)','translateY(7px)','translateY(0px)'],'.rig-eye-right':['translateY(0px)','translateY(7px)','translateY(0px)']},
-  question:{'.rig-eye-left':['translateY(0px)','translateY(-7px)','translateY(0px)'],'.rig-eye-right':['scaleY(1)','scaleY(.8)','scaleY(1)']}
+  welcome:{
+   '.rig-body':[bodyNeutral,'translate(0px,-10px) rotate(-4deg)','translate(0px,-6px) rotate(4deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(70px,-15px) rotate(28deg)','translate(70px,-15px) rotate(62deg)','translate(70px,-15px) rotate(22deg)',neutral],
+   '.rig-smile':['scale(1)','scale(1.07,1.12)','scale(1)']
+  },
+  study:{
+   '.rig-body':[bodyNeutral,'translate(8px,0px) rotate(4deg)','translate(-6px,0px) rotate(-3deg)',bodyNeutral],
+   '.rig-eye-left':['translate(0px,0px)','translate(16px,22px)','translate(-13px,22px)','translate(0px,0px)'],
+   '.rig-eye-right':['translate(0px,0px)','translate(16px,22px)','translate(-13px,22px)','translate(0px,0px)']
+  },
+  cards:{
+   '.rig-body':[bodyNeutral,'translate(-12px,0px) rotate(-3deg)','translate(12px,0px) rotate(3deg)',bodyNeutral],
+   '.rig-hand-left':[neutral,'translate(95px,18px) rotate(25deg)',neutral,neutral],
+   '.rig-hand-right':[neutral,neutral,'translate(-70px,-55px) rotate(18deg)',neutral],
+   '.rig-eye-left':['translateX(0px)','translateX(-15px)','translateX(15px)','translateX(0px)'],
+   '.rig-eye-right':['translateX(0px)','translateX(-15px)','translateX(15px)','translateX(0px)']
+  },
+  confidence:{
+   '.rig-body':[bodyNeutral,'translate(0px,10px) rotate(0deg)','translate(0px,-5px) rotate(0deg)',bodyNeutral],
+   '.rig-eye-left':['translateY(0px)','translateY(5px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(5px)','translateY(0px)'],
+   '.rig-smile':['scale(1)','scale(1.07,.86)','scale(1)']
+  },
+  download:{
+   '.rig-body':[bodyNeutral,'translate(0px,0px) rotate(0deg)','translate(0px,13px) rotate(0deg)',bodyNeutral],
+   '.rig-hand-right':[neutral,'translate(-75px,-85px) rotate(10deg)','translate(-75px,-25px) rotate(10deg)',neutral],
+   '.rig-eye-left':['translateY(0px)','translateY(14px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(14px)','translateY(0px)']
+  },
+  question:{
+   '.rig-body':[bodyNeutral,'translate(-5px,0px) rotate(-6deg)','translate(5px,0px) rotate(4deg)',bodyNeutral],
+   '.rig-eye-left':['translateY(0px)','translateY(-14px)','translateY(0px)'],
+   '.rig-eye-right':['translateY(0px)','translateY(5px)','translateY(0px)'],
+   '.rig-smile':['scale(1)','scale(.9,.82)','scale(1)']
+  }
  };
  
+ // Morph existing facial curves, without replacing the approved SVG paths.
+ // Straightened eyelid curves close visibly, then reopen on a short explicit beat.
+ const facialPathSupported = typeof CSS !== 'undefined' && CSS.supports('d', 'path("M0 0 C1 1 2 1 3 0")');
+ const eyeLeft=[281.8,246.7,284.6,202.5,326.8,184,357,216.5];
+ const eyeRight=[417.8,201,425,154,469,150,494,190.7];
+ const smile=[345.2,275.4,383,320.7,456.2,304,470.5,246.3];
+ const closedEye=points=>[points[0],points[1],points[0]+(points[6]-points[0])/3,points[1]+(points[7]-points[1])/3,points[0]+(points[6]-points[0])*2/3,points[1]+(points[7]-points[1])*2/3,points[6],points[7]];
+ const curve=points=>`path("M${points[0]} ${points[1]} C${points[2]} ${points[3]} ${points[4]} ${points[5]} ${points[6]} ${points[7]}")`;
+ const morph=(base,target,timeline,flatten=.92)=>timeline.map(([offset,amount])=>facialPathSupported
+  ? {offset,d:curve(base.map((value,index)=>Number((value+(target[index]-value)*amount).toFixed(4))))}
+  : {offset,transform:`scaleY(${Number((1-flatten*amount).toFixed(4))})`});
+ const eyes=(left,right=left)=>({
+  '.rig-eye-left path':morph(eyeLeft,closedEye(eyeLeft),left),
+  '.rig-eye-right path':morph(eyeRight,closedEye(eyeRight),right)
+ });
+ const mouth=(target,timeline)=>({'.rig-smile path':morph(smile,target,timeline,.3)});
+ const blink=[[0,0],[.12,0],[.16,1],[.22,1],[.27,0],[1,0]];
+ const idleBlink=[[0,0],[.18,0],[.23,1],[.31,1],[.37,0],[1,0]];
+ const cheerful=[345.2,275.4,375,339,462,318,470.5,246.3];
+ const focused=[345.2,275.4,390,298,450,282,470.5,246.3];
+ const contented=[345.2,275.4,378,330,462,314,470.5,246.3];
+ const thinking=[345.2,275.4,381,283,446,268,470.5,246.3];
+ Object.assign(poses.welcome,eyes(blink),mouth(cheerful,[[0,0],[.28,1],[.72,1],[1,0]]));
+ Object.assign(idles.welcome,eyes(idleBlink),mouth(cheerful,[[0,0],[.4,.6],[.72,.6],[1,0]]));
+ // Audience: blink, lower eyelids, scan the line below, then look back up.
+ Object.assign(poses.study,eyes([[0,0],[.1,0],[.14,1],[.2,1],[.25,.3],[.72,.3],[.9,0],[1,0]]),mouth(focused,[[0,0],[.3,.7],[.75,.7],[1,0]]));
+ Object.assign(idles.study,eyes([[0,0],[.2,.3],[.56,.3],[.61,1],[.69,1],[.76,.3],[1,0]]),mouth(focused,[[0,0],[.3,.5],[.7,.5],[1,0]]));
+ // Features: an attentive glance follows each hand, with a blink between them.
+ Object.assign(poses.cards,eyes([[0,0],[.36,0],[.4,1],[.47,1],[.52,0],[1,0]]),mouth(cheerful,[[0,0],[.35,.4],[.75,.4],[1,0]]));
+ Object.assign(idles.cards,eyes([[0,0],[.38,0],[.43,1],[.51,1],[.57,0],[1,0]]));
+ // Benefits: a longer, satisfied eye close and smile settles with the body.
+ Object.assign(poses.confidence,eyes([[0,0],[.2,.35],[.32,1],[.65,1],[.83,.2],[1,0]]),mouth(contented,[[0,0],[.25,1],[.72,1],[1,0]]));
+ Object.assign(idles.confidence,eyes([[0,0],[.22,.3],[.35,1],[.65,1],[.82,.2],[1,0]]),mouth(contented,[[0,0],[.3,.7],[.7,.7],[1,0]]));
+ Object.assign(poses.download,eyes([[0,0],[.1,0],[.14,1],[.2,1],[.25,.2],[.8,.2],[1,0]]),mouth(cheerful,[[0,0],[.3,.55],[.75,.55],[1,0]]));
+ Object.assign(idles.download,eyes([[0,0],[.2,.2],[.55,.2],[.6,1],[.68,1],[.75,.2],[1,0]]));
+ // FAQ: one narrowed eye, a thoughtful mouth, raised curled hand, then a blink.
+ Object.assign(poses.question,eyes([[0,0],[.23,.1],[.65,.1],[.73,1],[.79,1],[.86,0],[1,0]],[[0,0],[.23,.8],[.65,.8],[.73,1],[.79,1],[.86,0],[1,0]]),mouth(thinking,[[0,0],[.24,1],[.7,1],[1,0]]),{
+  '.rig-hand-right':[neutral,'translate(-15px,-5px) rotate(100deg)','translate(-15px,-5px) rotate(100deg)',neutral]
+ });
+ Object.assign(idles.question,eyes([[0,0],[.22,.15],[.55,.15],[.63,1],[.71,1],[.8,0],[1,0]],[[0,0],[.22,.75],[.55,.75],[.63,1],[.71,1],[.8,0],[1,0]]),mouth(thinking,[[0,0],[.3,.8],[.7,.8],[1,0]]),{
+  '.rig-hand-right':[neutral,'translate(-10px,0px) rotate(85deg)','translate(-10px,0px) rotate(85deg)',neutral]
+ });
+
  headerMascot.setAttribute('aria-hidden','true');
  const pageName = location.pathname.replace(/\/$/,'').split('/').pop()?.replace(/\.html$/,'') || 'index';
  const pageKey = ['id','en'].includes(pageName) ? 'index' : pageName;
@@ -165,7 +248,7 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
  const scheduleIdle = () => {
   clearIdle();
   if (!canMove() || animation) return;
-  const delay = pendingEntry ? Math.max(0, 900 - (performance.now() - lastEntry)) : ((readingPolicy || gestures[activeKey].calm) ? 9000 : 5000);
+  const delay = pendingEntry ? Math.max(0, 900 - (performance.now() - lastEntry)) : ((readingPolicy || gestures[activeKey].calm) ? 9000 : poses[activeKey] ? 2800 : 5000);
   idleTimer = setTimeout(() => playMascot(pendingEntry), delay);
  };
  const stopMotion = () => {
@@ -190,8 +273,8 @@ if (typeof window !== 'undefined' && headerMascot && 'IntersectionObserver' in w
    .replace(/(-?[\d.]+)(px|deg)/g, (_, value, unit) => `${Number(value) * .25}${unit}`)
    .replace(/(scale[XY]?\()([^)]+)(\))/g, (_, start, values, end) => start + values.split(',').map(value => 1 + (Number(value) - 1) * .25).join(',') + end))]));
   const parts = Object.entries(movements).map(([selector, values]) =>
-   headerMascot.querySelector(selector).animate(values.map(transform => ({transform})), {
-    duration, easing: 'ease-in-out', iterations: 1
+   headerMascot.querySelector(selector).animate(values.map(value => typeof value === 'string' ? {transform:value} : value), {
+    duration, easing: selector.endsWith(' path') ? 'linear' : 'ease-in-out', iterations: 1
    }));
   // Treat independent parts as one gesture: cancel together, never overlap or restart.
   const current = {cancel: () => parts.forEach(part => part.cancel()), finished: Promise.all(parts.map(part => part.finished))};
