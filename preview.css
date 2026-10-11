@@ -149,13 +149,14 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
   width:calc(100% - var(--mobile-nav-gutter) - var(--mobile-nav-gutter));
   justify-content:center;
  }
- .site-header.is-sticky .nav-slot:not(:focus-within){display:none}
- /* Preserve the split layout while a keyboard user still owns the language control. */
- .site-header.is-sticky .nav-slot:focus-within{margin-left:auto}
+ /* Follow the controller's stable visibility state, not transient blur/focus gaps. */
+ .site-header.is-sticky .nav-slot:has(.lang[hidden]){display:none}
+ /* Preserve the split layout until the controller releases the language control. */
+ .site-header.is-sticky .nav-slot:has(.lang:not([hidden])){margin-left:auto}
 }
 @media(max-width:380px){
  /* The centered pill has room for its name; the focus-preserved split layout does not. */
- .site-header.is-sticky:not(:has(.nav-slot:focus-within)) .brand-name{display:block}
+ .site-header.is-sticky:has(.lang[hidden]) .brand-name{display:block}
 }
 
 .audience-grid .audience-icon{display:block;width:144px;height:160px;object-fit:contain;margin-bottom:20px}

@@ -32,7 +32,10 @@ if (navSlot && heroDownload) {
  addEventListener('hashchange', scheduleCheck);
  document.querySelectorAll('.lang-btn').forEach(button => button.addEventListener('click', scheduleCheck));
  checkHeroPosition();
- navSlot.addEventListener('focusout', () => queueMicrotask(updateNavigation));
+ navSlot.addEventListener('focusout', event => {
+  if (navSlot.contains(event.relatedTarget)) return;
+  requestAnimationFrame(updateNavigation);
+ });
 }
 
 // Keep the full Ranca mascot lively without moving the header or its hit targets.

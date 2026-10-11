@@ -154,8 +154,22 @@ try{
    assert.equal(focused.languageOverlap,false,`${label}: focused language is not covered by the brand`);
    assert.equal(focused.overflow,false,`${label}: focused split layout does not overflow`);
    assert.deepEqual(focused.pill,initial.pill,`${label}: focused language preserves the original split layout`);
-   await page.keyboard.press('Tab');
-   assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('hreflang')),'en',`${label}: both focused language links stay keyboard reachable`);
+   assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('hreflang')),'id',`${label}: ID retains focus across sticky activation`);
+   for(let transfer=0;transfer<3;transfer++)for(const [key,locale] of [['Tab','en'],['Shift+Tab','id']]){
+    await page.keyboard.press(key);
+    const focusState=await page.evaluate(()=>({
+     locale:document.activeElement.getAttribute('hreflang'),
+     activeTag:document.activeElement.tagName,activeClass:document.activeElement.className,
+     languageHidden:document.querySelector('.site-header .lang').hidden,
+     slotDisplay:getComputedStyle(document.querySelector('.site-header .nav-slot')).display
+    }));
+    assert.equal(focusState.locale,locale,`${label}: ${key} transfer ${transfer+1} keeps language focus; ${JSON.stringify(focusState)}`);
+    assert.equal(focusState.languageHidden,false,`${label}: internal keyboard movement never hides language controls`);
+    const retained=await navigationLayout(page);
+    assert.equal(retained.languageVisible,true,`${label}: language remains visible after internal keyboard movement`);
+    assert.equal(retained.languageOverlap,false,`${label}: internal keyboard movement cannot overlap brand and language`);
+    assert.deepEqual(retained.pill,initial.pill,`${label}: internal keyboard movement preserves split geometry`);
+   }
    await page.evaluate(()=>document.activeElement.blur());
    await page.waitForFunction(()=>document.querySelector('.site-header .lang').hidden);
    assertStickyLayout(await navigationLayout(page),initial,`${label}: after language blur`);
