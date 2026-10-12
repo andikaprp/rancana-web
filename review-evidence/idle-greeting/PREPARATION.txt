@@ -1,0 +1,21 @@
+Current state: final researched anatomy findings and identity clarification received. First resting still rendered; greeting animation remains for the next review step.
+
+Source/style base: approved inside-body placement commit 62563067438e7dd66c6dd758d4137dd1b7243390. The five-state preview e3487234 / f30b315 was rejected and is not an approved idle model.
+
+Specific anatomy finding: Pelajar Ranca grips backpack straps; Mahasiswa Cana teaches with a raised index. Their activity-specific hand shapes must not be reused as idle. Moving a grip lower does not make it relaxed.
+
+Next scope: one short idle -> greeting -> idle sequence, both plain characters. Neutral palms low inside side lobes, fingers grouped/downward, thumb beside the hand, slight wrist bend. No cup, claw, pinch or gripping posture at rest. One hand opens and lifts briefly; the other stays low with subtle follow-through. Both return to their original resting pose.
+
+Source-code diagnosis of rejected preview:
+- The shape called 'relaxed' was the old strap-grip contour.
+- Every state kept palms at roughly the face/lower-cheek height.
+- The ten-second sequence started and ended in 'Greeting', so no neutral baseline or return to rest existed.
+- Alpha-containment checks proved the marks stayed inside the silhouette but could not establish natural anatomy or a relaxed pose.
+
+A safe lower placement exists without long external arms. A fully opaque 57px square fits at body y=390 with centers x=221..613 (Ranca), x=95..656 (Cana); at y=420, centers x=254..593 (Ranca), x=139..628 (Cana). These are pixel-containment limits, not anatomical approval or fixed anchors.
+
+Identity confirmed by the user: green is Ranca; pink is Cana. The user applied the smaller, playful/feminine line-eye and subtle-lash direction to PINK CANA. This first still scales Cana uniformly to 94% and uses curved smiling eye lines with one subtle outer lash each. Original Cana silhouette and texture remain; Ranca's face and scale stay as before.
+
+Final rest drawing: both hands below the face, with short descending arm connections, tapered palms, unequal rounded downward fingertips, two short separators and a thumb beside the palm/index base. This is redrawn relaxed geometry, not a lowered strap-grip contour.
+
+Sources opened in the executor: https://blog.animschool.edu/2025/06/ (Posing Hands for Animation; relaxed finger grouping and wrist curves); https://www.proko.com/course-lesson/how-to-draw-hands-from-imagination-step-by-step/ ; https://www.animationmentor.com/blog/pro-animation-tip-dont-forget-about-the-shoulders/ ; https://www.animatorisland.com/animation-terms/easing/ . The parent supplied the researched acceptance criteria.

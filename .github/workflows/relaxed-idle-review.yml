@@ -1,0 +1,35 @@
+name: Relaxed hands-down resting review
+on:
+  push:
+    branches: [review/relaxed-idle-greeting-20261012]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  resting-still:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: relaxed-hands-down-resting-review
+          path: review-evidence/idle-greeting-output/
+  check-rest-placement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8139 --bind 127.0.0.1 > /tmp/idle-review-server.log 2>&1 &
+          node check-relaxed-idle.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: relaxed-hands-down-ci
+          path: review-evidence/idle-greeting-output/
