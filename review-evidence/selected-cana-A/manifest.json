@@ -1,0 +1,35 @@
+{
+  "status": "selected-design",
+  "selectedOption": "A",
+  "userSelection": "let\u2019s do the A option",
+  "selectedAt": "2026-10-12T16:47:00Z",
+  "selectedSourceCommit": "8890fa0336851bc4ce082a946cbcbf3f5b8ebdb5",
+  "halfLiddedSourceCommit": "2f8ce89402d4b7a4d147813138faa16262b6066a",
+  "defaultState": "default-open",
+  "states": [
+    {
+      "id": "default-open",
+      "label": "Normal open \u00b7 default",
+      "sourcePath": "review-evidence/cana-normal-open-closed-options/A/open"
+    },
+    {
+      "id": "closed",
+      "label": "Closed counterpart",
+      "sourcePath": "review-evidence/cana-normal-open-closed-options/A/closed"
+    },
+    {
+      "id": "contextual-sassy",
+      "label": "Half-lidded \u00b7 contextual sass",
+      "sourcePath": "review-evidence/cana-open-closed-options/A/open"
+    }
+  ],
+  "lashesPerEye": 3,
+  "characterGeometryPreserved": true,
+  "presentationCaptionsRemoved": true,
+  "background": "transparent in SVG/asset PNG; green in preview",
+  "canaBodyHeightRatio": 0.9,
+  "bodyHashes": {
+    "ranca": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "cana": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547"
+  }
+}

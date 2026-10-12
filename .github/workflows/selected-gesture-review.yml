@@ -1,4 +1,4 @@
-name: Cana normally open and closed eye states
+name: Selected Cana A design package
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
@@ -6,17 +6,17 @@ on:
 permissions:
   contents: read
 jobs:
-  early-comparison:
+  selected-package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: cana-normal-open-closed-options
-          path: review-evidence/cana-normal-open-closed-options/
+          name: selected-cana-A
+          path: review-evidence/selected-cana-A/
           if-no-files-found: error
-  verify-options:
+  verify-selected-assets:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -27,11 +27,11 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: |
-          python3 review-evidence/cana-normal-open-closed-options/build.py
+          python3 review-evidence/selected-cana-A/build.py
           python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-eye-state-server.log 2>&1 &
-          node check-cana-normal-open-closed-options.mjs
+          node check-selected-cana-A.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cana-normal-open-closed-options-ci
-          path: review-evidence/cana-normal-open-closed-options/
+          name: selected-cana-A-ci
+          path: review-evidence/selected-cana-A/

@@ -1,0 +1,39 @@
+{
+  "selectedOption": "A",
+  "default": "normal fully open",
+  "sourceCommit": "8890fa0336851bc4ce082a946cbcbf3f5b8ebdb5",
+  "exactCharacterTreesMatchSources": true,
+  "threeLashesPerEyeAllStates": true,
+  "svgHtmlPixelIdentical": true,
+  "staticPreviewWidthsWithoutOverflow": [
+    320,
+    390
+  ],
+  "transparentAssets": [
+    {
+      "name": "RancaCana",
+      "width": 1600,
+      "height": 715,
+      "cornerAlpha": 0,
+      "transparentPixels": 716221,
+      "opaquePixels": 417147
+    },
+    {
+      "name": "Ranca",
+      "width": 800,
+      "height": 580,
+      "cornerAlpha": 0,
+      "transparentPixels": 241358,
+      "opaquePixels": 218296
+    },
+    {
+      "name": "Cana",
+      "width": 740,
+      "height": 580,
+      "cornerAlpha": 0,
+      "transparentPixels": 224063,
+      "opaquePixels": 198851
+    }
+  ],
+  "pageErrors": []
+}
