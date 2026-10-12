@@ -1,4 +1,4 @@
-name: Relaxed hands-down resting review
+name: Straighter longer resting hands review
 on:
   push:
     branches: [review/relaxed-idle-greeting-20261012]
@@ -13,7 +13,7 @@ jobs:
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: relaxed-hands-down-resting-review
+          name: straighter-longer-resting-review
           path: review-evidence/idle-greeting-output/
   check-rest-placement:
     runs-on: ubuntu-latest
@@ -31,5 +31,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: relaxed-hands-down-ci
+          name: straighter-longer-resting-ci
           path: review-evidence/idle-greeting-output/

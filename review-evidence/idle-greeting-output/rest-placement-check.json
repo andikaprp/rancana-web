@@ -7,13 +7,13 @@
       "character": "ranca",
       "pose": "relaxed idle",
       "minimumAlpha": 255,
-      "samples": 2045
+      "samples": 2315
     },
     {
       "character": "cana",
       "pose": "relaxed idle",
       "minimumAlpha": 255,
-      "samples": 2045
+      "samples": 2300
     }
   ]
 }
