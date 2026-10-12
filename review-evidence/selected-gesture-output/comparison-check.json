@@ -1,5 +1,10 @@
 {
   "baseline": "e8af2396b35c1ba6c5752a8a83cff2eaa3100725",
+  "comparisonBase": "77bafae3bacfedad31616360d5125f5af67e01e5",
+  "onlyBrowsRemovedFromRanca": true,
+  "onlyBrowsRemovedFromCana": true,
+  "rancaBrowCount": 0,
+  "canaBrowCount": 0,
   "rancaActiveHandUnchanged": true,
   "rancaMouthUnchanged": true,
   "rancaEyesAreOnlyLines": true,
@@ -18,7 +23,5 @@
   },
   "restingHandMinimumBodyAlpha": 255,
   "restingHandSamples": 2200,
-  "pageErrors": [],
-  "comparisonBase": "72c33b7bf0a13d328d2abbff121608d331450ed2",
-  "minimumCanaEyeToActiveHandCenterlineDistance": 24.63491993204457
+  "pageErrors": []
 }

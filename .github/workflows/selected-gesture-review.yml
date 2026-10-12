@@ -1,4 +1,4 @@
-name: Line eyes and slightly smaller Cana review
+name: No-brow editable mascot handoff
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
@@ -13,8 +13,9 @@ jobs:
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: line-eyes-cana-90-review
-          path: review-evidence/selected-gesture-output/
+          name: ranca-cana-no-brows-editable
+          path: review-evidence/no-brow-editable-bundle/
+          if-no-files-found: error
   verify-comparison:
     runs-on: ubuntu-latest
     timeout-minutes: 8
@@ -28,8 +29,13 @@ jobs:
       - run: |
           python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/selected-gesture-server.log 2>&1 &
           node check-selected-gesture-review.mjs
+          node export-no-brow-bundle.mjs
+          python3 review-evidence/selected-gesture-review/package-no-brow.py
+          node check-no-brow-bundle.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: line-eyes-cana-90-ci
-          path: review-evidence/selected-gesture-output/
+          name: ranca-cana-no-brows-ci
+          path: |
+            review-evidence/no-brow-editable-bundle/
+            review-evidence/selected-gesture-output/

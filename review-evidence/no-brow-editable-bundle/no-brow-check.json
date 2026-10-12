@@ -1,0 +1,27 @@
+{
+  "baseline": "e8af2396b35c1ba6c5752a8a83cff2eaa3100725",
+  "comparisonBase": "77bafae3bacfedad31616360d5125f5af67e01e5",
+  "onlyBrowsRemovedFromRanca": true,
+  "onlyBrowsRemovedFromCana": true,
+  "rancaBrowCount": 0,
+  "canaBrowCount": 0,
+  "rancaActiveHandUnchanged": true,
+  "rancaMouthUnchanged": true,
+  "rancaEyesAreOnlyLines": true,
+  "rancaRestArmUnchanged": true,
+  "canaMouthUnchanged": true,
+  "canaEyesAreOnlyLines": true,
+  "rancaHasNoLashes": true,
+  "canaHasLashes": true,
+  "rancaBodyUnchanged": true,
+  "rancaRestPalmPathUnchanged": true,
+  "canaHandsUnchanged": true,
+  "canaBodyHeightRatio": 0.9,
+  "restLine": {
+    "straight": true,
+    "vertical": true
+  },
+  "restingHandMinimumBodyAlpha": 255,
+  "restingHandSamples": 2200,
+  "pageErrors": []
+}

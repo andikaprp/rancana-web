@@ -1,0 +1,52 @@
+{
+  "basedOn": "77bafae3bacfedad31616360d5125f5af67e01e5",
+  "change": "Remove separate eyebrow paths only",
+  "canaBodyHeightRatio": 0.9,
+  "editableVectors": {
+    "ranca": [
+      "ranca-left-eye",
+      "ranca-right-eye",
+      "ranca-mouth",
+      "ranca-left-arm",
+      "ranca-left-palm",
+      "ranca-right-arm",
+      "ranca-right-palm"
+    ],
+    "cana": [
+      "cana-left-eye",
+      "cana-left-lashes",
+      "cana-right-eye",
+      "cana-right-lashes",
+      "cana-mouth",
+      "cana-left-arm",
+      "cana-left-palm",
+      "cana-right-arm",
+      "cana-right-palm"
+    ]
+  },
+  "rasterBodies": {
+    "ranca": {
+      "file": "assets/ranca-body.webp",
+      "sha256": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+      "dimensions": [
+        741,
+        532
+      ]
+    },
+    "cana": {
+      "file": "assets/cana-body.webp",
+      "sha256": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547",
+      "dimensions": [
+        745,
+        528
+      ]
+    }
+  },
+  "entrypoints": {
+    "react": "RancaCana.jsx",
+    "reactSelfContained": "RancaCana.embedded.jsx",
+    "htmlPreview": "preview.html",
+    "svgPair": "RancaCana.svg",
+    "layerTree": "editable-layers.json"
+  }
+}

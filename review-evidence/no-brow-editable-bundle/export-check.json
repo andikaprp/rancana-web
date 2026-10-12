@@ -1,0 +1,19 @@
+{
+  "standalonePixelIdentical": true,
+  "sourceScene": "77bafae3 with only separate eyebrows removed",
+  "layers": {
+    "ranca": {
+      "rasterImages": 1,
+      "editablePaths": 7,
+      "separateBrows": 0
+    },
+    "cana": {
+      "rasterImages": 1,
+      "editablePaths": 9,
+      "separateBrows": 0
+    }
+  },
+  "bodyImageBytesUnchanged": true,
+  "jsxValidation": "Generated as literal named SVG paths; not locally compiled. MagicPath worker must validate the imported component.",
+  "pageErrors": []
+}
