@@ -1,110 +1,96 @@
 {
-  "comparisonBase": "e488ad405c1d072e91e75ffb4466713de9ba097f",
+  "comparisonBase": "12db3276be39c5d2fe391e09d2d3be51121aa9c7",
   "characters": {
     "ranca": {
-      "beforeMatchesExactE488ad4": true,
-      "allOtherArtworkUnchanged": true,
-      "noBrows": true,
-      "lashPathCount": 0,
-      "lashDetails": []
+      "beforeMatchesExact12db327": true,
+      "allArtworkOutsideCanaEyesUnchanged": true,
+      "noBrows": true
     },
     "cana": {
-      "beforeMatchesExactE488ad4": true,
-      "allOtherArtworkUnchanged": true,
-      "noBrows": true,
-      "lashPathCount": 2,
-      "lashDetails": [
+      "beforeMatchesExact12db327": true,
+      "allArtworkOutsideCanaEyesUnchanged": true,
+      "noBrows": true
+    }
+  },
+  "rightEyeAndLashesUnchanged": true,
+  "eyes": [
+    {
+      "side": "left",
+      "eyeOriginUnchanged": true,
+      "lineOnly": true,
+      "localWidth": 19,
+      "previousLocalWidth": 19,
+      "outerAboveInner": true,
+      "outwardDirectionX": -58.87223768753557,
+      "tiltDegrees": 16.97262661489639,
+      "lashFill": "#fff9fc",
+      "lashStroke": "none",
+      "ribbons": [
         {
-          "fill": "#fff9fc",
-          "stroke": "none",
-          "curvedTaperedStrokes": 2,
-          "rootSpacing": 9.698110133422905,
-          "ribbons": [
-            {
-              "cubicEdges": 2,
-              "root": [
-                -4.3632,
-                -2.808
-              ],
-              "rootDistance": 0.00009947288514289301,
-              "widths": [
-                1.699997780351492,
-                1.480380253378525,
-                1.0556027962880974,
-                0.5330872991814141,
-                0
-              ],
-              "curveDeviation": 1.3025266561571789,
-              "rise": 7.5920000000000005,
-              "sideSweep": 7.436800000000001
-            },
-            {
-              "cubicEdges": 2,
-              "root": [
-                5.267200000000001,
-                -3.952
-              ],
-              "rootDistance": 0.0001771676475345609,
-              "widths": [
-                1.6999951826990565,
-                1.4719017548092823,
-                1.0413920506376302,
-                0.5256444026655414,
-                0
-              ],
-              "curveDeviation": 1.4899434687262472,
-              "rise": 7.348000000000001,
-              "sideSweep": 6.267200000000001
-            }
-          ]
+          "rootDistance": 0.0024304762635842755,
+          "widths": [
+            1.2980961855348008,
+            1.1299914723327016,
+            0.8077676507085746,
+            0.41568895365304115,
+            0
+          ],
+          "outwardSweepX": -10.037069152162815,
+          "upwardTip": true
         },
         {
-          "fill": "#fff9fc",
-          "stroke": "none",
-          "curvedTaperedStrokes": 2,
-          "rootSpacing": 12.8223449980883,
-          "ribbons": [
-            {
-              "cubicEdges": 2,
-              "root": [
-                -5.0625,
-                -3.625
-              ],
-              "rootDistance": 0.0007820378348993331,
-              "widths": [
-                1.6999969770561356,
-                1.4643194476568735,
-                1.031645110157801,
-                0.5204435990817778,
-                0
-              ],
-              "curveDeviation": 1.4564553570333871,
-              "rise": 7.275,
-              "sideSweep": 4.7625
-            },
-            {
-              "cubicEdges": 2,
-              "root": [
-                7.5600000000000005,
-                -5.88
-              ],
-              "rootDistance": 0.0014067628402849408,
-              "widths": [
-                1.7000034919964138,
-                1.4756791043184383,
-                1.0424064840370564,
-                0.5244329178773198,
-                0
-              ],
-              "curveDeviation": 1.8801678781428,
-              "rise": 8.620000000000001,
-              "sideSweep": 7.9399999999999995
-            }
-          ]
+          "rootDistance": 0.00013009688694933758,
+          "widths": [
+            1.294315290375572,
+            1.126568584760408,
+            0.8025007325512616,
+            0.4103489033962213,
+            0
+          ],
+          "outwardSweepX": -17.90572170258477,
+          "upwardTip": true
+        }
+      ]
+    },
+    {
+      "side": "right",
+      "eyeOriginUnchanged": true,
+      "lineOnly": true,
+      "localWidth": 23,
+      "previousLocalWidth": 23,
+      "outerAboveInner": true,
+      "outwardDirectionX": 69.33039480464419,
+      "tiltDegrees": 21.865806943084362,
+      "lashFill": "#fff9fc",
+      "lashStroke": "none",
+      "ribbons": [
+        {
+          "rootDistance": 0.0007820378348993331,
+          "widths": [
+            1.6999969770561356,
+            1.4643194476568735,
+            1.031645110157801,
+            0.5204435990817778,
+            0
+          ],
+          "outwardSweepX": 10.066785422952535,
+          "upwardTip": true
+        },
+        {
+          "rootDistance": 0.0014067628402849408,
+          "widths": [
+            1.7000034919964138,
+            1.4756791043184383,
+            1.0424064840370564,
+            0.5244329178773198,
+            0
+          ],
+          "outwardSweepX": 19.11773844480399,
+          "upwardTip": true
         }
       ]
     }
-  },
+  ],
   "canaBodyHeightRatio": 0.9,
   "pageErrors": []
 }

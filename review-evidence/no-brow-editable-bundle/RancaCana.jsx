@@ -37,9 +37,9 @@ export function CanaArtwork({ bodySrc = DEFAULT_CANA_BODY } = {}) {
       <image href={bodySrc} width="745" height="528" data-body-art="cana" id="cana-body" />
       <g transform="translate(29.6 -293.4) scale(3.2)" data-face-map="cana" id="cana-face-placement">
         <g fill="#fff9fc" stroke="#fff9fc" strokeWidth="3.7" strokeLinecap="round" strokeLinejoin="round" data-expression="happy" data-preserved-face="cana" id="cana-face">
-          <g transform="translate(72 167) rotate(-12)" id="cana-left-eye-group">
-            <path d="M -7 -3 Q 1 -2 12 -6" fill="none" data-line-eye="cana" id="cana-left-eye" />
-            <path d="M -3.91138 -3.52797 C -6.57121 -5.12931 -10.72891 -6.02139 -11.8 -10.4 C -11.27109 -5.57861 -7.22879 -3.67069 -4.81502 -2.08803 Z M 5.56498 -4.74813 C 3.36391 -5.51244 -0.40192 -7.18343 -1 -11.3 C -0.99808 -6.81657 2.63609 -4.08756 4.96942 -3.15587 Z" fill="#fff9fc" stroke="none" strokeWidth="1.4" data-lashes="cana" id="cana-left-lashes" />
+          <g transform="translate(72 167) rotate(8)" id="cana-left-eye-group">
+            <path d="M 12 -3 Q 2.08696 -3.75 -7 -6" fill="none" data-line-eye="cana" id="cana-left-eye" />
+            <path d="M 6.80429 -2.8885 C 4.77211 -3.77869 2.47819 -6.05524 3.16087 -8.925 C 3.01746 -6.24476 5.51485 -4.77131 7.38592 -4.049 Z M -3.59785 -4.56989 C -5.8455 -5.44454 -9.88109 -7.35044 -9.8913 -11.625 C -9.40587 -7.64956 -5.3458 -6.55546 -3.0665 -5.75011 Z" fill="#fff9fc" stroke="none" strokeWidth="1.4" data-lashes="cana" id="cana-left-lashes" />
           </g>
           <g transform="translate(117 166) rotate(-12)" id="cana-right-eye-group">
             <path d="M -11 -3 Q 1 -4 12 -7" fill="none" data-line-eye="cana" id="cana-right-eye" />

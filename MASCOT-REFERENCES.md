@@ -1,6 +1,6 @@
 # Ranca and Cana: current design instructions
 
-The latest user corrections are from 12 October 2026, 10:55 UTC: revise ONLY Cana’s lashes from e488ad4 toward the approved flowing, tapered reference direction. Use fewer lighter curved strokes with smooth sideways sweep and fine tapered tips, visible at normal display. Preserve the minimal white eye lines and avoid dense lashes, uniform spikes, eyebrows or eye creases. These override earlier preview interpretations.
+The latest user corrections are from 12 October 2026, 11:26 UTC: correct ONLY Cana’s eye/lash orientation from 12db327 as a paired face. Each eye and its lashes must sweep toward its own outer corner, rather than both eye lines leaning the same way. Keep slight asymmetry for sass, two curved tapered lashes per eye, and no eyebrows. These override earlier preview interpretations.
 
 GREEN RANCA represents the BOY: masculine, fun, happy and playful. His eyes are simple expressive curved WHITE LINES, now 25% wider than a4bde1c, with NO EYEBROWS and NO LASHES. Do not use open oval eye shapes, pupils or realistic eye details. Keep his cheerful mouth and selected open active hand posture.
 
@@ -27,7 +27,9 @@ Prop-free previews use the existing `assets/mascots/poses/ranca-body.webp` and `
 
 ## Current review scope
 
-The current comparison shows exact `e488ad4` as the previous preview. Only Cana’s two lash path elements change: each now contains two light curved tapered contours, replacing three upright uniform-width strokes. Main eyelid paths remain unchanged. Each lash attaches to its original lid, sweeps sideways, then curves upward to a fine tip. Taper is represented by editable filled white vector contours: approximately 1.7 units at the attached base, 1.04 at the middle, and zero at the tip. All other artwork is identical, including Ranca, hands/arms, bodies, mouths, face placement and Cana’s 90% height. Neither character has eyebrows.
+The current comparison shows exact `12db327` as the previous preview. Cana’s left eye/lash group is reoriented to mirror the right eye’s outward direction, using its existing shorter width (19 versus 23 local units) and gentler depth/tilt. The left group remains at (72,167) and rotates +8 degrees; the right remains at (117,166), -12 degrees. The rendered lid slopes are approximately 17 and 22 degrees. Both outer corners rise away from the center; both pairs of tapered lashes sweep toward their respective outer sides. The right eye/lash group is unchanged. All artwork outside Cana’s eye groups is unchanged, including Ranca, hands/arms, bodies, mouths, face placement and Cana’s 90% height. Neither character has eyebrows.
+
+The normal-size pair and Cana close-up were visually inspected for paired direction, readable tapered lashes and asymmetric sassy expression. Geometry checks additionally verify outward corner directions, outward lash tips, retained eye origins/widths and unchanged non-eye artwork.
 
 The approved curvature/spacing direction came from the supplied Fleischer Studios reference: https://images.squarespace-cdn.com/content/v1/69836b50ccc47d6e999702a9/7e3bf6fe-23fd-4135-8d86-d2c4f89cbda4/BB%2B4%2BJeni.jpg?format=1000w . The executor’s direct image download returned HTTP 403, so this revision follows the approved descriptive direction. Preserve Cana’s own identity and minimal artwork.
 

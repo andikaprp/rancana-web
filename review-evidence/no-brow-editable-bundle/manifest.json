@@ -1,6 +1,6 @@
 {
-  "basedOn": "e488ad405c1d072e91e75ffb4466713de9ba097f",
-  "change": "Replace only Cana lashes with two light sweeping tapered curves per eye; all other artwork unchanged",
+  "basedOn": "12db3276be39c5d2fe391e09d2d3be51121aa9c7",
+  "change": "Orient Cana eyes and tapered lashes toward their own outer corners; retain shorter gentler left eye for sass; all other artwork unchanged",
   "canaBodyHeightRatio": 0.9,
   "editableVectors": {
     "ranca": [
