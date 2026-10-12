@@ -22,6 +22,11 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - uses: actions/checkout@v4
+        with:
+          ref: e08df59b3d84dc159c7f7e8820b2617eb2683e25
+          path: .mascot-search-baseline
+          persist-credentials: false
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: node scripts/export-mascot-assets.mjs && git diff --exit-code -- assets/mascots/selected-A assets/mascots/ranca-header.svg
@@ -34,6 +39,7 @@ jobs:
             review-evidence/selected-A-website/before/
             review-evidence/selected-A-website/after/
       - run: node check-static-mascot-review.mjs --baseline=.mascot-main-baseline
+      - run: node check-search-contours.mjs --baseline=.mascot-search-baseline
       - run: node check-selected-website-mascots.mjs
       - run: python3 scripts/package-mascot-preview.py
       - uses: actions/upload-artifact@v4

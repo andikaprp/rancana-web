@@ -21,7 +21,7 @@ function faceShapes(){if(!cache.eyes)cache.eyes=['left','right'].map(side=>Objec
 // Interior shoulder anchors never detach; elbows and wrists lead different phases.
 function posture(character,pose){
  const green=character==='ranca';
- const s={left:green?[240,417,180,0,224,369]:[222,406,180,0,206,363],right:green?[568,427,180,0,587,374]:[550,418,180,0,568,368],closed:0,sassy:0,cover:0,gaze:[0,0]};
+ const s={left:green?[240,417,180,0,224,369]:[222,406,180,0,206,363],right:green?[568,427,180,0,587,374]:[550,418,180,0,568,368],closed:0,sassy:0,cover:0,shield:0,gaze:[0,0]};
  const pair=(l,r)=>{s.left=l;s.right=r;};
  if(pose==='anticipate')pair(green?[261,437,165,.2,237,391]:[206,426,195,.2,201,385],green?[556,444,195,.2,584,394]:[530,438,165,.2,564,390]);
  if(['lift1','lift2','present','presentHold','settle1','settle2','encourage'].includes(pose)){
@@ -34,12 +34,15 @@ function posture(character,pose){
  }
  if(pose==='wave')s.left=green?[230,222,350,1,192,320]:[207,218,350,1,176,320];
  if(pose==='search'||pose==='scan'){
-  pair(green?[447,357,65,1,321,411]:[265,178,275,1,178,269],green?[436,136,85,1,570,203]:[324,352,295,1,455,408]);
+  // Shield inward above the eyes: an outward palm forces the forearm back
+  // across its own fingers. Other gestures retain their approved targets.
+  pair(green?[447,357,65,1,321,411]:[295,113,60,1,175,222],green?[436,100,300,1,570,203]:[324,352,295,1,455,408]);
+  s.shield=1;
   s.gaze=[green?5:-5,-3];
   if(pose==='scan'){const reach=green?s.left:s.right;reach[0]+=green?63:-55;reach[1]-=30;reach[2]+=green?-15:15;reach[4]+=green?35:-35;s.gaze=[green?9:-9,2];}
  }
  if(pose==='feel'){
-  pair(green?[378,382,70,1,282,427]:[151,340,290,1,166,379],green?[631,345,80,1,613,394]:[392,390,290,1,489,430]);s.gaze=[green?8:-8,5];
+  pair(green?[378,382,70,1,282,427]:[151,340,290,1,166,379],green?[631,345,80,1,613,394]:[392,390,290,1,489,430]);s.gaze=[green?8:-8,5];s.shield=1;
  }
  if(pose==='peek'||pose==='peekHigh'){
   pair(green?[264,305,340,.9,215,365]:[250,320,340,.9,195,367],green?[565,311,20,.9,594,369]:[518,308,20,.9,565,363]);s.sassy=green?0:1;s.gaze=[green?4:-4,0];
@@ -84,7 +87,15 @@ export function createMascot(character,{smallCana=true,sunglasses=false}={}){
    lashes.forEach((l,i)=>{const q=between(between(open.lashes[i],half.lashes[i],sassy),shut.lashes[i],closed);l.setAttribute('d',`M${q[0]} Q${q[1]} ${q[2]}`);});g.setAttribute('opacity',1-cover);
   });
   hands.forEach(({arm,hand,root,open,rest,openPoints,restPoints},i)=>{
-   const key=i?'right':'left',[x,y,angle,flex,bx,by]=a[key].map((v,j)=>j===2?v+(((b[key][j]-v+540)%360)-180)*t:mix(v,b[key][j],t)),rad=angle*Math.PI/180;
+   const key=i?'right':'left',raised=green?i===1:i===0;
+   let [x,y,angle,flex,bx,by]=a[key].map((v,j)=>j===2?v+(((b[key][j]-v+540)%360)-180)*t:mix(v,b[key][j],t));
+   // Lift around the face during search entry/exit, rather than sweeping
+   // straight across an eye. The arc vanishes with zero velocity at each end.
+   if(raised&&[pose,context.nextPose].includes('feel')&&[pose,context.nextPose].some(p=>p==='search'||p==='scan')){
+    const arc=Math.sin(Math.PI*t)**2;x+=(green?100:-80)*arc;y-=70*arc;
+    if(!green)flex-=.5*arc; // Unfold Cana's fingers as the shielding hand arrives.
+   }
+   const rad=angle*Math.PI/180;
    // Outer contour starts at (-4,11), flows into thumb and three fingers,
    // and ends at the inner palm (+4,11). Join the arm to the OUTER start;
    // only the inner wrist joint stays open.
@@ -92,7 +103,12 @@ export function createMascot(character,{smallCana=true,sunglasses=false}={}){
    // Two tangent-continuous segments describe upper arm and forearm. The
    // wrist approaches along the palm axis, so the hand cannot appear detached.
    const tx=(ex-root[0])*.16,ty=(ey-root[1])*.16;
-   arm.setAttribute('d',`M${root} C${mix(root[0],bx,.55)} ${mix(root[1],by,.55)} ${bx-tx} ${by-ty} ${bx} ${by} C${bx+tx} ${by+ty} ${ex-Math.sin(rad)*23} ${ey+Math.cos(rad)*23} ${ex} ${ey}`);
+   // Only the raised search wrist follows the actual outer-contour tangent
+   // (mirrored local 2,-1), blended through entry/exit with the pose clock.
+   const shield=(green?i===1:i===0)?mix(a.shield,b.shield,t):0;
+   const wx=mix(ex-Math.sin(rad)*23,ex-(2*Math.cos(rad)+Math.sin(rad))*23/Math.sqrt(5),shield);
+   const wy=mix(ey+Math.cos(rad)*23,ey-(2*Math.sin(rad)-Math.cos(rad))*23/Math.sqrt(5),shield);
+   arm.setAttribute('d',`M${root} C${mix(root[0],bx,.55)} ${mix(root[1],by,.55)} ${bx-tx} ${by-ty} ${bx} ${by} C${bx+tx} ${by+ty} ${wx} ${wy} ${ex} ${ey}`);
    hand.setAttribute('d',flex===0?rest:flex===1?open:path(between(restPoints,openPoints,flex)));
    hand.setAttribute('transform',`translate(${x} ${y}) rotate(${angle}) scale(-2.6 2.6)`);
   });
