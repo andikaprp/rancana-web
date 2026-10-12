@@ -1,0 +1,25 @@
+name: Audience mascot reference study
+on:
+  push:
+    branches: [review/audience-mascot-study-20261012]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-audience-study.mjs
+      - run: ffmpeg -loglevel error -y -framerate 30 -i review-evidence/audience-study-output/frames/%03d.png -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart review-evidence/audience-study-output/hand-motion-study-1080x1350-6s.mp4
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical-audience-comparison-and-hand-study
+          path: review-evidence/audience-study-output/

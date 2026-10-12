@@ -1,0 +1,13 @@
+# Canonical audience mascot study
+
+Observed from current main acfd672 and the unchanged source rasters, 12 October 2026. Live https://rancana.id/id/ was blocked with ERR_TUNNEL_CONNECTION_FAILED. Local Chromium rendered the actual page and source assets. Both WebPs have one frame; no CSS/Web Animation or transform was present on the audience images. No original hand animation is inferred from these static assets.
+
+Ranca: green rounded lobes, backpack left, slightly turned posture; open white bean eyes with green cutouts, small brows and a white open smile. The left grip has a large palm cavity, three small stacked finger arcs, an open wrist contour and a broad U-shaped arm. At native resolution the white core is approximately 3–4 pixels wide, with soft antialiasing; the left hand occupies roughly x90–119/y188–221. The arm enters that contour directly, without a closed glove cuff.
+
+Cana: separate asymmetric pink lobe profile under a tilted graduation cap; half-lidded white eyes, a raised brow and small curved white smile. One index is raised; the other hand points inward. Extended fingers emerge from rounded palms while the remaining fingers stay compact. The long curved arms retain the hand stroke weight. No lashes, realistic iris, teeth, or facial detail is visible.
+
+The rejected c8ff53f rest hand has crowded deep notches and a closed outline. Its separate arm is heavier than the scaled hand and attaches to the closed base. The presenting hand spreads longer fingers from that different construction. The enlarged captures are from the actual c8ff53f renderer. They are not scale-normalized evidence about absolute line weight.
+
+The proposed study is explicitly a vector reconstruction. Its rest centerline was traced against the Pelajar raster in source coordinates, with 3.8px rounded strokes, an open wrist and short finger arcs. The six-second greeting (including a final rest hold) opens those arcs slightly, raises the wrist, gives two small wrist-led waves and returns. It is not a claim of exact pixels or a finished context pose. The source overlay is supplied to expose any deviation. No whole mascot, expression, body, audience asset or live scene is edited.
+
+For downstream social production: use both unchanged reference WebPs for complete identity. index.html/study.js contain the isolated hand stage and its source coordinate geometry. The proposed wave is a review candidate, not approval to reuse the Pelajar grip or Mahasiswa pointing pose for every context. Review full-body attachment/scale and gesture readability before adapting it to a greeting mascot.
