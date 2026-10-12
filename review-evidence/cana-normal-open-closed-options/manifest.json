@@ -1,0 +1,33 @@
+{
+  "sourceCommit": "ddb7c008bb81d5e3e4f44256cf63240c8802efb9",
+  "status": "Three unselected lash options, each with closed and comfortably fully open state",
+  "previousHalfLiddedStudyCommit": "2f8ce89402d4b7a4d147813138faa16262b6066a",
+  "canonicalReferencesVisuallyInspected": [
+    "assets/mascots/ranca-backpack-option-3.webp",
+    "assets/mascots/cana-academic-cap-option-3.webp"
+  ],
+  "openEyeTreatment": "Comfortably fully open solid white upright ovals, guided by the Pelajar open graphic eyes; lashes follow the curved upper edge; no flat lid, pupils, iris, highlights or brows",
+  "states": [
+    "closed",
+    "open"
+  ],
+  "closedStatesExactBaseline": true,
+  "allArtworkOutsideCanaEyesUnchanged": true,
+  "lashTreatmentsPreserved": true,
+  "openEyeDimensions": {
+    "left": {
+      "width": 13.2,
+      "height": 18
+    },
+    "right": {
+      "width": 14,
+      "height": 18.4
+    }
+  },
+  "normalDisplayScale": 0.625,
+  "canaBodyHeightRatio": 0.9,
+  "bodyHashes": {
+    "ranca": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "cana": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547"
+  }
+}

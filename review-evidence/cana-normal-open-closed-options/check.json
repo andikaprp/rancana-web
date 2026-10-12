@@ -1,0 +1,513 @@
+{
+  "options": [
+    {
+      "option": "A",
+      "states": [
+        {
+          "state": "closed",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 0,
+          "noBrows": true,
+          "eyes": [
+            {
+              "openEyeBounds": null,
+              "upperLidEndsAtCenter": null,
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.001845961130748359,
+                  "tipVerticalOffset": 4.000000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006120209105058884,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006229139942754501,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                }
+              ]
+            },
+            {
+              "openEyeBounds": null,
+              "upperLidEndsAtCenter": null,
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.0007702274997535067,
+                  "tipVerticalOffset": 4.000000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.00023460411928521535,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0012406813110073245,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "state": "open",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 2,
+          "noBrows": true,
+          "eyes": [
+            {
+              "openEyeBounds": {
+                "x": -4.099999904632568,
+                "y": -13,
+                "width": 13.199999809265137,
+                "height": 18
+              },
+              "upperLidEndsAtCenter": true,
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -4.1 -4 A 6.6 9 0 0 1 9.1 -4",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.0005864125678804039,
+                  "tipVerticalOffset": -3.704128352595367,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-1.91626 -10.6883) rotate(-14.7) scale(1 -1) translate(4.15 3.735)"
+                },
+                {
+                  "attachment": 0.0015656994560640845,
+                  "tipVerticalOffset": -4.399999999999999,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(2.5 -13) rotate(0) scale(1 -1) translate(-2.5 3)"
+                },
+                {
+                  "attachment": 0.0024553371576639285,
+                  "tipVerticalOffset": -3.607401577233306,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(6.91626 -10.6883) rotate(14.7) scale(1 -1) translate(-9.15 3.735)"
+                }
+              ]
+            },
+            {
+              "openEyeBounds": {
+                "x": -6.5,
+                "y": -13.199999809265137,
+                "width": 14,
+                "height": 18.399999618530273
+              },
+              "upperLidEndsAtCenter": true,
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -6.5 -4 A 7 9.2 0 0 1 7.5 -4",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.00008660024511227209,
+                  "tipVerticalOffset": -3.704128352595367,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-4.18391 -10.83693) rotate(-14.7) scale(1 -1) translate(7.55 4.439)"
+                },
+                {
+                  "attachment": 0.001011076629744024,
+                  "tipVerticalOffset": -4.4,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(0.5 -13.2) rotate(0) scale(1 -1) translate(-0.5 3.9)"
+                },
+                {
+                  "attachment": 0.002079923248403814,
+                  "tipVerticalOffset": -3.607401577233306,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(5.18391 -10.83693) rotate(14.7) scale(1 -1) translate(-8.55 4.439)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "option": "B",
+      "states": [
+        {
+          "state": "closed",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 0,
+          "noBrows": true,
+          "eyes": [
+            {
+              "openEyeBounds": null,
+              "upperLidEndsAtCenter": null,
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.0005285840978592918,
+                  "tipVerticalOffset": 6.200000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0013552021964625034,
+                  "tipVerticalOffset": 5.300000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.00013499424204781415,
+                  "tipVerticalOffset": 4.6000000000000005,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006949472588174178,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                }
+              ]
+            },
+            {
+              "openEyeBounds": null,
+              "upperLidEndsAtCenter": null,
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.001024329664790537,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0021273823253609805,
+                  "tipVerticalOffset": 4.600000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0016574073265769652,
+                  "tipVerticalOffset": 5.300000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0005507541121100964,
+                  "tipVerticalOffset": 6.200000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "state": "open",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 2,
+          "noBrows": true,
+          "eyes": [
+            {
+              "openEyeBounds": {
+                "x": -4.099999904632568,
+                "y": -13,
+                "width": 13.199999809265137,
+                "height": 18
+              },
+              "upperLidEndsAtCenter": true,
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -4.1 -4 A 6.6 9 0 0 1 9.1 -4",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.0008077313774215184,
+                  "tipVerticalOffset": -5.35731734016672,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-2.40476 -10.02218) rotate(-16.8) scale(1 -1) translate(5.1 3.96)"
+                },
+                {
+                  "attachment": 0.0024660126458326812,
+                  "tipVerticalOffset": -5.086931443216537,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(0.46049 -12.55951) rotate(-6.3) scale(1 -1) translate(0.35 3.135)"
+                },
+                {
+                  "attachment": 0.002573393885239797,
+                  "tipVerticalOffset": -4.692928139253329,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(4.53951 -12.55951) rotate(6.3) scale(1 -1) translate(-5.35 3.135)"
+                },
+                {
+                  "attachment": 0.001063770361646056,
+                  "tipVerticalOffset": -3.9358683043228506,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(7.40476 -10.02218) rotate(16.8) scale(1 -1) translate(-10.1 3.96)"
+                }
+              ]
+            },
+            {
+              "openEyeBounds": {
+                "x": -6.5,
+                "y": -13.199999809265137,
+                "width": 14,
+                "height": 18.399999618530273
+              },
+              "upperLidEndsAtCenter": true,
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -6.5 -4 A 7 9.2 0 0 1 7.5 -4",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.0009331608939389054,
+                  "tipVerticalOffset": -3.9358683043228524,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-4.70201 -10.156) rotate(-16.8) scale(1 -1) translate(8.7 4.604)"
+                },
+                {
+                  "attachment": 0.0026685022409458758,
+                  "tipVerticalOffset": -4.6929281392533255,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-1.66312 -12.74972) rotate(-6.3) scale(1 -1) translate(2.95 3.999)"
+                },
+                {
+                  "attachment": 0.002548431053813405,
+                  "tipVerticalOffset": -5.086931443216539,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(2.66312 -12.74972) rotate(6.3) scale(1 -1) translate(-3.95 3.999)"
+                },
+                {
+                  "attachment": 0.0010889831811205146,
+                  "tipVerticalOffset": -5.35731734016672,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(5.70201 -10.156) rotate(16.8) scale(1 -1) translate(-9.7 4.604)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "option": "C",
+      "states": [
+        {
+          "state": "closed",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 0,
+          "noBrows": true,
+          "eyes": [
+            {
+              "openEyeBounds": null,
+              "upperLidEndsAtCenter": null,
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.0005285840978592918,
+                  "tipVerticalOffset": 4.700000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0005321887752655939,
+                  "tipVerticalOffset": 5.400000000000002,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006120209105058884,
+                  "tipVerticalOffset": 5.800000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006922164469016957,
+                  "tipVerticalOffset": 5.200000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006949472588174178,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                }
+              ]
+            },
+            {
+              "openEyeBounds": null,
+              "upperLidEndsAtCenter": null,
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.001024329664790537,
+                  "tipVerticalOffset": 4.700000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0002807029310391569,
+                  "tipVerticalOffset": 5.400000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.00023460411928521535,
+                  "tipVerticalOffset": 5.800000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0007497583092561259,
+                  "tipVerticalOffset": 5.200000000000002,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0005507541121100964,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "state": "open",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 2,
+          "noBrows": true,
+          "eyes": [
+            {
+              "openEyeBounds": {
+                "x": -4.099999904632568,
+                "y": -13,
+                "width": 13.199999809265137,
+                "height": 18
+              },
+              "upperLidEndsAtCenter": true,
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -4.1 -4 A 6.6 9 0 0 1 9.1 -4",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.0008077313774215184,
+                  "tipVerticalOffset": -4.210369872292572,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-2.40476 -10.02218) rotate(-16.8) scale(1 -1) translate(5.1 3.96)"
+                },
+                {
+                  "attachment": 0.0021351079086997537,
+                  "tipVerticalOffset": -5.254420790066655,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-0.18446 -12.22191) rotate(-8.4) scale(1 -1) translate(1.3 3.24)"
+                },
+                {
+                  "attachment": 0.0015656994560640845,
+                  "tipVerticalOffset": -5.800000000000001,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(2.5 -13) rotate(0) scale(1 -1) translate(-2.5 3)"
+                },
+                {
+                  "attachment": 0.003119763218437036,
+                  "tipVerticalOffset": -5.056566323279537,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(5.18446 -12.22191) rotate(8.4) scale(1 -1) translate(-6.3 3.24)"
+                },
+                {
+                  "attachment": 0.001063770361646056,
+                  "tipVerticalOffset": -3.9231740218783457,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(7.40476 -10.02218) rotate(16.8) scale(1 -1) translate(-10.1 3.96)"
+                }
+              ]
+            },
+            {
+              "openEyeBounds": {
+                "x": -6.5,
+                "y": -13.199999809265137,
+                "width": 14,
+                "height": 18.399999618530273
+              },
+              "upperLidEndsAtCenter": true,
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -6.5 -4 A 7 9.2 0 0 1 7.5 -4",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.0009331608939389054,
+                  "tipVerticalOffset": -4.210369872292574,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-4.70201 -10.156) rotate(-16.8) scale(1 -1) translate(8.7 4.604)"
+                },
+                {
+                  "attachment": 0.0028499732355028707,
+                  "tipVerticalOffset": -5.254420790066655,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(-2.34716 -12.40462) rotate(-8.4) scale(1 -1) translate(4.1 4.076)"
+                },
+                {
+                  "attachment": 0.001011076629744024,
+                  "tipVerticalOffset": -5.799999999999999,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(0.5 -13.2) rotate(0) scale(1 -1) translate(-0.5 3.9)"
+                },
+                {
+                  "attachment": 0.0024228575019608067,
+                  "tipVerticalOffset": -5.056566323279535,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(3.34716 -12.40462) rotate(8.4) scale(1 -1) translate(-5.1 4.076)"
+                },
+                {
+                  "attachment": 0.0010889831811205146,
+                  "tipVerticalOffset": -3.9231740218783457,
+                  "rootOnUpperEdge": true,
+                  "transform": "translate(5.70201 -10.156) rotate(16.8) scale(1 -1) translate(-9.7 4.604)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "svgHtmlPixelIdentical": true,
+  "pageErrors": []
+}
