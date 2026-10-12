@@ -1,0 +1,44 @@
+name: Five mascot states unchanged MP4
+on:
+  push:
+    branches: [review/internal-mascot-states-20261012]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-video:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Verify unchanged source and video integrity
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          folder = pathlib.Path('review-evidence/internal-states-video')
+          report = json.loads((folder / 'video-verification.json').read_text())
+          assert report['sourceCommit'] == 'e34872342aad5be44ac451cad822237362e0ab9f'
+          for filename, expected in report['sourceHashes'].items():
+              assert hashlib.sha256(pathlib.Path(filename).read_bytes()).hexdigest() == expected, filename
+          assert hashlib.sha256((folder / 'Rancana-five-internal-hand-states-10s.mp4').read_bytes()).hexdigest() == report['sha256']
+          assert report['playback']['ended'] and report['playback']['duration'] == 10
+          assert report['playback']['decodedFrames'] >= 299
+          print('PASS: exact e3487234 scene, verified MP4 hash and recorded full browser playback')
+          PY
+      - name: Decode and count video frames
+        run: |
+          command -v ffmpeg || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+          ffmpeg -v error -i review-evidence/internal-states-video/Rancana-five-internal-hand-states-10s.mp4 -f null -
+          python3 - <<'PY'
+          import json, subprocess
+          data = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-count_frames', '-select_streams', 'v:0', '-show_entries', 'stream=codec_name,pix_fmt,width,height,r_frame_rate,nb_read_frames:format=duration', '-of', 'json', 'review-evidence/internal-states-video/Rancana-five-internal-hand-states-10s.mp4']))
+          stream = data['streams'][0]
+          assert (stream['width'], stream['height'], stream['codec_name'], stream['pix_fmt']) == (1920, 1080, 'h264', 'yuv420p')
+          assert stream['r_frame_rate'] == '30/1' and int(stream['nb_read_frames']) == 300
+          assert float(data['format']['duration']) == 10
+          print('PASS: 300 decoded frames, 30fps, 10.000 seconds, H.264 1920x1080')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unchanged-five-internal-hand-states-10s
+          path: review-evidence/internal-states-video/

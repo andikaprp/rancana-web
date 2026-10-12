@@ -1,0 +1,43 @@
+{
+  "sourceCommit": "e34872342aad5be44ac451cad822237362e0ab9f",
+  "sourceHashes": {
+    "review-evidence/internal-states/index.html": "a839a99c0f8e7f632a4290686902e94124873c5ca8387d244040b36127b53f78",
+    "review-evidence/internal-states/states.css": "b168df9920b68c5d9c72f50eaff838f471d5a56642e4496f59179f029028077b",
+    "review-evidence/internal-states/states.js": "ac3f7c20cf604a828426debd706e298bf73509b0e42453a15d2e590bb4a13bea",
+    "review-evidence/internal-states/preview.js": "91730e21ab83ca38d164253397213a806c4d12ed8933880ab6f7fdcbe0dfe9e6",
+    "review-evidence/internal-states/ranca-body.webp": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "review-evidence/internal-states/cana-body.webp": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547"
+  },
+  "unchangedScene": true,
+  "export": "Unchanged SVG scene and ten-second timeline; export-only framing hides controls and sheet; 300 deterministic frames",
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "30/1",
+        "duration": "10.000000",
+        "nb_read_frames": "300"
+      }
+    ],
+    "format": {
+      "duration": "10.000000"
+    }
+  },
+  "playback": {
+    "duration": 10,
+    "width": 1920,
+    "height": 1080,
+    "decodedFrames": 300,
+    "ended": true,
+    "currentTime": 10
+  },
+  "pageErrors": [],
+  "uniqueSourceFrames": 105,
+  "sha256": "f6f3dbc57ed955afa775c52fded476f7e927b9436551ec4e2344913fac601c9f",
+  "bytes": 1150163
+}
