@@ -1,22 +1,23 @@
 # Selected mascot identity on the website
 
-The selected source is [8336f999](https://github.com/andikaprp/rancana-web/commit/8336f9994ecdce986ab8603b5507d909700c5aa6). Option A has three short soft white lashes on each Cana eye. Normal fully open white oval eyes are default, with the selected closed and contextual half-lidded counterparts. No eyebrows or realistic facial details. The original body WebPs are byte-identical to main and the selected source.
+The selected source is [8336f999](https://github.com/andikaprp/rancana-web/commit/8336f9994ecdce986ab8603b5507d909700c5aa6). Cana option A has three short white lashes per eye, normal fully open white ovals, and contextual closed/half-lidded states. No eyebrows or realistic details. The original body WebPs remain byte-identical to main.
 
-Ranca is the green, masculine, cheerful/playful and encouraging companion. Cana is pink, feminine, normally friendly and relaxed; sass or cheekiness appears only where it fits. Cana remains slightly smaller, with the original wider asymmetric silhouette. Do not exchange their bodies or use a permanently sleepy Cana.
+Ranca is the original happy green six-lobed character; Cana is the smaller, wider asymmetric pink character. Preserve their colors, texture and silhouettes without outlines or filters. Navbar is always Ranca.
 
-## Instance audit and implementation
+## Instance audit and user revision
 
-- Navbar on all 22 localized pages and source pages: Ranca only, with welcome, study, feature, encouragement, download and question gestures plus restrained supporting-page contexts. Navigation/CTA logic is independent of the decorative renderer.
-- Homepage hero: the pair presents the phone screen with inward-facing open palms, then settles to long downward rest arms.
-- Audience cards: selected faces and hands, plus original canonical backpack/cap pixels isolated using SVG accessory clips. Original source WebPs are retained. The body silhouette comes from the selected character, not a redrawn generic cloud. The cards greet, read and blink.
-- Footer on home and supporting pages: original hide-and-seek timing, real text foreground and transparent counters. Search, peek, discovery, cover/count and role swaps use articulated hands. Cana's half-lidded expression is contextual during the cheeky peek; her neutral state is fully open.
-
-The canonical audience files were visually inspected. Accessory clip paths isolate the original costume pixels; no generative imagery or new costume design was introduced. The approved raster bodies are untouched. Existing PR24 and earlier alternative studies were not merged or modified.
+- Navbar: shared selected Ranca rig; retain section-specific context and pause/resume behavior.
+- Hero: both hands of each character present toward the phone. A small anticipation precedes elbow-led lifting, a clear two-handed hold, a secondary palm adjustment and a staggered settle. Interior shoulder roots remain fixed. Two smooth arm segments articulate elbows and wrists; wrists rotate by the shortest path.
+- Pelajar and Mahasiswa: **original canonical static artwork, unchanged** (`ranca-backpack-option-3.webp` and `cana-academic-cap-option-3.webp`). Never mount a rig, animate, isolate costume pixels or regenerate these preferred references.
+- Benefits: the glasses-wearing Cana was located in PR24's `.benefit-intro > .benefit-mascot`, using `cana-sunglasses-reference.webp`. This instance was absent from main/initial PR26. Only its static placement and original sunglasses pixels are carried into this revision. The approved prop-free Cana texture/face/arms sit underneath those sunglasses in one exported SVG. It has no clock. No other PR24 layout/copy/Flashcard/favicon change is adopted, and PR24 itself remains untouched.
+- Footer: real wordmark glyphs remain the foreground occluder. Both hands participate in reaching, shielding, scanning, peeking, hiding, counting and discovery. Ranca eagerly reaches/searches and celebrates; Cana playfully peeks, covers/counts and takes the searcher role. Downward rest is reserved for the loop's brief idle bookends.
 
 ## Rendering and validation
 
-`mascot-data.js` contains the approved editable source trees. `mascot-rig.js` renders one body and one face, morphing eyes/lashes together and anchoring arms at fixed interior shoulders. It uses no body recoloring or outline. The selected neutral SVG fallbacks are exported from the same renderer for no-JS and failed-module use. Reduced motion shows the selected neutral rig without clocks.
+`mascot-data.js` contains the approved editable face sources; `mascot-rig.js` renders the original bodies and interpolates eyes/lashes, elbows, palms and wrists. Export fallback SVGs with `node scripts/export-mascot-assets.mjs`. No-JS fallback and reduced motion are static. Original audience WebPs bypass the rig entirely.
 
-`check-selected-website-mascots.mjs` replaces the old drawing-specific header/controller assertions for the earlier rig. Those older tests remain in history; they describe superseded exact path coordinates. Current coverage checks body hashes, the six companion instances plus navbar, each context, root positions, loop resets, paused/manual/repeated visibility, reduced motion, supporting pages, ID/EN, 320/390/1440px, and real rendered screenshots/videos. Existing navigation, copy, privacy/analytics, six-width mascot layout and mobile Flashcard checks remain active.
+`check-selected-website-mascots.mjs` covers original body/audience hashes, static audience and sunglasses, two-handed hero reach, all gesture bounds sampled every 125ms, fixed shoulder roots, loop equality, interrupted/repeated visibility, reduced motion, ID/EN at 320/390/1440 and supporting pages. Review videos include one full hero loop and two full footer loops on desktop/mobile. Deterministic screenshots cover anticipation/lift, hold, settling, search, count and discovery.
 
-Review artifacts include deterministic before/after main versus selected-A screenshots, actual desktop/mobile WebM playback, and a portable website ZIP. Run its `preview-server.mjs` locally to inspect the full website. No merge or deployment is part of this implementation task.
+The new comparison gallery uses initial PR26 head `b66fcb0` as its before state. Separate mobile CI continues to test the published mobile spacing/copy fixes against its original baseline. All page copy, main Flashcard markup and canonical texture bytes stay unchanged.
+
+This is draft PR26 review work only. No merge, production deployment, Android changes or PR24 branch edits.

@@ -2,7 +2,7 @@
 (() => {
  const moduleURL=new URL('./mascot-rig.js',document.currentScript.src);
  window.RancanaCompanionArt=Object.freeze({async create(original,character){
-  const {createMascot}=await import(moduleURL.href),rig=createMascot(character,{costume:original.classList.contains('audience-icon')});
+  const {createMascot}=await import(moduleURL.href),rig=createMascot(character);
   const body=rig.svg.querySelector('image'),preload=new Image();preload.src=body.getAttribute('href');await preload.decode();
   const wrap=document.createElement('span');wrap.className='companion-actor';wrap.setAttribute('aria-hidden','true');original.before(wrap);wrap.append(original,rig.svg);original.dataset.companionOriginal='';
   let shown=false;

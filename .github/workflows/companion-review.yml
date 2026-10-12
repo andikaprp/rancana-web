@@ -15,7 +15,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
-          ref: acfd672dbe56f2dc51f4aecd3867ac732ed7719a
+          ref: b66fcb0bb67e6f69524ec0a88d65a917417b8756
           path: .mascot-main-baseline
           persist-credentials: false
       - uses: actions/setup-node@v4

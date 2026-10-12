@@ -1,9 +1,7 @@
-# Selected-A website implementation review
+# PR26 revised motion review
 
-Open `index.html` to compare main versus this implementation and play the actual 390px/1440px browser recordings. Download/extract `selected-A-website-preview.zip`, run `node preview-server.mjs`, and open `http://127.0.0.1:4173/id/` or `/en/` for the full local website. `BUILD.json` inside the ZIP identifies the exact source commit.
+Open `index.html` for the initial-PR26/revised comparisons and actual desktop/mobile motion recordings. The recordings include one full 11-second hero cycle and two complete 18-second footer cycles, with the unchanged static audience references and static benefits sunglasses Cana in between.
 
-The selected source is 8336f9994ecdce986ab8603b5507d909700c5aa6. Changes cover the navbar, hero, footer and canonical audience placements. Ranca stays cheerful; Cana uses selected A's normal-open/closed eyes with contextual half-lidded sass. Main's body texture bytes, mobile typography/spacing, Flashcard markup and all page copy are preserved.
+`selected-A-website-preview.zip` contains the complete review website. Unzip, run `node preview-server.mjs`, and visit `http://127.0.0.1:4173/id/` or `/en/`. `BUILD.json` identifies the exact commit. No deployment is involved.
 
-`report.json` contains selected-identity, body-hash, root-position, scene/loop, interruption, reduced-motion and locale/width results. The clips use natural playback with deterministic start positions. Existing mobile-layout and website-check artifacts provide the independent layout/copy/navigation checks.
-
-Draft review only. No merge, manual deployment, production integration outside this PR, or Android changes were performed. Cloud services are not required to run the preview.
+`report.json` records ID/EN 320/390/1440 checks, fixed body hashes, canonical static audience hashes, two-handed arm reach, all gesture bounds sampled every 125ms, loop equality, repeated/interrupted visibility, reduced motion and supporting-page coverage. Pose checkpoints include lift, presentation, settling, searching, discovery, covering eyes and peeking. Separate mobile-layout CI preserves published spacing/type and desktop Flashcard pixels.
