@@ -176,3 +176,25 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .site-header .rig-eye-left path,.site-header .rig-eye-right path,.site-header .rig-smile path{transform-box:fill-box;transform-origin:center}
 @media(max-width:899px){.site-header .brand-mark{width:44px;height:32px}}
 @media(prefers-reduced-motion:reduce){.site-header .ranca-rig *{animation:none!important;transition:none!important}}
+
+/* The raster flashcard labels cannot stay legible when the whole tile shrinks.
+   Keep the desktop composition; on mobile, flow the copy and typeset the answer
+   over the existing Aurora artwork. Labels match the original illustration. */
+.fc-mobile{display:none}
+@media(max-width:899px){
+ .preview .product .card-flashcards{zoom:1;width:100%;max-width:560px;height:auto;padding:24px 20px 28px}
+ .preview .card-flashcards .card-head{position:static;width:auto;text-align:center}
+ .preview .card-flashcards .card-head h3{font-size:24px;line-height:1.4}
+ .preview .card-flashcards .card-head p{font-size:16px;line-height:1.5;margin-top:12px}
+ .card-flashcards>.fc-front,.card-flashcards>.fc-back{display:none}
+ .fc-mobile{display:block;position:relative;isolation:isolate;margin:32px 0 0 8px;color:#fff}
+ .fc-mobile::before{content:'';position:absolute;inset:-10px 8px 10px -8px;z-index:-1;border:1px solid #b7d1c5;border-radius:14px;background:#fff;transform:rotate(-3deg)}
+ .fc-mobile-face{position:relative;display:grid;gap:24px;padding:16px;border-radius:14px;background:#17513d url('assets/flashcard-aurora-background.webp') center/100% 100% no-repeat;box-shadow:0 4px 12px #17513d1a}
+ .fc-mobile-face::before{content:'';position:absolute;inset:6px;border:1px solid #ffffffb3;border-radius:9px;pointer-events:none}
+ .fc-mobile-top,.fc-mobile-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;line-height:1.5}
+ .fc-mobile-answer{font:600 24px/1.4 var(--lora);text-align:center;padding:8px 0}
+ /* Remove the accumulated last-row padding, section padding and CTA margin. */
+ .benefit-list article:last-child{padding-bottom:0}
+ .benefits{padding-bottom:32px}
+ .benefits+.download{margin-top:0}
+}
