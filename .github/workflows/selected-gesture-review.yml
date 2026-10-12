@@ -1,4 +1,4 @@
-name: No-brow editable mascot handoff
+name: Eye and outward-hand refinement review
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]

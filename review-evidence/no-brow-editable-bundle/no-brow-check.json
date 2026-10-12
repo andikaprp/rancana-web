@@ -1,27 +1,63 @@
 {
-  "baseline": "e8af2396b35c1ba6c5752a8a83cff2eaa3100725",
-  "comparisonBase": "77bafae3bacfedad31616360d5125f5af67e01e5",
-  "onlyBrowsRemovedFromRanca": true,
-  "onlyBrowsRemovedFromCana": true,
-  "rancaBrowCount": 0,
-  "canaBrowCount": 0,
-  "rancaActiveHandUnchanged": true,
-  "rancaMouthUnchanged": true,
-  "rancaEyesAreOnlyLines": true,
-  "rancaRestArmUnchanged": true,
-  "canaMouthUnchanged": true,
-  "canaEyesAreOnlyLines": true,
-  "rancaHasNoLashes": true,
-  "canaHasLashes": true,
-  "rancaBodyUnchanged": true,
-  "rancaRestPalmPathUnchanged": true,
-  "canaHandsUnchanged": true,
-  "canaBodyHeightRatio": 0.9,
-  "restLine": {
-    "straight": true,
-    "vertical": true
+  "comparisonBase": "a4bde1cb7d2f7e3f9abffea6a1241fda7ee15939",
+  "characters": {
+    "ranca": {
+      "beforeMatchesExactA4bde1c": true,
+      "noBrows": true,
+      "bodyUnchanged": true,
+      "mouthUnchanged": true,
+      "placementUnchanged": true,
+      "restingLimbUnchanged": true,
+      "palmContourUnchanged": true,
+      "activeLimbPlacementUnchanged": true,
+      "activePalmMirrored": true,
+      "connectedEdgeOutside": true,
+      "openGapInside": true,
+      "wristJoinDistance": 0.000012573892026576978,
+      "wristOpening": 20.79999923706051,
+      "eyeWidthRatios": [
+        1.25,
+        1.25
+      ],
+      "eyeGroupsUnchanged": true,
+      "eyesLineOnly": true,
+      "lashCount": 0,
+      "lashLengthRatios": [],
+      "lashStrokeRatios": [],
+      "canaEyeContoursUnchanged": true
+    },
+    "cana": {
+      "beforeMatchesExactA4bde1c": true,
+      "noBrows": true,
+      "bodyUnchanged": true,
+      "mouthUnchanged": true,
+      "placementUnchanged": true,
+      "restingLimbUnchanged": true,
+      "palmContourUnchanged": true,
+      "activeLimbPlacementUnchanged": true,
+      "activePalmMirrored": true,
+      "connectedEdgeOutside": true,
+      "openGapInside": true,
+      "wristJoinDistance": 0.000006962722407277955,
+      "wristOpening": 20.799999237060536,
+      "eyeWidthRatios": [
+        1,
+        1
+      ],
+      "eyeGroupsUnchanged": true,
+      "eyesLineOnly": true,
+      "lashCount": 2,
+      "lashLengthRatios": [
+        0.5,
+        0.5
+      ],
+      "lashStrokeRatios": [
+        0.5,
+        0.5
+      ],
+      "canaEyeContoursUnchanged": true
+    }
   },
-  "restingHandMinimumBodyAlpha": 255,
-  "restingHandSamples": 2200,
+  "canaBodyHeightRatio": 0.9,
   "pageErrors": []
 }

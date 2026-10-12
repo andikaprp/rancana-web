@@ -11,17 +11,17 @@ export function RancaArtwork({ bodySrc = DEFAULT_RANCA_BODY } = {}) {
       <g transform="translate(-115 -249) scale(3)" data-face-map="ranca" id="ranca-face-placement">
         <g fill="#f6fff8" stroke="#f6fff8" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" data-expression="happy" data-preserved-face="ranca" id="ranca-face">
           <g transform="translate(147 157) rotate(-17)" id="ranca-left-eye-group">
-            <path d="M -8 1 Q 0 -8 8 1" fill="none" data-line-eye="ranca" id="ranca-left-eye" />
+            <path d="M -8 1 Q 2 -8 12 1" fill="none" data-line-eye="ranca" id="ranca-left-eye" />
           </g>
           <g transform="translate(182 143) rotate(-17)" id="ranca-right-eye-group">
-            <path d="M -8 1 Q 0 -8 8 1" fill="none" data-line-eye="ranca" id="ranca-right-eye" />
+            <path d="M -8 1 Q 2 -8 12 1" fill="none" data-line-eye="ranca" id="ranca-right-eye" />
           </g>
           <path d="M 158 173 Q 166 171 177 166 C 179 176 174 185 168 184 C 161 184 158 180 158 173 Z" stroke="none" id="ranca-mouth" />
         </g>
       </g>
       <g data-limb="active" transform="translate(83.6 -192.4) scale(2.6)" fill="none" stroke="#f6fff8" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" id="ranca-active-hand-group">
-        <path data-arm="left" d="M 77 203 C 59 222 62.126524239434694 189.4107134349638 69.49197638552701 184.336256352317" id="ranca-left-arm" />
-        <path data-palm="left" d="M -4 11 C -8 9 -11 5 -14 0 C -18 -5 -17 -9 -14 -9 C -11 -9 -10 -5 -7 -3 C -8 -7 -9 -12 -9 -15 C -9 -20 -4 -21 -3 -16 C -2 -14 -1 -11 -1 -10 C -1 -12 -1 -16 -1 -18 C -1 -23 5 -23 5 -18 C 5 -16 5 -12 5 -10 C 5.7 -11.7 6.3 -13.3 7 -15 C 9 -20 14 -18 13 -13 C 12.3 -9 11.7 -5 11 -1 C 10 4 8 9 4 11" transform="translate(64 174) rotate(-8) scale(1 1)" id="ranca-left-palm" />
+        <path data-arm="left" d="M 77 203 C 59 222 70.04866878936727 188.2973286272833 61.569831835594435 185.44964115999753" id="ranca-left-arm" />
+        <path data-palm="left" d="M -4 11 C -8 9 -11 5 -14 0 C -18 -5 -17 -9 -14 -9 C -11 -9 -10 -5 -7 -3 C -8 -7 -9 -12 -9 -15 C -9 -20 -4 -21 -3 -16 C -2 -14 -1 -11 -1 -10 C -1 -12 -1 -16 -1 -18 C -1 -23 5 -23 5 -18 C 5 -16 5 -12 5 -10 C 5.7 -11.7 6.3 -13.3 7 -15 C 9 -20 14 -18 13 -13 C 12.3 -9 11.7 -5 11 -1 C 10 4 8 9 4 11" transform="translate(64 174) rotate(-8) scale(-1 1)" id="ranca-left-palm" />
       </g>
       <g data-limb="resting" transform="translate(30.2 -207.4) scale(2.6)" fill="none" stroke="#f6fff8" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" id="ranca-resting-hand-group">
         <path data-arm="right" d="M 207 197 L 207 235.53846153846152" id="ranca-right-arm" />
@@ -39,18 +39,18 @@ export function CanaArtwork({ bodySrc = DEFAULT_CANA_BODY } = {}) {
         <g fill="#fff9fc" stroke="#fff9fc" strokeWidth="3.7" strokeLinecap="round" strokeLinejoin="round" data-expression="happy" data-preserved-face="cana" id="cana-face">
           <g transform="translate(72 167) rotate(-12)" id="cana-left-eye-group">
             <path d="M -7 -3 Q 1 -2 12 -6" fill="none" data-line-eye="cana" id="cana-left-eye" />
-            <path d="M -7 -3 Q -10 -5 -12 -10 M -10 -6 L -12 -12 M -7 -4 L -9 -10" fill="none" strokeWidth="2.8" data-lashes="cana" id="cana-left-lashes" />
+            <path d="M -7 -3 Q -8.5 -4 -9.5 -6.5 M -8.5 -4.5 L -9.5 -7.5 M -7 -3.5 L -8 -6.5" fill="none" strokeWidth="1.4" data-lashes="cana" id="cana-left-lashes" />
           </g>
           <g transform="translate(117 166) rotate(-12)" id="cana-right-eye-group">
             <path d="M -11 -3 Q 1 -4 12 -7" fill="none" data-line-eye="cana" id="cana-right-eye" />
-            <path d="M 12 -7 Q 18 -9 21 -13 M 16 -9 L 18 -13 M 13 -8 L 16 -11" fill="none" strokeWidth="2.8" data-lashes="cana" id="cana-right-lashes" />
+            <path d="M 12 -7 Q 15 -8 16.5 -10 M 14 -8 L 15 -10 M 12.5 -7.5 L 14 -9" fill="none" strokeWidth="1.4" data-lashes="cana" id="cana-right-lashes" />
           </g>
           <path d="M 86 186 Q 98 194 112 181" fill="none" id="cana-mouth" />
         </g>
       </g>
       <g data-limb="active" transform="translate(70.6 -220.8) scale(2.6)" fill="none" stroke="#fff9fc" strokeWidth="3.7" strokeLinecap="round" strokeLinejoin="round" id="cana-active-hand-group">
-        <path data-arm="left" d="M 57 209 C 23 225 31.05609090512258 198.24248664887386 38.75757741222467 193.69417865788157" id="cana-left-arm" />
-        <path data-palm="left" d="M -4 11 C -8 9 -11 5 -14 0 C -18 -4.65 -17 -8.370000000000001 -14 -8.370000000000001 C -11 -8.370000000000001 -10 -4.65 -7 -2.79 C -8 -6.510000000000001 -9 -11.16 -9 -13.950000000000001 C -9 -18.6 -4 -19.53 -3 -14.88 C -2 -13.020000000000001 -1 -10.23 -1 -9.3 C -1 -11.16 -1 -14.88 -1 -16.740000000000002 C -1 -21.39 5 -21.39 5 -16.740000000000002 C 5 -14.88 5 -11.16 5 -9.3 C 5.7 -10.881 6.3 -12.369000000000002 7 -13.950000000000001 C 9 -18.6 14 -16.740000000000002 13 -12.09 C 12.3 -8.370000000000001 11.7 -4.65 11 -0.93 C 10 4 8 9 4 11" transform="translate(34 183) rotate(-4) scale(1 1)" id="cana-left-palm" />
+        <path data-arm="left" d="M 57 209 C 23 225 39.036603307201176 197.68443485892084 30.77706501014608 194.2522304478346" id="cana-left-arm" />
+        <path data-palm="left" d="M -4 11 C -8 9 -11 5 -14 0 C -18 -4.65 -17 -8.370000000000001 -14 -8.370000000000001 C -11 -8.370000000000001 -10 -4.65 -7 -2.79 C -8 -6.510000000000001 -9 -11.16 -9 -13.950000000000001 C -9 -18.6 -4 -19.53 -3 -14.88 C -2 -13.020000000000001 -1 -10.23 -1 -9.3 C -1 -11.16 -1 -14.88 -1 -16.740000000000002 C -1 -21.39 5 -21.39 5 -16.740000000000002 C 5 -14.88 5 -11.16 5 -9.3 C 5.7 -10.881 6.3 -12.369000000000002 7 -13.950000000000001 C 9 -18.6 14 -16.740000000000002 13 -12.09 C 12.3 -8.370000000000001 11.7 -4.65 11 -0.93 C 10 4 8 9 4 11" transform="translate(34 183) rotate(-4) scale(-1 1)" id="cana-left-palm" />
       </g>
       <g data-limb="resting" transform="translate(87.2 -207.4) scale(2.6)" fill="none" stroke="#fff9fc" strokeWidth="3.7" strokeLinecap="round" strokeLinejoin="round" id="cana-resting-hand-group">
         <path data-arm="right" d="M 175 194 C 203 206 178.9748340336336 212.25224708266003 180.02910105771258 212.47252200619798" id="cana-right-arm" />

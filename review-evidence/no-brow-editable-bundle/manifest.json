@@ -1,6 +1,6 @@
 {
-  "basedOn": "77bafae3bacfedad31616360d5125f5af67e01e5",
-  "change": "Remove separate eyebrow paths only",
+  "basedOn": "a4bde1cb7d2f7e3f9abffea6a1241fda7ee15939",
+  "change": "Lengthen Ranca eye lines by 25%; mirror active palms to connect outside/open inside; halve Cana lash size and stroke weight",
   "canaBodyHeightRatio": 0.9,
   "editableVectors": {
     "ranca": [

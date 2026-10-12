@@ -3,12 +3,57 @@ import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const out='review-evidence/selected-gesture-output';await fs.mkdir(out,{recursive:true});
-const b=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||undefined,args:['--no-sandbox']});const p=await b.newPage({viewport:{width:1860,height:1200}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
-await p.goto('http://127.0.0.1:8140/review-evidence/selected-gesture-review/');await p.waitForFunction(()=>window.selectedReview?.ready);await p.evaluate(()=>Promise.all([...document.images].map(i=>i.decode())));
-const report=await p.evaluate(async()=>{const before=document.querySelector('#before [data-character="ranca"]'),after=document.querySelector('#after [data-character="ranca"]'),canaBefore=document.querySelector('#before [data-character="cana"]'),canaAfter=document.querySelector('#after [data-character="cana"]');const equal=(a,b,sel)=>a.querySelector(sel).outerHTML===b.querySelector(sel).outerHTML;
-const stripBrows=node=>{const clone=node.querySelector('[data-face-map]').cloneNode(true),f=clone.querySelector('[data-preserved-face]'),mouth=f.lastElementChild;for(const n of [...f.children])if(n.tagName.toLowerCase()==='path'&&n!==mouth)n.remove();return clone.outerHTML;};const browCount=node=>{const f=node.querySelector('[data-preserved-face]');return [...f.children].filter(n=>n.tagName.toLowerCase()==='path'&&n!==f.lastElementChild).length;};const lineEyes=[...after.querySelectorAll('[data-line-eye]')];const arm=after.querySelector('[data-arm="right"]').getAttribute('d').trim().split(/[ ,]+/);const restLine={straight:arm[3]==='L',vertical:Math.abs(Number(arm[1])-Number(arm[4]))<1e-7};
-const img=new Image();img.src=after.querySelector('image').getAttribute('href');await img.decode();const canvas=document.createElement('canvas');canvas.width=img.width;canvas.height=img.height;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);const data=ctx.getImageData(0,0,img.width,img.height).data;let minimumAlpha=255,samples=0;
-for(const path of after.querySelectorAll('[data-limb="resting"] path')){const matrix=after.getCTM().inverse().multiply(path.getCTM());for(let l=0;l<=path.getTotalLength();l+=.3){const q0=path.getPointAtLength(l),q=new DOMPoint(q0.x,q0.y).matrixTransform(matrix);for(const[dx,dy]of[[0,0],[5,0],[-5,0],[0,5],[0,-5]]){const x=Math.round(q.x+dx),y=Math.round(q.y+dy),a=x>=0&&y>=0&&x<img.width&&y<img.height?data[(y*img.width+x)*4+3]:0;minimumAlpha=Math.min(minimumAlpha,a);samples++;}}}
-return{baseline:selectedReview.baseline,comparisonBase:selectedReview.comparisonBase,onlyBrowsRemovedFromRanca:stripBrows(before)===after.querySelector('[data-face-map]').outerHTML,onlyBrowsRemovedFromCana:stripBrows(canaBefore)===canaAfter.querySelector('[data-face-map]').outerHTML,rancaBrowCount:browCount(after),canaBrowCount:browCount(canaAfter),rancaActiveHandUnchanged:equal(before,after,'[data-limb="active"]'),rancaMouthUnchanged:before.querySelector('[data-preserved-face]').lastElementChild.outerHTML===after.querySelector('[data-preserved-face]').lastElementChild.outerHTML,rancaEyesAreOnlyLines:lineEyes.length===2&&lineEyes.every(n=>n.getAttribute('fill')==='none'&&!/[zZ]/.test(n.getAttribute('d')))&&after.querySelectorAll('[data-preserved-face] > g path').length===2,rancaRestArmUnchanged:equal(before,after,'[data-arm="right"]'),canaMouthUnchanged:canaBefore.querySelector('[data-preserved-face]').lastElementChild.outerHTML===canaAfter.querySelector('[data-preserved-face]').lastElementChild.outerHTML,canaEyesAreOnlyLines:canaAfter.querySelectorAll('[data-line-eye="cana"]').length===2&&[...canaAfter.querySelectorAll('[data-preserved-face] > g path')].every(n=>n.getAttribute('fill')==='none'&&!/[zZ]/.test(n.getAttribute('d'))),rancaHasNoLashes:after.querySelectorAll('[data-lashes]').length===0,canaHasLashes:canaAfter.querySelectorAll('[data-lashes="cana"]').length===2,rancaBodyUnchanged:equal(before,after,'image'),rancaRestPalmPathUnchanged:before.querySelector('[data-palm="right"]').getAttribute('d')===after.querySelector('[data-palm="right"]').getAttribute('d'),canaHandsUnchanged:equal(canaBefore,canaAfter,'[data-limb="active"]')&&equal(canaBefore,canaAfter,'[data-limb="resting"]'),canaBodyHeightRatio:Number(canaAfter.dataset.bodyScale)*selectedReview.bodyMetrics.cana.height/selectedReview.bodyMetrics.ranca.height,restLine,restingHandMinimumBodyAlpha:minimumAlpha,restingHandSamples:samples};});
-for(const key of ['onlyBrowsRemovedFromRanca','onlyBrowsRemovedFromCana','rancaActiveHandUnchanged','rancaMouthUnchanged','rancaEyesAreOnlyLines','rancaRestArmUnchanged','canaMouthUnchanged','canaEyesAreOnlyLines','rancaHasNoLashes','canaHasLashes','rancaBodyUnchanged','rancaRestPalmPathUnchanged','canaHandsUnchanged'])assert.equal(report[key],true,key);assert.equal(report.rancaBrowCount,0);assert.equal(report.canaBrowCount,0);assert.ok(Math.abs(report.canaBodyHeightRatio-.9)<1e-9);assert.equal(report.restLine.straight,true);assert.equal(report.restLine.vertical,true);assert.equal(report.restingHandMinimumBodyAlpha,255);assert.deepEqual(errors,[]);
-await p.locator('#comparison').screenshot({path:out+'/selected-baseline-before-after.png'});await fs.writeFile(out+'/comparison-check.json',JSON.stringify({...report,pageErrors:errors},null,2));await b.close();console.log(JSON.stringify(report));
+const baseline=JSON.parse(await fs.readFile('review-evidence/selected-gesture-review/a4bde1c-baseline-layers.json','utf8'));
+const b=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||undefined,args:['--no-sandbox']});
+const p=await b.newPage({viewport:{width:1860,height:1200}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
+await p.goto('http://127.0.0.1:8140/review-evidence/selected-gesture-review/');await p.waitForFunction(()=>window.selectedReview?.ready);
+await p.evaluate(()=>Promise.all([...document.images].map(i=>i.decode())));
+const report=await p.evaluate(async baseline=>{
+  const canonical=n=>({tag:n.tagName.toLowerCase(),attributes:Object.fromEntries([...n.attributes].filter(a=>a.name!=='id').map(a=>[a.name,a.name==='href'?a.value.split('/').at(-1):a.value]).sort(([a],[b])=>a.localeCompare(b))),children:[...n.children].map(canonical)});
+  const build=t=>{const n=document.createElementNS('http://www.w3.org/2000/svg',t.tag);for(const[k,v]of Object.entries(t.attributes))n.setAttribute(k,v);for(const c of t.children)if(typeof c!=='string')n.append(build(c));return n;};
+  const eq=(a,b)=>JSON.stringify(canonical(a))===JSON.stringify(canonical(b));
+  const result={comparisonBase:selectedReview.comparisonBase,characters:{}};
+  for(const key of ['ranca','cana']){
+    const before=document.querySelector(`#before [data-character="${key}"]`),after=document.querySelector(`#after [data-character="${key}"]`),f=after.querySelector('[data-preserved-face]');
+    const source=build(baseline.children.find(n=>typeof n!=='string'&&n.attributes['data-character']===key));
+    const get=(node,s)=>node.querySelector(s),same=s=>eq(get(before,s),get(after,s));
+    const palm=get(after,'[data-limb="active"] [data-palm]'),arm=get(after,'[data-limb="active"] [data-arm]');
+    const point=(path,l)=>new DOMPoint(...Object.values({x:path.getPointAtLength(l).x,y:path.getPointAtLength(l).y})).matrixTransform(after.getCTM().inverse().multiply(path.getCTM()));
+    const connected=point(palm,palm.getTotalLength()),open=point(palm,0),armEnd=point(arm,arm.getTotalLength());
+    const eyes=[...after.querySelectorAll('[data-line-eye]')],oldEyes=[...before.querySelectorAll('[data-line-eye]')];
+    const lashes=[...after.querySelectorAll('[data-lashes]')],oldLashes=[...before.querySelectorAll('[data-lashes]')];
+    result.characters[key]={
+      beforeMatchesExactA4bde1c:eq(before,source),
+      noBrows:[...f.children].filter(n=>n.tagName.toLowerCase()==='path'&&n!==f.lastElementChild).length===0,
+      bodyUnchanged:same('image'),mouthUnchanged:eq(before.querySelector('[data-preserved-face]').lastElementChild,f.lastElementChild),
+      placementUnchanged:before.getAttribute('transform')===after.getAttribute('transform'),
+      restingLimbUnchanged:same('[data-limb="resting"]'),
+      palmContourUnchanged:get(before,'[data-limb="active"] [data-palm]').getAttribute('d')===palm.getAttribute('d'),
+      activeLimbPlacementUnchanged:get(before,'[data-limb="active"]').getAttribute('transform')===get(after,'[data-limb="active"]').getAttribute('transform'),
+      activePalmMirrored:palm.getAttribute('transform')===get(before,'[data-limb="active"] [data-palm]').getAttribute('transform').replace('scale(1 1)','scale(-1 1)'),
+      connectedEdgeOutside:connected.x<open.x,
+      openGapInside:open.x>connected.x&&open.x<(key==='ranca'?414:365),
+      wristJoinDistance:Math.hypot(connected.x-armEnd.x,connected.y-armEnd.y),
+      wristOpening:Math.hypot(connected.x-open.x,connected.y-open.y),
+      eyeWidthRatios:eyes.map((e,i)=>e.getBBox().width/oldEyes[i].getBBox().width),
+      eyeGroupsUnchanged:eyes.every((e,i)=>e.parentElement.getAttribute('transform')===oldEyes[i].parentElement.getAttribute('transform')),
+      eyesLineOnly:eyes.length===2&&eyes.every(e=>e.getAttribute('fill')==='none'&&!/[zZ]/.test(e.getAttribute('d'))),
+      lashCount:lashes.length,
+      lashLengthRatios:lashes.map((e,i)=>e.getTotalLength()/oldLashes[i].getTotalLength()),
+      lashStrokeRatios:lashes.map((e,i)=>Number(e.getAttribute('stroke-width'))/Number(oldLashes[i].getAttribute('stroke-width'))),
+      canaEyeContoursUnchanged:key!=='cana'||eyes.every((e,i)=>eq(e,oldEyes[i]))
+    };
+  }
+  result.canaBodyHeightRatio=Number(document.querySelector('#after [data-character="cana"]').dataset.bodyScale)*selectedReview.bodyMetrics.cana.height/selectedReview.bodyMetrics.ranca.height;
+  return result;
+},baseline);
+for(const[key,c]of Object.entries(report.characters)){
+  for(const name of ['beforeMatchesExactA4bde1c','noBrows','bodyUnchanged','mouthUnchanged','placementUnchanged','restingLimbUnchanged','palmContourUnchanged','activeLimbPlacementUnchanged','activePalmMirrored','connectedEdgeOutside','openGapInside','eyeGroupsUnchanged','eyesLineOnly','canaEyeContoursUnchanged'])assert.equal(c[name],true,key+': '+name);
+  assert.ok(c.wristJoinDistance<.001);assert.ok(c.wristOpening>20);
+  for(const ratio of c.eyeWidthRatios)assert.ok(Math.abs(ratio-(key==='ranca'?1.25:1))<1e-6);
+  assert.equal(c.lashCount,key==='ranca'?0:2);
+  for(const ratio of [...c.lashLengthRatios,...c.lashStrokeRatios])assert.ok(Math.abs(ratio-.5)<.001);
+}
+assert.ok(Math.abs(report.canaBodyHeightRatio-.9)<1e-9);assert.deepEqual(errors,[]);
+await p.locator('#comparison').screenshot({path:out+'/selected-baseline-before-after.png'});
+await fs.writeFile(out+'/comparison-check.json',JSON.stringify({...report,pageErrors:errors},null,2));await b.close();console.log(JSON.stringify(report));

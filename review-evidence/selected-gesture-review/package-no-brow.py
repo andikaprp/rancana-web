@@ -50,7 +50,7 @@ code+='    </svg>\n  );\n}\n'
 (root/'RancaCana.jsx').write_text(code)
 embedded=code.replace('"assets/ranca-body.webp"',json.dumps(bodydata['ranca'])).replace('"assets/cana-body.webp"',json.dumps(bodydata['cana']))
 (root/'RancaCana.embedded.jsx').write_text(embedded)
-manifest={'basedOn':'77bafae3bacfedad31616360d5125f5af67e01e5','change':'Remove separate eyebrow paths only','canaBodyHeightRatio':.9,'editableVectors':{},'rasterBodies':{},'entrypoints':{'react':'RancaCana.jsx','reactSelfContained':'RancaCana.embedded.jsx','htmlPreview':'preview.html','svgPair':'RancaCana.svg','layerTree':'editable-layers.json'}}
+manifest={'basedOn':'a4bde1cb7d2f7e3f9abffea6a1241fda7ee15939','change':'Lengthen Ranca eye lines by 25%; mirror active palms to connect outside/open inside; halve Cana lash size and stroke weight','canaBodyHeightRatio':.9,'editableVectors':{},'rasterBodies':{},'entrypoints':{'react':'RancaCana.jsx','reactSelfContained':'RancaCana.embedded.jsx','htmlPreview':'preview.html','svgPair':'RancaCana.svg','layerTree':'editable-layers.json'}}
 for k,c in characters.items():
  manifest['editableVectors'][k]=[n['attributes'].get('id') for n in walk(c) if n['tag']=='path']
  body=root/'assets'/(k+'-body.webp');manifest['rasterBodies'][k]={'file':'assets/'+body.name,'sha256':hashlib.sha256(body.read_bytes()).hexdigest(),'dimensions':[741,532] if k=='ranca' else [745,528]}
