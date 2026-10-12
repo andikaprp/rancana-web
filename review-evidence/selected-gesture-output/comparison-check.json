@@ -1,61 +1,54 @@
 {
-  "comparisonBase": "a4bde1cb7d2f7e3f9abffea6a1241fda7ee15939",
+  "comparisonBase": "d1d034f3294b08770c20005eae416b16e43f516f",
   "characters": {
     "ranca": {
-      "beforeMatchesExactA4bde1c": true,
+      "beforeMatchesExactD1d034f": true,
+      "allOtherArtworkUnchanged": true,
       "noBrows": true,
-      "bodyUnchanged": true,
-      "mouthUnchanged": true,
-      "placementUnchanged": true,
-      "restingLimbUnchanged": true,
-      "palmContourUnchanged": true,
-      "activeLimbPlacementUnchanged": true,
-      "activePalmMirrored": true,
-      "connectedEdgeOutside": true,
-      "openGapInside": true,
-      "wristJoinDistance": 0.000012573892026576978,
-      "wristOpening": 20.79999923706051,
-      "eyeWidthRatios": [
-        1.25,
-        1.25
-      ],
-      "eyeGroupsUnchanged": true,
-      "eyesLineOnly": true,
       "lashCount": 0,
-      "lashLengthRatios": [],
-      "lashStrokeRatios": [],
-      "canaEyeContoursUnchanged": true
+      "lashDetails": []
     },
     "cana": {
-      "beforeMatchesExactA4bde1c": true,
+      "beforeMatchesExactD1d034f": true,
+      "allOtherArtworkUnchanged": true,
       "noBrows": true,
-      "bodyUnchanged": true,
-      "mouthUnchanged": true,
-      "placementUnchanged": true,
-      "restingLimbUnchanged": true,
-      "palmContourUnchanged": true,
-      "activeLimbPlacementUnchanged": true,
-      "activePalmMirrored": true,
-      "connectedEdgeOutside": true,
-      "openGapInside": true,
-      "wristJoinDistance": 0.000006962722407277955,
-      "wristOpening": 20.799999237060536,
-      "eyeWidthRatios": [
-        1,
-        1
-      ],
-      "eyeGroupsUnchanged": true,
-      "eyesLineOnly": true,
       "lashCount": 2,
-      "lashLengthRatios": [
-        0.5,
-        0.5
-      ],
-      "lashStrokeRatios": [
-        0.5,
-        0.5
-      ],
-      "canaEyeContoursUnchanged": true
+      "lashDetails": [
+        {
+          "strokeWidth": 1.4,
+          "curvedStrokes": 3,
+          "rootDistances": [
+            0.0006361401501983905,
+            0.00016019031185494892,
+            0.0016770815661687293
+          ],
+          "rootSpanFraction": 0.7283157894736842,
+          "minimumRootSpacing": 6.512742059992856,
+          "rise": [
+            6.628,
+            6.3875,
+            5.278
+          ],
+          "changed": true
+        },
+        {
+          "strokeWidth": 1.4,
+          "curvedStrokes": 3,
+          "rootDistances": [
+            0.00013620915981213524,
+            0.0005734743436292961,
+            0.0024052262923349543
+          ],
+          "rootSpanFraction": 0.7419304347826087,
+          "minimumRootSpacing": 8.512824020264956,
+          "rise": [
+            4.979999999999999,
+            6.356799999999999,
+            7.0088
+          ],
+          "changed": true
+        }
+      ]
     }
   },
   "canaBodyHeightRatio": 0.9,

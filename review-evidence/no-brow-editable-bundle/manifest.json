@@ -1,6 +1,6 @@
 {
-  "basedOn": "a4bde1cb7d2f7e3f9abffea6a1241fda7ee15939",
-  "change": "Lengthen Ranca eye lines by 25%; mirror active palms to connect outside/open inside; halve Cana lash size and stroke weight",
+  "basedOn": "d1d034f3294b08770c20005eae416b16e43f516f",
+  "change": "Redistribute Cana lashes into three separated curved strokes along each upper eye line; retain fine 1.4 stroke weight; all other artwork unchanged",
   "canaBodyHeightRatio": 0.9,
   "editableVectors": {
     "ranca": [
@@ -47,6 +47,8 @@
     "reactSelfContained": "RancaCana.embedded.jsx",
     "htmlPreview": "preview.html",
     "svgPair": "RancaCana.svg",
-    "layerTree": "editable-layers.json"
+    "layerTree": "editable-layers.json",
+    "normalSizePair": "Ranca-Cana-normal-size.png",
+    "canaLashCloseup": "Cana-lashes-closeup.png"
   }
 }

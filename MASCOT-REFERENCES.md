@@ -1,10 +1,10 @@
 # Ranca and Cana: current design instructions
 
-The latest user corrections are from 12 October 2026, 09:35 UTC: slightly lengthen Ranca’s eye lines; put each waving hand’s connected edge outside and open gap inside; shorten and thin Cana’s lashes. Preserve the no-brow pair and editable bundle. These override earlier preview interpretations.
+The latest user corrections are from 12 October 2026, 09:46 UTC: revise ONLY Cana’s lash distribution from d1d034f. Use three separated short curved lashes across each upper eye line, from inner/middle to outer, readable at normal display. Keep fine weight and avoid a dense comb, spikes or separate eyebrows. These override earlier preview interpretations.
 
 GREEN RANCA represents the BOY: masculine, fun, happy and playful. His eyes are simple expressive curved WHITE LINES, now 25% wider than a4bde1c, with NO EYEBROWS and NO LASHES. Do not use open oval eye shapes, pupils or realistic eye details. Keep his cheerful mouth and selected open active hand posture.
 
-PINK CANA represents the GIRL: clearly feminine in eye styling and attitude while remaining sassy/confident. Her eyes also use simple WHITE LINES, with elegant winged lines and smaller/finer lashes (half the a4bde1c lash size and stroke weight) and an asymmetric expression, with NO SEPARATE EYEBROWS. Keep the restrained smirk. Preserve the distinct asymmetric pink body; do not replace it with a recolored Ranca silhouette.
+PINK CANA represents the GIRL: clearly feminine in eye styling and attitude while remaining sassy/confident. Her eyes also use simple WHITE LINES, with elegant winged lines and three separated short curved lashes distributed across each upper lid (fine 1.4 stroke weight, unchanged from d1d034f) and an asymmetric expression, with NO SEPARATE EYEBROWS. Keep the restrained smirk. Preserve the distinct asymmetric pink body; do not replace it with a recolored Ranca silhouette.
 
 Cana is only slightly smaller than Ranca. Use approximately 90% of Ranca's visible BODY HEIGHT through uniform scaling, preserving the original aspect ratio and naturally wider Cana shape. The 50% interpretation in 72c33b7 was rejected. The older 94% instruction is also superseded by the current approximately 90% comparison.
 
@@ -27,7 +27,7 @@ Prop-free previews use the existing `assets/mascots/poses/ranca-body.webp` and `
 
 ## Current review scope
 
-The current comparison shows exact `a4bde1c` as the previous preview. The revised preview lengthens Ranca’s eye lines by 25% in local width, mirrors both active palm contours to put their arm connection outside/open gap inside, and reduces Cana’s lash geometry and stroke width by half. Bodies, all resting hands/arms, mouths, face placement, Cana’s main eye lines and Cana’s 90% body-height scale/placement are unchanged. Neither character has eyebrows.
+The current comparison shows exact `d1d034f` as the previous preview. Only Cana’s two lash paths change: three separate curved strokes per eye attach to the upper lid and span roughly 73–74% of its width, instead of clustering at its outside edge. The fine 1.4 stroke weight is unchanged. All other rendered artwork is identical, including both main eye lines, both bodies, all arms/hands, mouths, face placement, Ranca’s longer eyes and Cana’s 90% body-height scale. Neither character has eyebrows.
 
 The editable handoff is in `review-evidence/no-brow-editable-bundle/`: named SVG face/hand paths, unchanged body WebPs, React source, self-contained HTML, clean PNG and labeled close-ups. Body textures remain raster images. MagicPath quota denial remains a parent-reported blocker; do not attempt another import. Updating these files does not complete that import.
 

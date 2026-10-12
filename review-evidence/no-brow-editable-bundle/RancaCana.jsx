@@ -39,11 +39,11 @@ export function CanaArtwork({ bodySrc = DEFAULT_CANA_BODY } = {}) {
         <g fill="#fff9fc" stroke="#fff9fc" strokeWidth="3.7" strokeLinecap="round" strokeLinejoin="round" data-expression="happy" data-preserved-face="cana" id="cana-face">
           <g transform="translate(72 167) rotate(-12)" id="cana-left-eye-group">
             <path d="M -7 -3 Q 1 -2 12 -6" fill="none" data-line-eye="cana" id="cana-left-eye" />
-            <path d="M -7 -3 Q -8.5 -4 -9.5 -6.5 M -8.5 -4.5 L -9.5 -7.5 M -7 -3.5 L -8 -6.5" fill="none" strokeWidth="1.4" data-lashes="cana" id="cana-left-lashes" />
+            <path d="M -5.7008 -2.872 Q -7.8 -5.5 -8.8 -9.5 M 0.8075 -3.1125 Q -0.6 -6 -0.7 -9.5 M 8.1372 -4.722 Q 7.8 -7 8 -10" fill="none" strokeWidth="1.4" data-lashes="cana" id="cana-left-lashes" />
           </g>
           <g transform="translate(117 166) rotate(-12)" id="cana-right-eye-group">
             <path d="M -11 -3 Q 1 -4 12 -7" fill="none" data-line-eye="cana" id="cana-right-eye" />
-            <path d="M 12 -7 Q 15 -8 16.5 -10 M 14 -8 L 15 -10 M 12.5 -7.5 L 14 -9" fill="none" strokeWidth="1.4" data-lashes="cana" id="cana-right-lashes" />
+            <path d="M -8.61 -3.22 Q -8.8 -5.7 -8.5 -8.2 M -0.1716 -4.3432 Q 0.9 -7.1 1.1 -10.7 M 8.4544 -6.0912 Q 10.5 -8.8 11.5 -13.1" fill="none" strokeWidth="1.4" data-lashes="cana" id="cana-right-lashes" />
           </g>
           <path d="M 86 186 Q 98 194 112 181" fill="none" id="cana-mouth" />
         </g>

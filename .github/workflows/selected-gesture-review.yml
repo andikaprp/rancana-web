@@ -1,4 +1,4 @@
-name: Eye and outward-hand refinement review
+name: Distributed Cana lashes review
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
