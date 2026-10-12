@@ -1,0 +1,45 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const sourceCommit='d9c198596a9db9400fadb9ac86ddc3c5cd708738';
+const sourceFiles=['index.html','test.js','ranca-body.webp','cana-body.webp','ranca-reference.webp','cana-reference.webp'].map(f=>'review-evidence/plain-articulation/'+f);
+const sourceHashes={};
+for(const file of sourceFiles){const bytes=await fs.readFile(file),original=execFileSync('git',['show',`${sourceCommit}:${file}`],{maxBuffer:20e6});assert.ok(bytes.equals(original),`${file} differs from approved export source`);sourceHashes[file]=createHash('sha256').update(bytes).digest('hex');}
+const out='review-evidence/plain-motion-delivery';await fs.mkdir(out,{recursive:true});
+const frames=await fs.mkdtemp(path.join(os.tmpdir(),'plain-articulation-frames-'));
+const browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH||undefined,args:['--no-sandbox','--enable-unsafe-swiftshader']});
+const p=await browser.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1,reducedMotion:'no-preference'});
+const errors=[];p.on('pageerror',e=>errors.push(e.message));
+const origin=process.env.PLAIN_REVIEW_ORIGIN||'http://127.0.0.1:8136';
+await p.goto(origin+'/review-evidence/plain-articulation/');await p.waitForFunction(()=>window.plainTest?.ready);
+await p.evaluate(()=>{plainTest.seek(0);document.body.classList.add('video-only');});
+const frameHashes=[];
+for(let i=0;i<120;i++){
+  const frame=path.join(frames,String(i).padStart(3,'0')+'.png');
+  await p.evaluate(t=>plainTest.seek(t),i*1000/30);
+  const bytes=await p.screenshot({path:frame});
+  frameHashes.push(createHash('sha256').update(bytes).digest('hex'));
+  if(i%30===0)console.log(`Rendered ${i+1}/120 exact-scene frames`);
+}
+assert.deepEqual(errors,[]);
+const video=out+'/Rancana-plain-two-arm-test-4s.mp4';
+execFileSync('ffmpeg',['-hide_banner','-loglevel','error','-y','-framerate','30','-i',frames+'/%03d.png','-frames:v','120','-an','-c:v','libx264','-preset','medium','-crf','17','-pix_fmt','yuv420p','-movflags','+faststart',video],{stdio:'inherit'});
+const probe=JSON.parse(execFileSync('ffprobe',['-v','error','-count_frames','-select_streams','v:0','-show_entries','stream=codec_name,pix_fmt,width,height,r_frame_rate,nb_read_frames,duration:format=duration','-of','json',video],{encoding:'utf8'}));
+const stream=probe.streams[0];assert.equal(stream.codec_name,'h264');assert.equal(stream.pix_fmt,'yuv420p');assert.equal(stream.width,1920);assert.equal(stream.height,1080);assert.equal(stream.r_frame_rate,'30/1');assert.equal(Number(stream.nb_read_frames),120);assert.equal(Number(probe.format.duration),4);
+execFileSync('ffmpeg',['-v','error','-i',video,'-f','null','-'],{stdio:'inherit'});
+await p.setContent('<video muted playsinline style="width:960px" src="'+origin+'/'+video+'"></video>');
+const playback=await p.evaluate(async()=>{const v=document.querySelector('video');if(v.readyState<1)await new Promise((resolve,reject)=>{v.onloadedmetadata=resolve;v.onerror=()=>reject(new Error('Video metadata failed'));setTimeout(()=>reject(new Error('Video metadata timed out')),12000);});const result={duration:v.duration,width:v.videoWidth,height:v.videoHeight,decodedFrames:0};await v.play();await new Promise((resolve,reject)=>{v.onended=resolve;v.onerror=()=>reject(new Error('Video playback failed'));setTimeout(()=>reject(new Error('Video did not finish')),12000);});result.ended=v.ended;result.currentTime=v.currentTime;result.decodedFrames=v.getVideoPlaybackQuality().totalVideoFrames;return result;});
+assert.equal(playback.ended,true);assert.equal(playback.duration,4);assert.ok(playback.decodedFrames>=119);
+await browser.close();
+const videoBytes=await fs.readFile(video);const report={sourceCommit,sourceHashes,unchangedScene:true,export:'Existing video-only layout; 120 deterministic frames at original four-second timeline speed',probe,playback,pageErrors:errors,uniqueSourceFrames:new Set(frameHashes).size,sha256:createHash('sha256').update(videoBytes).digest('hex'),bytes:videoBytes.length};
+await fs.writeFile(out+'/video-verification.json',JSON.stringify(report,null,2)+'\n');
+await fs.copyFile(path.join(frames,'045.png'),out+'/video-checkpoint-1500ms.png');
+await fs.writeFile(out+'/README.txt',`Four-second review export of unchanged scene ${sourceCommit}.\nRancana-plain-two-arm-test-4s.mp4: H.264, 1920x1080, 30fps, 120 frames, 4.000 seconds, no audio.\nThe existing video-only layout is used. No design or motion source changes.\nVerified with ffprobe, full ffmpeg decode and complete Chromium playback.\nThis remains the inferred-depth review prototype; no production integration or publication.\n`);
+await fs.rm(frames,{recursive:true,force:true});
+console.log(JSON.stringify(report,null,2));

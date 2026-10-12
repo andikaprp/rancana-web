@@ -1,0 +1,43 @@
+{
+  "sourceCommit": "d9c198596a9db9400fadb9ac86ddc3c5cd708738",
+  "sourceHashes": {
+    "review-evidence/plain-articulation/index.html": "8496603a36cc3fd82304423361e9ac7484545f920d9f502b70fb4f5403f65f99",
+    "review-evidence/plain-articulation/test.js": "c9ba6c1812f4053fb65ce73746e1136362f0351ba0d848e952a0f90d541d4768",
+    "review-evidence/plain-articulation/ranca-body.webp": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "review-evidence/plain-articulation/cana-body.webp": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547",
+    "review-evidence/plain-articulation/ranca-reference.webp": "6c4f21f106fb85fbb13d239c7293e5a98fc0b663e27d701b7d90a2d5af9e5154",
+    "review-evidence/plain-articulation/cana-reference.webp": "cdb8ee20752265f5b1e6906ce3091ef1992daacf5769e0a4c96bb8682b6e9492"
+  },
+  "unchangedScene": true,
+  "export": "Existing video-only layout; 120 deterministic frames at original four-second timeline speed",
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "30/1",
+        "duration": "4.000000",
+        "nb_read_frames": "120"
+      }
+    ],
+    "format": {
+      "duration": "4.000000"
+    }
+  },
+  "playback": {
+    "duration": 4,
+    "width": 1920,
+    "height": 1080,
+    "decodedFrames": 120,
+    "ended": true,
+    "currentTime": 4
+  },
+  "pageErrors": [],
+  "uniqueSourceFrames": 120,
+  "sha256": "a97137beb00d04f120498ae87b86bf9aa9fe7f98c302e6531047f003c9549373",
+  "bytes": 614009
+}
