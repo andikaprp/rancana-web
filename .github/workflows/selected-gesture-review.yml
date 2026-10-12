@@ -1,4 +1,4 @@
-name: Selected baseline hand refinement review
+name: Line eyes and slightly smaller Cana review
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
@@ -13,7 +13,7 @@ jobs:
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: selected-baseline-before-after-review
+          name: line-eyes-cana-90-review
           path: review-evidence/selected-gesture-output/
   verify-comparison:
     runs-on: ubuntu-latest
@@ -31,5 +31,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: selected-baseline-before-after-ci
+          name: line-eyes-cana-90-ci
           path: review-evidence/selected-gesture-output/
