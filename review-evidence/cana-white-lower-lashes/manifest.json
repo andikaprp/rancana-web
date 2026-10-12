@@ -1,0 +1,16 @@
+{
+  "status": "Review-only preview; stop for user review",
+  "sourceFullPair": "0023cb6fe11ff9b5646782e0c63dbe8c5c02621b",
+  "change": "Add six neat thinner softly tapered white downward lashes per Cana lid; existing eye direction and all prior artwork unchanged",
+  "allPriorArtworkUnchanged": true,
+  "rancaUnchanged": true,
+  "canaBodyHeightRatio": 0.9,
+  "referenceAccess": "Library resolved the attachment but supported byte transfer failed; followed parent visual inspection supplied in the task. No local visual-inspection claim.",
+  "lashBaseWidth": 1.05,
+  "lashTipWidth": 0.24,
+  "lidStrokeWidth": 3.7,
+  "rasterBodies": {
+    "ranca": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "cana": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547"
+  }
+}

@@ -1,0 +1,494 @@
+{
+  "tag": "svg",
+  "attributes": {
+    "xmlns": "http://www.w3.org/2000/svg",
+    "viewBox": "0 0 1600 715",
+    "id": "ranca-cana",
+    "role": "img",
+    "aria-label": "Ranca and Cana without eyebrows"
+  },
+  "children": [
+    {
+      "tag": "g",
+      "attributes": {
+        "data-character": "ranca",
+        "data-body-scale": "1",
+        "transform": "translate(20 100) scale(1)",
+        "id": "ranca-placement"
+      },
+      "children": [
+        {
+          "tag": "image",
+          "attributes": {
+            "href": "assets/ranca-body.webp",
+            "width": "741",
+            "height": "532",
+            "data-body-art": "ranca",
+            "id": "ranca-body"
+          },
+          "children": []
+        },
+        {
+          "tag": "g",
+          "attributes": {
+            "transform": "translate(-115 -249) scale(3)",
+            "data-face-map": "ranca",
+            "id": "ranca-face-placement"
+          },
+          "children": [
+            {
+              "tag": "g",
+              "attributes": {
+                "fill": "#f6fff8",
+                "stroke": "#f6fff8",
+                "stroke-width": "3.6",
+                "stroke-linecap": "round",
+                "stroke-linejoin": "round",
+                "data-expression": "happy",
+                "data-preserved-face": "ranca",
+                "id": "ranca-face"
+              },
+              "children": [
+                {
+                  "tag": "g",
+                  "attributes": {
+                    "transform": "translate(147 157) rotate(-17)",
+                    "id": "ranca-left-eye-group"
+                  },
+                  "children": [
+                    {
+                      "tag": "path",
+                      "attributes": {
+                        "d": "M -8 1 Q 2 -8 12 1",
+                        "fill": "none",
+                        "data-line-eye": "ranca",
+                        "id": "ranca-left-eye"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "g",
+                  "attributes": {
+                    "transform": "translate(182 143) rotate(-17)",
+                    "id": "ranca-right-eye-group"
+                  },
+                  "children": [
+                    {
+                      "tag": "path",
+                      "attributes": {
+                        "d": "M -8 1 Q 2 -8 12 1",
+                        "fill": "none",
+                        "data-line-eye": "ranca",
+                        "id": "ranca-right-eye"
+                      },
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "tag": "path",
+                  "attributes": {
+                    "d": "M 158 173 Q 166 171 177 166 C 179 176 174 185 168 184 C 161 184 158 180 158 173 Z",
+                    "stroke": "none",
+                    "id": "ranca-mouth"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "g",
+          "attributes": {
+            "data-limb": "active",
+            "transform": "translate(83.6 -192.4) scale(2.6)",
+            "fill": "none",
+            "stroke": "#f6fff8",
+            "stroke-width": "3.6",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "id": "ranca-active-hand-group"
+          },
+          "children": [
+            {
+              "tag": "path",
+              "attributes": {
+                "data-arm": "left",
+                "d": "M 77 203 C 59 222 70.04866878936727 188.2973286272833 61.569831835594435 185.44964115999753",
+                "id": "ranca-left-arm"
+              },
+              "children": []
+            },
+            {
+              "tag": "path",
+              "attributes": {
+                "data-palm": "left",
+                "d": "M -4 11 C -8 9 -11 5 -14 0 C -18 -5 -17 -9 -14 -9 C -11 -9 -10 -5 -7 -3 C -8 -7 -9 -12 -9 -15 C -9 -20 -4 -21 -3 -16 C -2 -14 -1 -11 -1 -10 C -1 -12 -1 -16 -1 -18 C -1 -23 5 -23 5 -18 C 5 -16 5 -12 5 -10 C 5.7 -11.7 6.3 -13.3 7 -15 C 9 -20 14 -18 13 -13 C 12.3 -9 11.7 -5 11 -1 C 10 4 8 9 4 11",
+                "transform": "translate(64 174) rotate(-8) scale(-1 1)",
+                "id": "ranca-left-palm"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "g",
+          "attributes": {
+            "data-limb": "resting",
+            "transform": "translate(30.2 -207.4) scale(2.6)",
+            "fill": "none",
+            "stroke": "#f6fff8",
+            "stroke-width": "3.6",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "id": "ranca-resting-hand-group"
+          },
+          "children": [
+            {
+              "tag": "path",
+              "attributes": {
+                "data-arm": "right",
+                "d": "M 207 197 L 207 235.53846153846152",
+                "id": "ranca-right-arm"
+              },
+              "children": []
+            },
+            {
+              "tag": "path",
+              "attributes": {
+                "data-palm": "right",
+                "d": "M -4 11 C -8 9 -11 4 -12 0 C -15 -4 -13 -8 -10 -7 C -7 -6 -7 -3 -5 -2 C -5 -5 -6 -8 -5 -10 C -3 -13 0 -12 0 -9 C 0 -7 0 -5 0 -4 C 1 -6 2 -8 3 -9 C 5 -11 8 -9 7 -6 C 6 -4 6 -3 5 -2 C 7 -4 9 -5 11 -3 C 13 -1 11 3 9 5 C 8 7 7 9 6 10 C 5 10.5 4.5 10.8 4 11",
+                "transform": "translate(203 246.53846153846152) rotate(180) scale(-1 1)",
+                "id": "ranca-right-palm"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "g",
+      "attributes": {
+        "data-character": "cana",
+        "data-body-scale": "0.907258064516129",
+        "transform": "translate(860 151.48387096774195) scale(0.907258064516129)",
+        "id": "cana-placement"
+      },
+      "children": [
+        {
+          "tag": "image",
+          "attributes": {
+            "href": "assets/cana-body.webp",
+            "width": "745",
+            "height": "528",
+            "data-body-art": "cana",
+            "id": "cana-body"
+          },
+          "children": []
+        },
+        {
+          "tag": "g",
+          "attributes": {
+            "transform": "translate(29.6 -293.4) scale(3.2)",
+            "data-face-map": "cana",
+            "id": "cana-face-placement"
+          },
+          "children": [
+            {
+              "tag": "g",
+              "attributes": {
+                "fill": "#fff9fc",
+                "stroke": "#fff9fc",
+                "stroke-width": "3.7",
+                "stroke-linecap": "round",
+                "stroke-linejoin": "round",
+                "data-expression": "happy",
+                "data-preserved-face": "cana",
+                "id": "cana-face"
+              },
+              "children": [
+                {
+                  "tag": "g",
+                  "attributes": {
+                    "transform": "translate(72 167)",
+                    "id": "cana-left-eye-group"
+                  },
+                  "children": [
+                    {
+                      "tag": "path",
+                      "attributes": {
+                        "d": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+                        "fill": "none",
+                        "data-line-eye": "cana",
+                        "id": "cana-left-eye"
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "g",
+                      "attributes": {
+                        "id": "cana-left-lashes",
+                        "data-lashes": "left",
+                        "fill": "#fff9fc",
+                        "stroke": "none"
+                      },
+                      "children": [
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-left-lash-1",
+                            "data-lash": "1",
+                            "d": "M -6.00321 -4.01509 Q -5.60901 -1.20345 -7.20764 0.45010 Q -7.25200 0.64512 -7.05236 0.63310 Q -4.85599 -0.93335 -4.95679 -4.10171 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-left-lash-2",
+                            "data-lash": "2",
+                            "d": "M -2.96445 -3.38162 Q -2.67487 -0.03833 -3.59057 1.82893 Q -3.57729 2.02849 -3.38943 1.95987 Q -1.89013 0.11713 -1.91555 -3.42958 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-left-lash-3",
+                            "data-lash": "3",
+                            "d": "M 0.07506 -3.05179 Q 0.26092 0.74794 0.08287 2.81391 Q 0.16521 2.99617 0.31713 2.86609 Q 1.05908 0.80206 1.12494 -3.06821 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-left-lash-4",
+                            "data-lash": "4",
+                            "d": "M 3.87507 -3.06835 Q 3.94095 0.73752 4.68297 2.76652 Q 4.83536 2.89604 4.91703 2.71348 Q 4.73905 0.68248 4.92493 -3.05165 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-left-lash-5",
+                            "data-lash": "5",
+                            "d": "M 6.91557 -3.43004 Q 6.89041 0.05357 8.39001 1.86074 Q 8.57846 1.92772 8.58999 1.72806 Q 7.67459 -0.10477 7.96443 -3.38116 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-left-lash-6",
+                            "data-lash": "6",
+                            "d": "M 9.95695 -4.10366 Q 9.85797 -1.05795 12.05438 0.43477 Q 12.25423 0.44243 12.20562 0.24843 Q 10.60703 -1.33885 11.00305 -4.01314 Z"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "g",
+                  "attributes": {
+                    "transform": "translate(117 166)",
+                    "id": "cana-right-eye-group"
+                  },
+                  "children": [
+                    {
+                      "tag": "path",
+                      "attributes": {
+                        "d": "M -11 -5 Q 0.5 -2.8 12 -5",
+                        "fill": "none",
+                        "data-line-eye": "cana",
+                        "id": "cana-right-eye"
+                      },
+                      "children": []
+                    },
+                    {
+                      "tag": "g",
+                      "attributes": {
+                        "id": "cana-right-lashes",
+                        "data-lashes": "right",
+                        "fill": "#fff9fc",
+                        "stroke": "none"
+                      },
+                      "children": [
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-right-lash-1",
+                            "data-lash": "1",
+                            "d": "M -9.68321 -4.63285 Q -9.28901 -1.82121 -10.88764 -0.16766 Q -10.93200 0.02736 -10.73236 0.01534 Q -8.53599 -1.55111 -8.63679 -4.71947 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-right-lash-2",
+                            "data-lash": "2",
+                            "d": "M -6.00445 -4.17346 Q -5.71487 -0.83017 -6.63057 1.03709 Q -6.61729 1.23665 -6.42943 1.16803 Q -4.93013 -0.67471 -4.95555 -4.22142 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-right-lash-3",
+                            "data-lash": "3",
+                            "d": "M -2.32494 -3.93579 Q -2.13908 -0.13606 -2.31713 1.92991 Q -2.23479 2.11217 -2.08287 1.98209 Q -1.34092 -0.08194 -1.27506 -3.95221 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-right-lash-4",
+                            "data-lash": "4",
+                            "d": "M 2.27507 -3.95235 Q 2.34095 -0.14648 3.08297 1.88252 Q 3.23536 2.01204 3.31703 1.82948 Q 3.13905 -0.20152 3.32493 -3.93565 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-right-lash-5",
+                            "data-lash": "5",
+                            "d": "M 5.95557 -4.22188 Q 5.93041 -0.73827 7.43001 1.06890 Q 7.61846 1.13588 7.62999 0.93622 Q 6.71459 -0.89661 7.00443 -4.17300 Z"
+                          },
+                          "children": []
+                        },
+                        {
+                          "tag": "path",
+                          "attributes": {
+                            "id": "cana-right-lash-6",
+                            "data-lash": "6",
+                            "d": "M 9.63695 -4.72142 Q 9.53797 -1.67571 11.73438 -0.18299 Q 11.93423 -0.17533 11.88562 -0.36933 Q 10.28703 -1.95661 10.68305 -4.63090 Z"
+                          },
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "path",
+                  "attributes": {
+                    "d": "M 86 186 Q 98 194 112 181",
+                    "fill": "none",
+                    "id": "cana-mouth"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "tag": "g",
+          "attributes": {
+            "data-limb": "active",
+            "transform": "translate(70.6 -220.8) scale(2.6)",
+            "fill": "none",
+            "stroke": "#fff9fc",
+            "stroke-width": "3.7",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "id": "cana-active-hand-group"
+          },
+          "children": [
+            {
+              "tag": "path",
+              "attributes": {
+                "data-arm": "left",
+                "d": "M 57 209 C 23 225 39.036603307201176 197.68443485892084 30.77706501014608 194.2522304478346",
+                "id": "cana-left-arm"
+              },
+              "children": []
+            },
+            {
+              "tag": "path",
+              "attributes": {
+                "data-palm": "left",
+                "d": "M -4 11 C -8 9 -11 5 -14 0 C -18 -4.65 -17 -8.370000000000001 -14 -8.370000000000001 C -11 -8.370000000000001 -10 -4.65 -7 -2.79 C -8 -6.510000000000001 -9 -11.16 -9 -13.950000000000001 C -9 -18.6 -4 -19.53 -3 -14.88 C -2 -13.020000000000001 -1 -10.23 -1 -9.3 C -1 -11.16 -1 -14.88 -1 -16.740000000000002 C -1 -21.39 5 -21.39 5 -16.740000000000002 C 5 -14.88 5 -11.16 5 -9.3 C 5.7 -10.881 6.3 -12.369000000000002 7 -13.950000000000001 C 9 -18.6 14 -16.740000000000002 13 -12.09 C 12.3 -8.370000000000001 11.7 -4.65 11 -0.93 C 10 4 8 9 4 11",
+                "transform": "translate(34 183) rotate(-4) scale(-1 1)",
+                "id": "cana-left-palm"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "tag": "g",
+          "attributes": {
+            "data-limb": "resting",
+            "transform": "translate(87.2 -207.4) scale(2.6)",
+            "fill": "none",
+            "stroke": "#fff9fc",
+            "stroke-width": "3.7",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+            "id": "cana-resting-hand-group"
+          },
+          "children": [
+            {
+              "tag": "path",
+              "attributes": {
+                "data-arm": "right",
+                "d": "M 175 194 C 203 206 178.9748340336336 212.25224708266003 180.02910105771258 212.47252200619798",
+                "id": "cana-right-arm"
+              },
+              "children": []
+            },
+            {
+              "tag": "path",
+              "attributes": {
+                "data-palm": "right",
+                "d": "M -4 11 C -8 9 -11 4 -12 0 C -15 -3.72 -13 -7.44 -10 -6.510000000000001 C -7 -5.58 -7 -2.79 -5 -1.86 C -5 -4.65 -6 -7.44 -5 -9.3 C -3 -12.09 0 -11.16 0 -8.370000000000001 C 0 -6.510000000000001 0 -4.65 0 -3.72 C 1 -5.58 2 -7.44 3 -8.370000000000001 C 5 -10.23 8 -8.370000000000001 7 -5.58 C 6 -3.72 6 -2.79 5 -1.86 C 7 -3.72 9 -4.65 11 -2.79 C 13 -0.93 11 3 9 5 C 8 7 7 9 6 10 C 5 10.5 4.5 10.8 4 11",
+                "transform": "translate(178 224) rotate(170) scale(-1 1)",
+                "id": "cana-right-palm"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "text",
+      "attributes": {
+        "x": "434",
+        "y": "676",
+        "font-family": "system-ui, sans-serif",
+        "font-size": "32",
+        "fill": "#f1f7ee",
+        "text-anchor": "middle"
+      },
+      "children": [
+        "Ranca \u00b7 playful"
+      ]
+    },
+    {
+      "tag": "text",
+      "attributes": {
+        "x": "1191",
+        "y": "676",
+        "font-family": "system-ui, sans-serif",
+        "font-size": "32",
+        "fill": "#f1f7ee",
+        "text-anchor": "middle"
+      },
+      "children": [
+        "Cana \u00b7 sassy"
+      ]
+    }
+  ]
+}

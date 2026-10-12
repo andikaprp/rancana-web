@@ -1,4 +1,4 @@
-name: Single lash-free Cana study
+name: Cana white downward lashes review
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
@@ -13,10 +13,10 @@ jobs:
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: cana-lash-free-study
-          path: review-evidence/cana-lash-free-study/
+          name: cana-white-lower-lashes-review
+          path: review-evidence/cana-white-lower-lashes/
           if-no-files-found: error
-  verify-study:
+  verify-review:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -27,11 +27,11 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: |
-          python3 review-evidence/cana-lash-free-study/build.py
-          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-lash-free-server.log 2>&1 &
-          node check-cana-lash-free-study.mjs
+          python3 review-evidence/cana-white-lower-lashes/build.py
+          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-white-lash-server.log 2>&1 &
+          node check-cana-white-lower-lashes.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cana-lash-free-study-ci
-          path: review-evidence/cana-lash-free-study/
+          name: cana-white-lower-lashes-ci
+          path: review-evidence/cana-white-lower-lashes/

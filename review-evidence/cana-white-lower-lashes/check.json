@@ -1,0 +1,171 @@
+{
+  "rancaLashes": 0,
+  "canaLashes": 12,
+  "canaPathCount": 19,
+  "eyes": [
+    {
+      "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+      "eyeTransform": "translate(72 167)",
+      "lashColor": "#fff9fc",
+      "lashStroke": "none",
+      "noBrows": true,
+      "strokes": [
+        {
+          "rootX": -5.48,
+          "attachmentDistance": 0.0020075235454791274,
+          "downwardLength": 4.6,
+          "sidewaysCurve": -1.6499999999999995,
+          "softTipCap": true,
+          "widths": [
+            1.0499989718090208,
+            0.6953906278128847,
+            0.24000182999302277
+          ]
+        },
+        {
+          "rootX": -2.44,
+          "attachmentDistance": 0.0014985329351702712,
+          "downwardLength": 5.3,
+          "sidewaysCurve": -1.0500000000000003,
+          "softTipCap": true,
+          "widths": [
+            1.049995891230056,
+            0.7117254667531578,
+            0.24000538160632992
+          ]
+        },
+        {
+          "rootX": 0.6,
+          "attachmentDistance": 0.0006499025559195823,
+          "downwardLength": 5.9,
+          "sidewaysCurve": -0.39999999999999997,
+          "softTipCap": true,
+          "widths": [
+            1.0500083955854833,
+            0.7210142947438699,
+            0.2400010416644061
+          ]
+        },
+        {
+          "rootX": 4.4,
+          "attachmentDistance": 0.0018725051944981257,
+          "downwardLength": 5.800000000000001,
+          "sidewaysCurve": 0.39999999999999947,
+          "softTipCap": true,
+          "widths": [
+            1.0499928140706485,
+            0.7209598649890293,
+            0.23999442743530466
+          ]
+        },
+        {
+          "rootX": 7.4399999999999995,
+          "attachmentDistance": 0.0022773234967817723,
+          "downwardLength": 5.199999999999999,
+          "sidewaysCurve": 1.0500000000000007,
+          "softTipCap": true,
+          "widths": [
+            1.049998359046337,
+            0.7113807028588841,
+            0.23999163068740556
+          ]
+        },
+        {
+          "rootX": 10.48,
+          "attachmentDistance": 0.0017716397333337615,
+          "downwardLength": 4.3999999999999995,
+          "sidewaysCurve": 1.6499999999999986,
+          "softTipCap": true,
+          "widths": [
+            1.0500090858654503,
+            0.6936303354453286,
+            0.23999194403146093
+          ]
+        }
+      ]
+    },
+    {
+      "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+      "eyeTransform": "translate(117 166)",
+      "lashColor": "#fff9fc",
+      "lashStroke": "none",
+      "noBrows": true,
+      "strokes": [
+        {
+          "rootX": -9.16,
+          "attachmentDistance": 0.001650284044737274,
+          "downwardLength": 4.6000000000000005,
+          "sidewaysCurve": -1.6499999999999986,
+          "softTipCap": true,
+          "widths": [
+            1.0499989718090217,
+            0.6953906278128847,
+            0.24000182999302277
+          ]
+        },
+        {
+          "rootX": -5.48,
+          "attachmentDistance": 0.00008388299605671936,
+          "downwardLength": 5.300000000000001,
+          "sidewaysCurve": -1.049999999999999,
+          "softTipCap": true,
+          "widths": [
+            1.0499958912300569,
+            0.7117254667531578,
+            0.24000538160632942
+          ]
+        },
+        {
+          "rootX": -1.7999999999999998,
+          "attachmentDistance": 0.0007956472427651819,
+          "downwardLength": 5.9,
+          "sidewaysCurve": -0.40000000000000036,
+          "softTipCap": true,
+          "widths": [
+            1.0500083955854829,
+            0.7210142947438697,
+            0.24000104166440603
+          ]
+        },
+        {
+          "rootX": 2.8,
+          "attachmentDistance": 0.00032551741013410506,
+          "downwardLength": 5.8,
+          "sidewaysCurve": 0.40000000000000036,
+          "softTipCap": true,
+          "widths": [
+            1.049992814070649,
+            0.7209598649890298,
+            0.23999442743530516
+          ]
+        },
+        {
+          "rootX": 6.48,
+          "attachmentDistance": 0.00038543080944500747,
+          "downwardLength": 5.2,
+          "sidewaysCurve": 1.0499999999999998,
+          "softTipCap": true,
+          "widths": [
+            1.049998359046337,
+            0.711380702858885,
+            0.23999163068740542
+          ]
+        },
+        {
+          "rootX": 10.16,
+          "attachmentDistance": 0.0011760415288892788,
+          "downwardLength": 4.3999999999999995,
+          "sidewaysCurve": 1.6499999999999986,
+          "softTipCap": true,
+          "widths": [
+            1.0500090858654503,
+            0.6936303354453285,
+            0.23999194403146093
+          ]
+        }
+      ]
+    }
+  ],
+  "svgHtmlPixelIdentical": true,
+  "pageErrors": []
+}
