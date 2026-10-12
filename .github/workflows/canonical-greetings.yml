@@ -1,11 +1,20 @@
-name: Canonical full-character greeting review
+name: Canonical full-character pose review
 on:
   push:
-    branches: [review/canonical-greetings-20261012]
+    branches: [review/canonical-character-poses-20261012]
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
+  first-pose-sheet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: first-full-character-pose-sheet
+          path: review-evidence/character-poses/first-review-sheet.png
   isolated-greetings:
     runs-on: ubuntu-latest
     timeout-minutes: 12
