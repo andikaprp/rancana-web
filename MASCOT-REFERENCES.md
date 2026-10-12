@@ -1,10 +1,10 @@
 # Ranca and Cana: current design instructions
 
-The latest user corrections are from 12 October 2026, 09:46 UTC: revise ONLY Cana’s lash distribution from d1d034f. Use three separated short curved lashes across each upper eye line, from inner/middle to outer, readable at normal display. Keep fine weight and avoid a dense comb, spikes or separate eyebrows. These override earlier preview interpretations.
+The latest user corrections are from 12 October 2026, 10:55 UTC: revise ONLY Cana’s lashes from e488ad4 toward the approved flowing, tapered reference direction. Use fewer lighter curved strokes with smooth sideways sweep and fine tapered tips, visible at normal display. Preserve the minimal white eye lines and avoid dense lashes, uniform spikes, eyebrows or eye creases. These override earlier preview interpretations.
 
 GREEN RANCA represents the BOY: masculine, fun, happy and playful. His eyes are simple expressive curved WHITE LINES, now 25% wider than a4bde1c, with NO EYEBROWS and NO LASHES. Do not use open oval eye shapes, pupils or realistic eye details. Keep his cheerful mouth and selected open active hand posture.
 
-PINK CANA represents the GIRL: clearly feminine in eye styling and attitude while remaining sassy/confident. Her eyes also use simple WHITE LINES, with elegant winged lines and three separated short curved lashes distributed across each upper lid (fine 1.4 stroke weight, unchanged from d1d034f) and an asymmetric expression, with NO SEPARATE EYEBROWS. Keep the restrained smirk. Preserve the distinct asymmetric pink body; do not replace it with a recolored Ranca silhouette.
+PINK CANA represents the GIRL: clearly feminine in eye styling and attitude while remaining sassy/confident. Her eyes also use simple WHITE LINES, with elegant winged lines and two separated sweeping lashes per upper lid, with a fine variable-width contour that narrows smoothly to a tip and an asymmetric expression, with NO SEPARATE EYEBROWS. Keep the restrained smirk. Preserve the distinct asymmetric pink body; do not replace it with a recolored Ranca silhouette.
 
 Cana is only slightly smaller than Ranca. Use approximately 90% of Ranca's visible BODY HEIGHT through uniform scaling, preserving the original aspect ratio and naturally wider Cana shape. The 50% interpretation in 72c33b7 was rejected. The older 94% instruction is also superseded by the current approximately 90% comparison.
 
@@ -27,7 +27,9 @@ Prop-free previews use the existing `assets/mascots/poses/ranca-body.webp` and `
 
 ## Current review scope
 
-The current comparison shows exact `d1d034f` as the previous preview. Only Cana’s two lash paths change: three separate curved strokes per eye attach to the upper lid and span roughly 73–74% of its width, instead of clustering at its outside edge. The fine 1.4 stroke weight is unchanged. All other rendered artwork is identical, including both main eye lines, both bodies, all arms/hands, mouths, face placement, Ranca’s longer eyes and Cana’s 90% body-height scale. Neither character has eyebrows.
+The current comparison shows exact `e488ad4` as the previous preview. Only Cana’s two lash path elements change: each now contains two light curved tapered contours, replacing three upright uniform-width strokes. Main eyelid paths remain unchanged. Each lash attaches to its original lid, sweeps sideways, then curves upward to a fine tip. Taper is represented by editable filled white vector contours: approximately 1.7 units at the attached base, 1.04 at the middle, and zero at the tip. All other artwork is identical, including Ranca, hands/arms, bodies, mouths, face placement and Cana’s 90% height. Neither character has eyebrows.
+
+The approved curvature/spacing direction came from the supplied Fleischer Studios reference: https://images.squarespace-cdn.com/content/v1/69836b50ccc47d6e999702a9/7e3bf6fe-23fd-4135-8d86-d2c4f89cbda4/BB%2B4%2BJeni.jpg?format=1000w . The executor’s direct image download returned HTTP 403, so this revision follows the approved descriptive direction. Preserve Cana’s own identity and minimal artwork.
 
 The editable handoff is in `review-evidence/no-brow-editable-bundle/`: named SVG face/hand paths, unchanged body WebPs, React source, self-contained HTML, clean PNG and labeled close-ups. Body textures remain raster images. MagicPath quota denial remains a parent-reported blocker; do not attempt another import. Updating these files does not complete that import.
 

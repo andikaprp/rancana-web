@@ -50,7 +50,7 @@ code+='    </svg>\n  );\n}\n'
 (root/'RancaCana.jsx').write_text(code)
 embedded=code.replace('"assets/ranca-body.webp"',json.dumps(bodydata['ranca'])).replace('"assets/cana-body.webp"',json.dumps(bodydata['cana']))
 (root/'RancaCana.embedded.jsx').write_text(embedded)
-manifest={'basedOn':'d1d034f3294b08770c20005eae416b16e43f516f','change':'Redistribute Cana lashes into three separated curved strokes along each upper eye line; retain fine 1.4 stroke weight; all other artwork unchanged','canaBodyHeightRatio':.9,'editableVectors':{},'rasterBodies':{},'entrypoints':{'react':'RancaCana.jsx','reactSelfContained':'RancaCana.embedded.jsx','htmlPreview':'preview.html','svgPair':'RancaCana.svg','layerTree':'editable-layers.json','normalSizePair':'Ranca-Cana-normal-size.png','canaLashCloseup':'Cana-lashes-closeup.png'}}
+manifest={'basedOn':'e488ad405c1d072e91e75ffb4466713de9ba097f','change':'Replace only Cana lashes with two light sweeping tapered curves per eye; all other artwork unchanged','canaBodyHeightRatio':.9,'editableVectors':{},'rasterBodies':{},'entrypoints':{'react':'RancaCana.jsx','reactSelfContained':'RancaCana.embedded.jsx','htmlPreview':'preview.html','svgPair':'RancaCana.svg','layerTree':'editable-layers.json','normalSizePair':'Ranca-Cana-normal-size.png','canaLashCloseup':'Cana-lashes-closeup.png'}}
 for k,c in characters.items():
  manifest['editableVectors'][k]=[n['attributes'].get('id') for n in walk(c) if n['tag']=='path']
  body=root/'assets'/(k+'-body.webp');manifest['rasterBodies'][k]={'file':'assets/'+body.name,'sha256':hashlib.sha256(body.read_bytes()).hexdigest(),'dimensions':[741,532] if k=='ranca' else [745,528]}

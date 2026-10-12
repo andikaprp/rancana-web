@@ -1,52 +1,106 @@
 {
-  "comparisonBase": "d1d034f3294b08770c20005eae416b16e43f516f",
+  "comparisonBase": "e488ad405c1d072e91e75ffb4466713de9ba097f",
   "characters": {
     "ranca": {
-      "beforeMatchesExactD1d034f": true,
+      "beforeMatchesExactE488ad4": true,
       "allOtherArtworkUnchanged": true,
       "noBrows": true,
-      "lashCount": 0,
+      "lashPathCount": 0,
       "lashDetails": []
     },
     "cana": {
-      "beforeMatchesExactD1d034f": true,
+      "beforeMatchesExactE488ad4": true,
       "allOtherArtworkUnchanged": true,
       "noBrows": true,
-      "lashCount": 2,
+      "lashPathCount": 2,
       "lashDetails": [
         {
-          "strokeWidth": 1.4,
-          "curvedStrokes": 3,
-          "rootDistances": [
-            0.0006361401501983905,
-            0.00016019031185494892,
-            0.0016770815661687293
-          ],
-          "rootSpanFraction": 0.7283157894736842,
-          "minimumRootSpacing": 6.512742059992856,
-          "rise": [
-            6.628,
-            6.3875,
-            5.278
-          ],
-          "changed": true
+          "fill": "#fff9fc",
+          "stroke": "none",
+          "curvedTaperedStrokes": 2,
+          "rootSpacing": 9.698110133422905,
+          "ribbons": [
+            {
+              "cubicEdges": 2,
+              "root": [
+                -4.3632,
+                -2.808
+              ],
+              "rootDistance": 0.00009947288514289301,
+              "widths": [
+                1.699997780351492,
+                1.480380253378525,
+                1.0556027962880974,
+                0.5330872991814141,
+                0
+              ],
+              "curveDeviation": 1.3025266561571789,
+              "rise": 7.5920000000000005,
+              "sideSweep": 7.436800000000001
+            },
+            {
+              "cubicEdges": 2,
+              "root": [
+                5.267200000000001,
+                -3.952
+              ],
+              "rootDistance": 0.0001771676475345609,
+              "widths": [
+                1.6999951826990565,
+                1.4719017548092823,
+                1.0413920506376302,
+                0.5256444026655414,
+                0
+              ],
+              "curveDeviation": 1.4899434687262472,
+              "rise": 7.348000000000001,
+              "sideSweep": 6.267200000000001
+            }
+          ]
         },
         {
-          "strokeWidth": 1.4,
-          "curvedStrokes": 3,
-          "rootDistances": [
-            0.00013620915981213524,
-            0.0005734743436292961,
-            0.0024052262923349543
-          ],
-          "rootSpanFraction": 0.7419304347826087,
-          "minimumRootSpacing": 8.512824020264956,
-          "rise": [
-            4.979999999999999,
-            6.356799999999999,
-            7.0088
-          ],
-          "changed": true
+          "fill": "#fff9fc",
+          "stroke": "none",
+          "curvedTaperedStrokes": 2,
+          "rootSpacing": 12.8223449980883,
+          "ribbons": [
+            {
+              "cubicEdges": 2,
+              "root": [
+                -5.0625,
+                -3.625
+              ],
+              "rootDistance": 0.0007820378348993331,
+              "widths": [
+                1.6999969770561356,
+                1.4643194476568735,
+                1.031645110157801,
+                0.5204435990817778,
+                0
+              ],
+              "curveDeviation": 1.4564553570333871,
+              "rise": 7.275,
+              "sideSweep": 4.7625
+            },
+            {
+              "cubicEdges": 2,
+              "root": [
+                7.5600000000000005,
+                -5.88
+              ],
+              "rootDistance": 0.0014067628402849408,
+              "widths": [
+                1.7000034919964138,
+                1.4756791043184383,
+                1.0424064840370564,
+                0.5244329178773198,
+                0
+              ],
+              "curveDeviation": 1.8801678781428,
+              "rise": 8.620000000000001,
+              "sideSweep": 7.9399999999999995
+            }
+          ]
         }
       ]
     }
