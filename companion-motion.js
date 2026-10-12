@@ -83,6 +83,8 @@
     addScene(row, 'hide-seek', 18000,
       [actor(images[0], 'ranca', 'hide-seek'), actor(images[1], 'cana', 'hide-seek')], [row], word);
   }
+  const audience=document.querySelector('.audience-grid');
+  if(audience){const images=audience.querySelectorAll('.audience-icon');if(images.length===2)addScene(audience,'audience',14000,[actor(images[0],'ranca','audience'),actor(images[1],'cana','audience')],[audience]);}
   if (!scenes.length) return;
 
   function addScene(root, name, duration, actors, targets, word) {
@@ -129,6 +131,11 @@
       [6300 + delay, gesture(1, -1, 2), 'settle2'],
       [6500 + delay, neutral, 'ready'], [11000, neutral, 'ready']
     ];
+  }
+
+  function audienceTrack(green) {
+    const delay=green?0:500;
+    return [[0,neutral,'ready'],[1200+delay,neutral,'ready'],[2200+delay,'translateY(-2%) rotate(-3deg)','wave'],[3900+delay,'translateY(-2%) rotate(2deg)','wave'],[5100+delay,neutral,'ready'],[8500+delay,neutral,'read'],[9900+delay,neutral,'blink'],[10300+delay,neutral,'ready'],[14000,neutral,'ready']];
   }
 
   function glyphCenters(scene) {
@@ -209,7 +216,7 @@
     const glyphs = scene.word ? glyphCenters(scene) : null;
     scene.tracks = scene.actors.map(item => scene.word
       ? footerTrack(item, glyphs, item.character === 'ranca')
-      : heroTrack(item.character === 'ranca'));
+      : scene.name==='audience' ? audienceTrack(item.character === 'ranca') : heroTrack(item.character === 'ranca'));
     scene.actors.forEach((item, index) => {
       const keyframes = scene.tracks[index].map(([time, transform]) =>
         ({ offset: time / scene.duration, transform, easing: ease }));
@@ -226,7 +233,7 @@
   }
 
   function setPose(item, pose, originalOnly = false, time = 0, context = {}) {
-    if (item.rig && !originalOnly) {
+    if (item.rig) {
       try {
         // One shared native scene clock drives both body movement and vector
         // articulation. Interpolation also works after deterministic seeks/resizes.
@@ -293,7 +300,7 @@
         nextPose: next[2], progress
       });
     });
-    const phase = scene.name === 'present'
+    const phase = scene.name === 'audience' ? 'greeting' : scene.name === 'present'
       ? (time < 1400 || time >= 6850 ? 'ready' : 'present')
       : time < 600 || time >= 16800 ? 'ready'
       : time < 5600 ? 'ranca-searches' : time < 7700 ? 'found'

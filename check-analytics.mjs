@@ -65,6 +65,7 @@ try {
   // Trusted click dispatch in Chromium; abort only its destination, never delay navigation for analytics.
   await s.context.route('https://play.google.com/**',route=>route.abort());
   const play=s.page.locator('.hero-ctas a[href*="play.google.com"]').first();
+  await play.evaluate(a=>a.addEventListener('click',e=>e.preventDefault())); // Keep this analytics assertion isolated from outbound navigation.
   await play.click({noWaitAfter:true});await s.settle();
   check(s.events.filter(x=>x[1]==='google_play_click').length,1);
   check(s.events.at(-1)[2].link_destination,'google_play');check(s.events.at(-1)[2].link_placement,'hero');
