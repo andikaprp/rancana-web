@@ -1,0 +1,90 @@
+{
+  "options": [
+    {
+      "option": "A",
+      "images": 0,
+      "eyelids": 2,
+      "paths": 4,
+      "actualPixelWidth": 146.96875,
+      "closeupMatches": true,
+      "eyes": [
+        {
+          "side": "left",
+          "baselineLevel": true,
+          "rotationAbsent": true,
+          "depth": 1.2999999523162842,
+          "lineOnly": true,
+          "taperedLashContours": 2
+        },
+        {
+          "side": "right",
+          "baselineLevel": true,
+          "rotationAbsent": true,
+          "depth": 1.5,
+          "lineOnly": true,
+          "taperedLashContours": 2
+        }
+      ]
+    },
+    {
+      "option": "B",
+      "images": 0,
+      "eyelids": 2,
+      "paths": 4,
+      "actualPixelWidth": 146.96875,
+      "closeupMatches": true,
+      "eyes": [
+        {
+          "side": "left",
+          "baselineLevel": true,
+          "rotationAbsent": true,
+          "depth": 0.75,
+          "lineOnly": true,
+          "taperedLashContours": 1
+        },
+        {
+          "side": "right",
+          "baselineLevel": true,
+          "rotationAbsent": true,
+          "depth": 1,
+          "lineOnly": true,
+          "taperedLashContours": 1
+        }
+      ]
+    },
+    {
+      "option": "C",
+      "images": 0,
+      "eyelids": 2,
+      "paths": 4,
+      "actualPixelWidth": 146.96875,
+      "closeupMatches": true,
+      "eyes": [
+        {
+          "side": "left",
+          "baselineLevel": true,
+          "rotationAbsent": true,
+          "depth": 1.600000023841858,
+          "lineOnly": true,
+          "taperedLashContours": 2
+        },
+        {
+          "side": "right",
+          "baselineLevel": true,
+          "rotationAbsent": true,
+          "depth": 1.2999999523162842,
+          "lineOnly": true,
+          "taperedLashContours": 2
+        }
+      ]
+    }
+  ],
+  "fullPairFilesUnchanged": [
+    "review-evidence/selected-gesture-review/review.js",
+    "review-evidence/no-brow-editable-bundle/Ranca-Cana-normal-size.png",
+    "review-evidence/no-brow-editable-bundle/Ranca-Cana-no-brows.png",
+    "review-evidence/no-brow-editable-bundle/RancaCana.svg",
+    "review-evidence/no-brow-editable-bundle/RancaCana.jsx"
+  ],
+  "pageErrors": []
+}

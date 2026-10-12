@@ -1,3 +1,9 @@
+# REJECTED — historical full-face preview
+
+The user explicitly rejected commit `c598c91f7c3a65e56ff5a327d8f544e1d0488339`: “oh god this is worse”. This bundle is retained only as historical evidence. Do not apply it or regenerate a full pair. Current work is the unselected eye-only A/B/C strip in `review-evidence/cana-eye-sketches/`.
+
+---
+
 # Ranca and Cana: editable no-brow handoff
 
 This revises only Cana’s eye/lash orientation from `12db3276be39c5d2fe391e09d2d3be51121aa9c7`. The left eye and its lashes now sweep outward left; the right eye and its lashes sweep outward right. The left remains shorter and more gently tilted to preserve her sassy asymmetry. Both keep two light curved tapered lashes. No eyebrows.

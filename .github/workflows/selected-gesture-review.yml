@@ -1,4 +1,4 @@
-name: Paired outward Cana eyes review
+name: Cana eye-only sketch review
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
@@ -6,17 +6,17 @@ on:
 permissions:
   contents: read
 jobs:
-  early-still:
+  early-sketches:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: ranca-cana-no-brows-editable
-          path: review-evidence/no-brow-editable-bundle/
+          name: cana-eye-only-abc-sketches
+          path: review-evidence/cana-eye-sketches/
           if-no-files-found: error
-  verify-comparison:
+  verify-sketches:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -27,15 +27,11 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: |
-          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/selected-gesture-server.log 2>&1 &
-          node check-selected-gesture-review.mjs
-          node export-no-brow-bundle.mjs
-          python3 review-evidence/selected-gesture-review/package-no-brow.py
-          node check-no-brow-bundle.mjs
+          python3 review-evidence/cana-eye-sketches/build.py
+          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-eye-sketch-server.log 2>&1 &
+          node check-cana-eye-sketches.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ranca-cana-no-brows-ci
-          path: |
-            review-evidence/no-brow-editable-bundle/
-            review-evidence/selected-gesture-output/
+          name: cana-eye-only-abc-ci
+          path: review-evidence/cana-eye-sketches/

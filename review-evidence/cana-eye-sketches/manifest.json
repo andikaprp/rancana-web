@@ -1,0 +1,50 @@
+{
+  "status": "Unselected eye-only sketches",
+  "rejectedFullPair": "c598c91f7c3a65e56ff5a327d8f544e1d0488339",
+  "scope": "Eyes only; no body, hands, mouth, scale or full-pair rendering changes",
+  "actualSizeScale": 1.814516129032258,
+  "referenceInspection": "Direct reference image download returned HTTP 403 in the previous task; actual image has not been visually inspected. These are description-guided alternatives, not a claimed match.",
+  "options": [
+    {
+      "id": "A",
+      "label": "Two soft curls",
+      "depths": [
+        1.3,
+        1.5
+      ],
+      "roots": [
+        -7,
+        1.5
+      ],
+      "sweep": 4.4,
+      "rise": 4.8
+    },
+    {
+      "id": "B",
+      "label": "One quiet sweep",
+      "depths": [
+        0.75,
+        1.0
+      ],
+      "roots": [
+        -5
+      ],
+      "sweep": 6.5,
+      "rise": 5.2
+    },
+    {
+      "id": "C",
+      "label": "Low flowing wisps",
+      "depths": [
+        1.6,
+        1.3
+      ],
+      "roots": [
+        -7,
+        2
+      ],
+      "sweep": 5.2,
+      "rise": 4.4
+    }
+  ]
+}
