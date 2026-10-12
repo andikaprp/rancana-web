@@ -1,0 +1,15 @@
+{
+  "sampledTimes": 101,
+  "points": 227045,
+  "minimumAlpha": 255,
+  "selfContained": true,
+  "normalPlayback": true,
+  "repeatedVisibilityCycles": 4,
+  "reducedMotion": true,
+  "responsiveWidths": [
+    320,
+    390,
+    1440
+  ],
+  "pageErrors": []
+}

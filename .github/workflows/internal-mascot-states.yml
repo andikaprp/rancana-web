@@ -1,0 +1,37 @@
+name: Five internal-hand mascot states
+on:
+  push:
+    branches: [review/internal-mascot-states-20261012]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  early-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: five-internal-hand-states-review
+          path: review-evidence/internal-states-output/
+  check-states:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 review-evidence/internal-states/package.py
+          python3 -m http.server 8138 --bind 127.0.0.1 > /tmp/internal-states-server.log 2>&1 &
+          node check-internal-states.mjs
+          node check-state-transitions.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: five-internal-hand-states-ci
+          path: review-evidence/internal-states-output/

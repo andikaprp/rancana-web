@@ -1,0 +1,79 @@
+{
+  "scope": "Five coordinated states, still review",
+  "pageErrors": [],
+  "allHandStrokesInsideOpaqueBody": true,
+  "results": [
+    {
+      "character": "ranca",
+      "state": "Greeting",
+      "minimumAlpha": 255,
+      "samples": 2670
+    },
+    {
+      "character": "ranca",
+      "state": "Thinking",
+      "minimumAlpha": 255,
+      "samples": 2895
+    },
+    {
+      "character": "ranca",
+      "state": "Presenting",
+      "minimumAlpha": 255,
+      "samples": 2620
+    },
+    {
+      "character": "ranca",
+      "state": "Surprised",
+      "minimumAlpha": 255,
+      "samples": 2710
+    },
+    {
+      "character": "ranca",
+      "state": "Playful",
+      "minimumAlpha": 255,
+      "samples": 2835
+    },
+    {
+      "character": "cana",
+      "state": "Greeting",
+      "minimumAlpha": 255,
+      "samples": 2835
+    },
+    {
+      "character": "cana",
+      "state": "Thinking",
+      "minimumAlpha": 255,
+      "samples": 2975
+    },
+    {
+      "character": "cana",
+      "state": "Presenting",
+      "minimumAlpha": 255,
+      "samples": 2825
+    },
+    {
+      "character": "cana",
+      "state": "Surprised",
+      "minimumAlpha": 255,
+      "samples": 2870
+    },
+    {
+      "character": "cana",
+      "state": "Playful",
+      "minimumAlpha": 255,
+      "samples": 2950
+    },
+    {
+      "character": "ranca",
+      "state": "Greeting",
+      "minimumAlpha": 255,
+      "samples": 2670
+    },
+    {
+      "character": "cana",
+      "state": "Greeting",
+      "minimumAlpha": 255,
+      "samples": 2835
+    }
+  ]
+}
