@@ -73,7 +73,7 @@ export function createMascot(character,{smallCana=true,sunglasses=false}={}){
  const eyes=['left','right'].map(side=>face.querySelector(`[data-source-id="${character}-${side}-eye-group"]`));
  let eyeModels;
  if(!green){const shapes=faceShapes();eyeModels=eyes.map((g,i)=>{g.replaceChildren();const white=element('path',{fill:'#fff9fc',stroke:'none'},g),lid=element('path',{fill:'none',stroke:'#fff9fc','stroke-width':3.7,'stroke-linecap':'round'},g);const lashes=element('g',{'data-lashes':i?'right':'left',fill:'none',stroke:'#fff9fc','stroke-width':.95,'stroke-linecap':'round','stroke-linejoin':'round'},g);return{g,white,lid,lashes:[0,1,2].map(j=>element('path',{'data-lash':j+1},lashes)),shapes:shapes[i]};});}
- const hands=['left','right'].map((side,i)=>{const color=green?'#f6fff8':'#fff9fc';const g=element('g',{'data-companion-hand':side,'data-art-part':'hand-'+side,class:'rig-hand-'+side,fill:'none',stroke:color,'stroke-width':green?9.36:9.62,'stroke-linecap':'round','stroke-linejoin':'round'},placement);const arm=element('path',{'data-arm':side},g),hand=element('path',{'data-palm':side,'stroke-width':green?3.6:3.7},g);const open=find(source,`${character}-left-palm`).attributes.d,rest=find(source,`${character}-right-palm`).attributes.d;return{g,arm,hand,open,rest,openPoints:points(open),restPoints:points(rest),root:green?(i?[568,306]:[240,312]):(i?[550,299]:[222,307])};});
+ const hands=['left','right'].map((side,i)=>{const color=green?'#f6fff8':'#fff9fc';const g=element('g',{'data-companion-hand':side,'data-art-part':'hand-'+side,class:'rig-hand-'+side,fill:'none',stroke:color,'stroke-width':green?9.36:9.62,'stroke-linecap':'round','stroke-linejoin':'round'},placement);const arm=element('path',{'data-arm':side},g),hand=element('path',{'data-palm':side,'data-wrist-join':'outer-thumb','data-gap':'inner-wrist','stroke-width':green?3.6:3.7},g);const open=find(source,`${character}-left-palm`).attributes.d,rest=find(source,`${character}-right-palm`).attributes.d;return{g,arm,hand,open,rest,openPoints:points(open),restPoints:points(rest),root:green?(i?[568,306]:[240,312]):(i?[550,299]:[222,307])};});
  function setPose(pose='ready',time=0,context={}){
   const a=posture(character,pose),b=posture(character,context.nextPose||pose),t=ease(clamp(context.progress||0)),closed=Math.max(mix(a.closed,b.closed,t),clamp(context.blink||0)),sassy=mix(a.sassy,b.sassy,t),cover=mix(a.cover,b.cover,t),gaze=a.gaze.map((v,i)=>mix(v,b.gaze[i],t));
   face.setAttribute('transform',faceTree.attributes.transform+` translate(${gaze[0]} ${gaze[1]})`);
@@ -85,8 +85,10 @@ export function createMascot(character,{smallCana=true,sunglasses=false}={}){
   });
   hands.forEach(({arm,hand,root,open,rest,openPoints,restPoints},i)=>{
    const key=i?'right':'left',[x,y,angle,flex,bx,by]=a[key].map((v,j)=>j===2?v+(((b[key][j]-v+540)%360)-180)*t:mix(v,b[key][j],t)),rad=angle*Math.PI/180;
-   // The palm's connected wrist endpoint is (4,11), after the selected mirrored orientation.
-   const ex=x+2.6*(-4*Math.cos(rad)-11*Math.sin(rad)),ey=y+2.6*(-4*Math.sin(rad)+11*Math.cos(rad));
+   // Outer contour starts at (-4,11), flows into thumb and three fingers,
+   // and ends at the inner palm (+4,11). Join the arm to the OUTER start;
+   // only the inner wrist joint stays open.
+   const ex=x+2.6*(4*Math.cos(rad)-11*Math.sin(rad)),ey=y+2.6*(4*Math.sin(rad)+11*Math.cos(rad));
    // Two tangent-continuous segments describe upper arm and forearm. The
    // wrist approaches along the palm axis, so the hand cannot appear detached.
    const tx=(ex-root[0])*.16,ty=(ey-root[1])*.16;

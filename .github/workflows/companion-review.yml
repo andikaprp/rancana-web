@@ -15,7 +15,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
-          ref: b66fcb0bb67e6f69524ec0a88d65a917417b8756
+          ref: 9692a9a83f49cbf701f1651327d3ec862e220c7c
           path: .mascot-main-baseline
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -25,6 +25,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: node scripts/export-mascot-assets.mjs && git diff --exit-code -- assets/mascots/selected-A assets/mascots/ranca-header.svg
+      - run: cp REVIEW-CHECKLIST.md review-evidence/selected-A-website/REVIEW-CHECKLIST.md
       - run: node scripts/capture-mascot-comparison.mjs --baseline=.mascot-main-baseline
       - uses: actions/upload-artifact@v4
         with:
@@ -32,6 +33,7 @@ jobs:
           path: |
             review-evidence/selected-A-website/before/
             review-evidence/selected-A-website/after/
+      - run: node check-static-mascot-review.mjs --baseline=.mascot-main-baseline
       - run: node check-selected-website-mascots.mjs
       - run: python3 scripts/package-mascot-preview.py
       - uses: actions/upload-artifact@v4

@@ -15,11 +15,11 @@ try{
   assert.equal(await page.locator('[data-companion-scene]').count(),4);assert.equal(await page.locator('.brand-mark [data-mascot-identity="ranca"]').count(),1);assert.equal(await page.locator('[data-brow],.rig-brow,[data-mascot-identity="cana"] [data-source-id*="brow"]').count(),0);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   if(width<900){assert.equal(await page.locator('.fc-mobile:visible').count(),1);assert.equal(await page.locator('.card-flashcards > .fc-front:visible,.card-flashcards > .fc-back:visible').count(),0);}
-  // The user's two preferred audience references are unchanged static images.
+  // Canonical bodies, hands and costumes stay unchanged; static SVGs replace only facial ink.
   const staticRefs=['ranca-backpack-option-3.webp','cana-academic-cap-option-3.webp'];
   for(const [i,file]of staticRefs.entries()){
    const icon=page.locator('.audience-icon').nth(i);
-   assert.ok((await icon.getAttribute('src')).endsWith(file));
+   assert.ok((await icon.getAttribute('src')).endsWith(i?'selected-A/cana-college.svg':'selected-A/ranca-school.svg'));
    assert.equal(await icon.evaluate(e=>e.parentElement.tagName==='ARTICLE'&&e.getAnimations({subtree:true}).length===0),true);
    assert.equal(crypto.createHash('sha256').update(await fs.readFile(path.join(root,'assets/mascots',file))).digest('hex'),i?'c97a6a2a5792b9905f04f85478b24468eeca6dc9331607c1583d80866da75775':'5dc88e3c525f530d7fd28df0c011ec4a3326f9ebb22f1ab1b6c4869ae704e1af');
   }
@@ -32,6 +32,7 @@ try{
   // Actual geometry across every transition must stay within each SVG canvas.
   for(const name of Object.keys(scenes))for(let time=0;time<scenes[name];time+=125){
    await seek(page,name,time);
+   const joins=await page.locator(`[data-companion-scene="${name}"] [data-companion-hand]`).evaluateAll(gs=>gs.map(g=>{const a=g.querySelector('[data-arm]'),p=g.querySelector('[data-palm]'),end=a.getPointAtLength(a.getTotalLength()),outer=p.getPointAtLength(0).matrixTransform(p.transform.baseVal.consolidate().matrix),inner=p.getPointAtLength(p.getTotalLength()).matrixTransform(p.transform.baseVal.consolidate().matrix);return Math.hypot(end.x-outer.x,end.y-outer.y)<.03&&Math.hypot(end.x-inner.x,end.y-inner.y)>15;}));assert.ok(joins.every(Boolean),'outer thumb contour joins continuously; inner wrist stays open');
    const geometry=await page.locator(`[data-companion-scene="${name}"] svg`).evaluateAll(els=>els.map(svg=>{const inv=svg.getScreenCTM().inverse();return [...svg.querySelectorAll('[data-companion-hand]')].map(g=>{const b=g.getBBox(),m=inv.multiply(g.getScreenCTM());return [[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]].map(([x,y])=>new DOMPoint(x,y).matrixTransform(m)).every(p=>p.x>=4&&p.y>=4&&p.x<=svg.viewBox.baseVal.width-4&&p.y<=svg.viewBox.baseVal.height-4);});}));
    assert.ok(geometry.flat().every(Boolean),`${name} hands fit their viewport at ${time}`);
    if(name==='hide-seek'&&time>=1050&&time<=16100){const poses=await page.locator(`[data-companion-scene="${name}"] svg`).evaluateAll(els=>els.map(e=>e.dataset.mascotPose));assert.ok(poses.every(p=>p!=='ready'),'active hide-and-seek never resets to resting arms');}

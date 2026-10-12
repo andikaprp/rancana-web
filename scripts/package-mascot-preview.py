@@ -13,6 +13,7 @@ with zipfile.ZipFile(out/'selected-A-website-preview.zip','w',zipfile.ZIP_DEFLAT
  for directory in ['id','en','assets']:
   for p in sorted((root/directory).rglob('*')):
    if p.is_file():z.write(p,str(p.relative_to(root)))
+ z.write(root/'REVIEW-CHECKLIST.md','REVIEW-CHECKLIST.md')
  z.writestr('preview-server.mjs',server)
  z.writestr('BUILD.json',json.dumps({'commit':commit,'sourceSelection':'8336f9994ecdce986ab8603b5507d909700c5aa6','reviewOnly':True},indent=2))
  z.writestr('PREVIEW-README.txt','Run node preview-server.mjs, then open http://127.0.0.1:4173/id/ or /en/.\nThis is the draft website implementation. No deployment is required. The same local asset files and motion modules are used as the reviewed commit.\n')
