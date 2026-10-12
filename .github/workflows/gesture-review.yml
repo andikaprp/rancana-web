@@ -1,0 +1,78 @@
+name: Isolated gesture review
+on:
+  push:
+    branches: [review/dynamic-mascot-gestures-20261012]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gesture-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-gesture-review.mjs
+      - run: python3 build-gesture-gallery.py sunglasses
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-gesture-previews
+          path: review-evidence/gesture-review/
+  companion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-companion-motion.mjs
+        env: {COMPANION_REQUIRE_POSES: '1'}
+      - run: python3 build-gesture-gallery.py companion
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-companion-motion
+          path: review-evidence/companion-motion/
+  website:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-website-regressions
+          path: |
+            review-evidence/*.json
+            review-evidence/header*.png
+            review-evidence/header*.webm
+  mobile-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: d289e92315f601045326f72536178e117c27ea6f
+          path: .mobile-layout-baseline
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-mobile-layout.mjs --baseline=.mobile-layout-baseline
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-mobile-layout
+          path: review-evidence/mobile-layout/

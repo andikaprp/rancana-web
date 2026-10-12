@@ -83,6 +83,10 @@
     addScene(row, 'hide-seek', 18000,
       [actor(images[0], 'ranca', 'hide-seek'), actor(images[1], 'cana', 'hide-seek')], [row], word);
   }
+  // Review-only sunglasses stage; ordinary site pages retain their four actors.
+  const sunglasses = document.querySelector('[data-sunglasses-cana]');
+  if (sunglasses) addScene(sunglasses.parentElement, 'confidence', 10000,
+    [actor(sunglasses, 'cana', 'confidence')], [sunglasses.parentElement]);
   if (!scenes.length) return;
 
   function addScene(root, name, duration, actors, targets, word) {
@@ -115,7 +119,7 @@
     const direction = green ? 1 : -1;
     const delay = green ? 0 : 350;
     const gesture = (x, y, tilt, scale = 1) =>
-      `translate(${direction * x}%, ${y}%) rotate(${-direction * tilt}deg) scale(${scale})`;
+      `translate(${direction * x}%, ${y}%) rotate(${-direction * tilt * (green ? 1 : .65)}deg) scale(${scale})`;
     return [
       [0, neutral, 'ready'], [650 + delay, neutral, 'ready'],
       [800 + delay, gesture(.4, -.5, .7), 'lift1'],
@@ -128,6 +132,18 @@
       [6000 + delay, gesture(2, -2, 4), 'settle1'],
       [6300 + delay, gesture(1, -1, 2), 'settle2'],
       [6500 + delay, neutral, 'ready'], [11000, neutral, 'ready']
+    ];
+  }
+
+  function confidenceTrack() {
+    return [
+      [0,'rotate(-5deg)','cool'], [1300,'rotate(-5deg)','cool'],
+      [2400,'translate(1%, -2%) rotate(-8deg)','adjust'],
+      [3100,'translate(1%, -2%) rotate(-8deg)','adjust'],
+      [3800,'translate(2%, -1%) rotate(-3deg)','glance'],
+      [5100,'translate(2%, -1%) rotate(-3deg)','glance'],
+      [6000,'translate(1%, -2%) rotate(-7deg)','adjust'],
+      [7200,'rotate(-5deg)','cool'], [10000,'rotate(-5deg)','cool']
     ];
   }
 
@@ -209,7 +225,7 @@
     const glyphs = scene.word ? glyphCenters(scene) : null;
     scene.tracks = scene.actors.map(item => scene.word
       ? footerTrack(item, glyphs, item.character === 'ranca')
-      : heroTrack(item.character === 'ranca'));
+      : scene.name === 'confidence' ? confidenceTrack() : heroTrack(item.character === 'ranca'));
     scene.actors.forEach((item, index) => {
       const keyframes = scene.tracks[index].map(([time, transform]) =>
         ({ offset: time / scene.duration, transform, easing: ease }));
@@ -226,7 +242,7 @@
   }
 
   function setPose(item, pose, originalOnly = false, time = 0, context = {}) {
-    if (item.rig && !originalOnly) {
+    if (item.rig && (!originalOnly || item.element.dataset.companionScene === 'confidence')) {
       try {
         // One shared native scene clock drives both body movement and vector
         // articulation. Interpolation also works after deterministic seeks/resizes.
@@ -303,6 +319,8 @@
 
   function tick() {
     raf = 0;
+    // Recheck before painting too: a preference change may precede its event.
+    if (reduce.matches) { sync(); return; }
     for (const scene of scenes) if (scene.running) paintPoses(scene);
     if (scenes.some(scene => scene.running)) raf = requestAnimationFrame(tick);
   }
@@ -313,7 +331,7 @@
         for (const item of scene.actors) {
           item.animation?.cancel();
           item.animation = null;
-          setPose(item, 'ready', true);
+          setPose(item, scene.name === 'confidence' ? 'cool' : 'ready', true);
           item.element.dataset.companionMotion = reduce.matches ? 'reduced' : 'unsupported';
         }
         scene.running = false;
@@ -414,7 +432,7 @@
     await Promise.all(scenes.map(async scene => {
       await Promise.all(scene.actors.map(async item => {
         try {
-          const rig = await module.create(item.image, item.character);
+          const rig = await module.create(item.image, item.character, {accessory: scene.name === 'confidence' ? 'sunglasses' : null});
           if (!rig?.motionElement || typeof rig.setPose !== 'function' ||
               typeof rig.show !== 'function' || typeof rig.restoreOriginal !== 'function')
             throw new Error('Incomplete companion artwork renderer');

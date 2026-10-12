@@ -29,3 +29,5 @@ work/
 assets/social/SOURCES.txt
 
 tests/
+
+build-gesture-gallery.py

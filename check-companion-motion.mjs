@@ -10,7 +10,7 @@ import {chromium} from 'playwright';
 // claim any visual, lifecycle, or playback result until the real-page run passes.
 const root = path.dirname(fileURLToPath(import.meta.url));
 const out = path.join(root, 'review-evidence/companion-motion');
-const widths = [320, 393, 768, 900, 1440, 1920];
+const widths = [320, 390, 393, 768, 900, 1440, 1920];
 const scenes = {present: 11000, 'hide-seek': 18000};
 const originalHashes = {
   ranca: '550f22181dbc81f4ae1392d72600bde1fd41ed0e',
@@ -976,7 +976,7 @@ try {
   }
   report.complete = true;
   report.nativeArtReady = report.responsive.every(entry => entry.artwork.every(actor => actor.art === 'native'));
-  console.log('PASS: original hashes; 24 responsive ID/EN scenes; painted UI/control clearance; real foreground glyph occlusion and visible gaps; stationary wordmark/socials; lifecycle pause/resume; reduced-motion originals; safe asset failures; four 20-second natural recordings.');
+  console.log(`PASS: original hashes; ${report.responsive.length} responsive ID/EN scenes; painted UI/control clearance; real foreground glyph occlusion and visible gaps; stationary wordmark/socials; lifecycle pause/resume; reduced-motion originals; safe asset failures; four 20-second natural recordings.`);
   assert.equal(report.nativeArtReady, true, 'the final-art gate rejects placeholder choreography');
 } finally {
   await fs.writeFile(path.join(out, 'report.json'), JSON.stringify(report, null, 2));
