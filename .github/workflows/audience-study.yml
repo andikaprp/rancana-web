@@ -16,6 +16,7 @@ jobs:
         with: {node-version: '22', cache: npm}
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: node check-audience-study.mjs
       - run: ffmpeg -loglevel error -y -framerate 30 -i review-evidence/audience-study-output/frames/%03d.png -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart review-evidence/audience-study-output/hand-motion-study-1080x1350-6s.mp4
       - uses: actions/upload-artifact@v4
