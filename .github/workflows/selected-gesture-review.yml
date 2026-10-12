@@ -1,4 +1,4 @@
-name: Cana white downward lashes review
+name: Three Cana lash alternatives
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
@@ -6,17 +6,17 @@ on:
 permissions:
   contents: read
 jobs:
-  early-preview:
+  early-comparison:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: cana-white-lower-lashes-review
-          path: review-evidence/cana-white-lower-lashes/
+          name: cana-three-white-lash-options
+          path: review-evidence/cana-three-lash-options/
           if-no-files-found: error
-  verify-review:
+  verify-options:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -27,11 +27,11 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: |
-          python3 review-evidence/cana-white-lower-lashes/build.py
-          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-white-lash-server.log 2>&1 &
-          node check-cana-white-lower-lashes.mjs
+          python3 review-evidence/cana-three-lash-options/build.py
+          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-three-option-server.log 2>&1 &
+          node check-cana-three-lash-options.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cana-white-lower-lashes-ci
-          path: review-evidence/cana-white-lower-lashes/
+          name: cana-three-white-lash-options-ci
+          path: review-evidence/cana-three-lash-options/

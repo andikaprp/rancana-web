@@ -1,0 +1,93 @@
+{
+  "sourceCommit": "0cc81a1eafa24adce523866fa3082ccad851116b",
+  "status": "Exactly three unselected review-only alternatives",
+  "allArtworkOutsideLashesUnchanged": true,
+  "rancaUnchanged": true,
+  "canaBodyHeightRatio": 0.9,
+  "normalDisplayScale": 0.625,
+  "fullCanaViewBox": "830 130 740 580",
+  "faceViewBox": "1030 295 285 160",
+  "options": [
+    {
+      "id": "A",
+      "title": "Soft curves",
+      "description": "3 short rounded strokes per eye",
+      "kind": "rounded",
+      "positions": [
+        0.15,
+        0.5,
+        0.85
+      ],
+      "lengths": [
+        4,
+        4.4,
+        3.9
+      ],
+      "fans": [
+        -0.65,
+        0,
+        0.65
+      ],
+      "width": 0.95
+    },
+    {
+      "id": "B",
+      "title": "Graduated fan",
+      "description": "4 curved graduated strokes per eye",
+      "kind": "tapered",
+      "positions": [
+        0.1,
+        0.35,
+        0.65,
+        0.9
+      ],
+      "lengths": [
+        6.2,
+        5.3,
+        4.6,
+        3.9
+      ],
+      "fans": [
+        -2,
+        -1.65,
+        -1.1,
+        -0.7
+      ],
+      "width": 1.05,
+      "tip": 0.25
+    },
+    {
+      "id": "C",
+      "title": "Fine wisps",
+      "description": "5 fine tapered wisps per eye",
+      "kind": "tapered",
+      "positions": [
+        0.1,
+        0.3,
+        0.5,
+        0.7,
+        0.9
+      ],
+      "lengths": [
+        4.7,
+        5.4,
+        5.8,
+        5.2,
+        4.4
+      ],
+      "fans": [
+        -1,
+        -0.6,
+        0,
+        0.6,
+        1
+      ],
+      "width": 0.75,
+      "tip": 0.15
+    }
+  ],
+  "bodyHashes": {
+    "ranca": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "cana": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547"
+  }
+}

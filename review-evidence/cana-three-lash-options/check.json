@@ -1,0 +1,291 @@
+{
+  "options": [
+    {
+      "option": "A",
+      "fullFrame": "830 130 740 580",
+      "renderedWidth": 462.5,
+      "faceFrame": "1030 295 285 160",
+      "bodyScale": "0.907258064516129",
+      "eyes": [
+        {
+          "lid": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+          "transform": "translate(72 167)",
+          "style": "rounded",
+          "color": "#fff9fc",
+          "roundedCap": true,
+          "noBrows": true,
+          "lashCount": 3,
+          "geometry": [
+            {
+              "rootX": -4.15,
+              "attachment": 0.001845961130748359,
+              "length": 4,
+              "fan": -0.6499999999999995,
+              "baseWidth": 0.95,
+              "tipWidth": 0.95
+            },
+            {
+              "rootX": 2.5,
+              "attachment": 0.0006120209105058884,
+              "length": 4.4,
+              "fan": 0,
+              "baseWidth": 0.95,
+              "tipWidth": 0.95
+            },
+            {
+              "rootX": 9.15,
+              "attachment": 0.0006229139942754501,
+              "length": 3.9,
+              "fan": 0.6500000000000004,
+              "baseWidth": 0.95,
+              "tipWidth": 0.95
+            }
+          ]
+        },
+        {
+          "lid": "M -11 -5 Q 0.5 -2.8 12 -5",
+          "transform": "translate(117 166)",
+          "style": "rounded",
+          "color": "#fff9fc",
+          "roundedCap": true,
+          "noBrows": true,
+          "lashCount": 3,
+          "geometry": [
+            {
+              "rootX": -7.55,
+              "attachment": 0.0007702274997535067,
+              "length": 4,
+              "fan": -0.6499999999999995,
+              "baseWidth": 0.95,
+              "tipWidth": 0.95
+            },
+            {
+              "rootX": 0.5,
+              "attachment": 0.00023460411928521535,
+              "length": 4.4,
+              "fan": 0,
+              "baseWidth": 0.95,
+              "tipWidth": 0.95
+            },
+            {
+              "rootX": 8.55,
+              "attachment": 0.0012406813110073245,
+              "length": 3.9,
+              "fan": 0.6499999999999986,
+              "baseWidth": 0.95,
+              "tipWidth": 0.95
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "option": "B",
+      "fullFrame": "830 130 740 580",
+      "renderedWidth": 462.5,
+      "faceFrame": "1030 295 285 160",
+      "bodyScale": "0.907258064516129",
+      "eyes": [
+        {
+          "lid": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+          "transform": "translate(72 167)",
+          "style": "tapered",
+          "color": "#fff9fc",
+          "roundedCap": true,
+          "noBrows": true,
+          "lashCount": 4,
+          "geometry": [
+            {
+              "rootX": -5.1,
+              "attachment": 0.0005285840978592918,
+              "length": 6.2,
+              "fan": -2,
+              "baseWidth": 1.050001562094076,
+              "tipWidth": 0.24999505275104952
+            },
+            {
+              "rootX": -0.35,
+              "attachment": 0.0013552021964625034,
+              "length": 5.3,
+              "fan": -1.65,
+              "baseWidth": 1.0500070035956903,
+              "tipWidth": 0.24999445193843814
+            },
+            {
+              "rootX": 5.35,
+              "attachment": 0.00013499424204781415,
+              "length": 4.6,
+              "fan": -1.0999999999999996,
+              "baseWidth": 1.050000747618782,
+              "tipWidth": 0.2500006695991036
+            },
+            {
+              "rootX": 10.1,
+              "attachment": 0.0006949472588174178,
+              "length": 3.9,
+              "fan": -0.6999999999999993,
+              "baseWidth": 1.0500084395851295,
+              "tipWidth": 0.24999708958305814
+            }
+          ]
+        },
+        {
+          "lid": "M -11 -5 Q 0.5 -2.8 12 -5",
+          "transform": "translate(117 166)",
+          "style": "tapered",
+          "color": "#fff9fc",
+          "roundedCap": true,
+          "noBrows": true,
+          "lashCount": 4,
+          "geometry": [
+            {
+              "rootX": -8.7,
+              "attachment": 0.001024329664790537,
+              "length": 3.9000000000000004,
+              "fan": 0.6999999999999993,
+              "baseWidth": 1.0500084395851312,
+              "tipWidth": 0.24999708958305886
+            },
+            {
+              "rootX": -2.95,
+              "attachment": 0.0021273823253609805,
+              "length": 4.6,
+              "fan": 1.1,
+              "baseWidth": 1.0500007476187816,
+              "tipWidth": 0.25000066959910344
+            },
+            {
+              "rootX": 3.95,
+              "attachment": 0.0016574073265769652,
+              "length": 5.3,
+              "fan": 1.6499999999999995,
+              "baseWidth": 1.0500070035956905,
+              "tipWidth": 0.24999445193843814
+            },
+            {
+              "rootX": 9.7,
+              "attachment": 0.0005507541121100964,
+              "length": 6.2,
+              "fan": 2,
+              "baseWidth": 1.0500015620940768,
+              "tipWidth": 0.24999505275104933
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "option": "C",
+      "fullFrame": "830 130 740 580",
+      "renderedWidth": 462.5,
+      "faceFrame": "1030 295 285 160",
+      "bodyScale": "0.907258064516129",
+      "eyes": [
+        {
+          "lid": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+          "transform": "translate(72 167)",
+          "style": "tapered",
+          "color": "#fff9fc",
+          "roundedCap": true,
+          "noBrows": true,
+          "lashCount": 5,
+          "geometry": [
+            {
+              "rootX": -5.1,
+              "attachment": 0.0005285840978592918,
+              "length": 4.7,
+              "fan": -1,
+              "baseWidth": 0.7500093954078169,
+              "tipWidth": 0.15000506124794571
+            },
+            {
+              "rootX": -1.3,
+              "attachment": 0.0005321887752655939,
+              "length": 5.4,
+              "fan": -0.5999999999999999,
+              "baseWidth": 0.7500080090239039,
+              "tipWidth": 0.1499909330593019
+            },
+            {
+              "rootX": 2.5,
+              "attachment": 0.0006120209105058884,
+              "length": 5.8,
+              "fan": 0,
+              "baseWidth": 0.75,
+              "tipWidth": 0.15000000000000036
+            },
+            {
+              "rootX": 6.3,
+              "attachment": 0.0006922164469016957,
+              "length": 5.2,
+              "fan": 0.6000000000000005,
+              "baseWidth": 0.7499932245027279,
+              "tipWidth": 0.15000176665626297
+            },
+            {
+              "rootX": 10.1,
+              "attachment": 0.0006949472588174178,
+              "length": 4.4,
+              "fan": 1,
+              "baseWidth": 0.7500046093191693,
+              "tipWidth": 0.15000088133074424
+            }
+          ]
+        },
+        {
+          "lid": "M -11 -5 Q 0.5 -2.8 12 -5",
+          "transform": "translate(117 166)",
+          "style": "tapered",
+          "color": "#fff9fc",
+          "roundedCap": true,
+          "noBrows": true,
+          "lashCount": 5,
+          "geometry": [
+            {
+              "rootX": -8.7,
+              "attachment": 0.001024329664790537,
+              "length": 4.7,
+              "fan": -1,
+              "baseWidth": 0.7500093954078177,
+              "tipWidth": 0.1500050612479464
+            },
+            {
+              "rootX": -4.1,
+              "attachment": 0.0002807029310391569,
+              "length": 5.4,
+              "fan": -0.5999999999999996,
+              "baseWidth": 0.7500080090239039,
+              "tipWidth": 0.14999093305930217
+            },
+            {
+              "rootX": 0.5,
+              "attachment": 0.00023460411928521535,
+              "length": 5.8,
+              "fan": 0,
+              "baseWidth": 0.75,
+              "tipWidth": 0.14999999999999997
+            },
+            {
+              "rootX": 5.1,
+              "attachment": 0.0007497583092561259,
+              "length": 5.200000000000001,
+              "fan": 0.5999999999999996,
+              "baseWidth": 0.7499932245027288,
+              "tipWidth": 0.15000176665626297
+            },
+            {
+              "rootX": 9.7,
+              "attachment": 0.0005507541121100964,
+              "length": 4.4,
+              "fan": 1,
+              "baseWidth": 0.7500046093191693,
+              "tipWidth": 0.15000088133074427
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "svgHtmlPixelIdentical": true,
+  "pageErrors": []
+}

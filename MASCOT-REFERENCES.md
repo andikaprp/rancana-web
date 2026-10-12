@@ -6,18 +6,21 @@
 
 ## Current authorized scope
 
-The user’s new annotated example supersedes the absence of lashes in the `0023cb6` study. Their direction is “just an example but it shud be white and more proper and neat”. The parent inspected the annotation: about six thin black downward lashes along each existing thick white shallow curved lid. Black is annotation only; the revision must be WHITE.
+The user requests exactly three new white-eyelash alternatives, side by side, based on `0cc81a1eafa24adce523866fa3082ccad851116b`. Preserve the exact existing relaxed curved lids and their direction, mouth, body, hands, size, color and all Ranca artwork. No eyebrows, new pose, diagonal eye rotation or mirrored V.
 
-Add six tidy thinner white lashes per eyelid, attached along the existing lid, with controlled spacing, balanced curved lengths and softly tapered tips. The implementation fans gently outward, varies lengths within a small bounded range and avoids an oversized stroke. Preserve the exact lids and their direction, mouth, body/hands, scale and all Ranca artwork. No eyebrows, new pose or change of eye direction.
+- A, Soft curves: three short rounded downward strokes per eye, widely spaced.
+- B, Graduated fan: four softly tapered curves distributed along each lid, gently longer toward the outer side with restrained outward curvature.
+- C, Fine wisps: five thinner softly tapered wisps across each lid, with lower total density than the prior six-lash treatment.
 
-The new isolated review is in `review-evidence/cana-white-lower-lashes/`, including normal/full-size pair PNGs, Cana close-up, static same-frame contact sheet, editable named SVG/layer JSON and self-contained HTML. Each lash has its own named vector path. Existing artwork is unchanged when the new lash groups are removed. Prior studies remain archived; no rollout is approved.
+The options are in `review-evidence/cana-three-lash-options/`. The labeled comparison shows full Cana at exactly the same scale in all three columns (matching Cana in a 1000px-wide full-pair preview), followed by corresponding face close-ups using an identical crop. Each option also has a normal-size full-pair PNG, preserving Ranca, and native editable SVG/layer JSON. All artwork outside the lash groups is identical to the baseline. No option is selected or applied to the website.
+
+The earlier eye-only A/B/C strip is archived and is not the current comparison. The user’s annotation still supplies the downward white-lash direction; the three alternatives are clean interpretations rather than literal uneven tracing.
 
 ## Visual-review workflow
 
 For every mascot revision, inspect actual renders at normal display and enlarged size using exact source frames. Compare matching frames in a contact sheet, identify specific issues, make targeted fixes, and verify final exports. For future authorized animations, also inspect transition, loop and interrupted-visibility checkpoints. This task is static; the contact sheet compares the prior and proposed still frames and does not imply animation approval.
 
-The first uniform rounded-stroke pass looked too rigid in close-up. The targeted final pass uses curved tapered contours with gently softened tips (about 1.05 local units at the attached base, 0.7 in the middle, 0.24 at the tip). Lengths range only from 4.4 to 5.9 local units; root spacing stays controlled. PNGs and the contact sheet were visually reviewed, and native SVG/HTML render pixel-identically.
-
+The final A/B/C comparison and same-frame face close-ups were visually inspected. Normal-size full-pair exports were also rendered for each option. Checks verify exactly three alternatives, identical framing/scale, unchanged lid paths/transforms, white downward lashes, controlled attachment/spacing, expected 3/4/5 counts and pixel-identical SVG/HTML exports.
 ## Frozen artwork constraints
 
 GREEN RANCA represents the playful/happy BOY, with longer simple white line eyes, NO LASHES and NO EYEBROWS. PINK CANA represents the sassy/confident GIRL, with minimal white marks and NO EYEBROWS; her exact relaxed eyelids from 0023cb6 are preserved and now receive the new downward white lashes. Preserve both mouths, original distinct body silhouettes/colors and smooth texture without a new rim/outline. Cana remains 90% of Ranca’s visible body height, uniformly scaled, preserving her wider asymmetric silhouette.
