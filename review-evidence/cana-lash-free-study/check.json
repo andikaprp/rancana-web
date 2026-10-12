@@ -1,0 +1,20 @@
+{
+  "lashes": 0,
+  "eyes": [
+    {
+      "lineOnly": true,
+      "levelEndpoints": true,
+      "depth": 1.5,
+      "transform": "translate(72 167)"
+    },
+    {
+      "lineOnly": true,
+      "levelEndpoints": true,
+      "depth": 1.0999999046325684,
+      "transform": "translate(117 166)"
+    }
+  ],
+  "canaPathCount": 7,
+  "rancaPathCount": 7,
+  "pageErrors": []
+}

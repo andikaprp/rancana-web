@@ -1,4 +1,4 @@
-name: Cana eye-only sketch review
+name: Single lash-free Cana study
 on:
   push:
     branches: [review/selected-gesture-rest-refinement-20261012]
@@ -6,17 +6,17 @@ on:
 permissions:
   contents: read
 jobs:
-  early-sketches:
+  early-preview:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
       - uses: actions/upload-artifact@v4
         with:
-          name: cana-eye-only-abc-sketches
-          path: review-evidence/cana-eye-sketches/
+          name: cana-lash-free-study
+          path: review-evidence/cana-lash-free-study/
           if-no-files-found: error
-  verify-sketches:
+  verify-study:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -27,11 +27,11 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: |
-          python3 review-evidence/cana-eye-sketches/build.py
-          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-eye-sketch-server.log 2>&1 &
-          node check-cana-eye-sketches.mjs
+          python3 review-evidence/cana-lash-free-study/build.py
+          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/cana-lash-free-server.log 2>&1 &
+          node check-cana-lash-free-study.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cana-eye-only-abc-ci
-          path: review-evidence/cana-eye-sketches/
+          name: cana-lash-free-study-ci
+          path: review-evidence/cana-lash-free-study/

@@ -1,0 +1,14 @@
+{
+  "status": "Single controlled preview, not approved for integration",
+  "sourceFullPair": "c598c91f7c3a65e56ff5a327d8f544e1d0488339",
+  "sourceEyesRejected": true,
+  "change": "Cana only: relaxed shallow near-horizontal line eyes, no lashes or eyebrows",
+  "allArtworkOutsideCanaEyesUnchanged": true,
+  "rancaUnchanged": true,
+  "canaBodyHeightRatio": 0.9,
+  "ABCOptionApplied": false,
+  "rasterBodies": {
+    "ranca": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "cana": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547"
+  }
+}

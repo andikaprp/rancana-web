@@ -2,13 +2,15 @@
 
 ## Rejected full-face version
 
-`c598c91f7c3a65e56ff5a327d8f544e1d0488339` is explicitly REJECTED. The user said “oh god this is worse”. The paired outward-eye treatment is not an approved direction. Its full-pair files remain frozen as historical evidence; do not regenerate them or apply more whole-face revisions.
+`c598c91f7c3a65e56ff5a327d8f544e1d0488339` is explicitly REJECTED. The user said “oh god this is worse”. The paired outward-eye treatment is not an approved direction. Its full-pair files remain frozen as historical evidence. A later explicit user instruction authorizes the separate single study below; it does not approve the rejected orientation.
 
 ## Current authorized scope
 
-Prepare only three eye-only sketches A/B/C on pink swatches, shown at actual size and enlarged. Use gentle shallow eyelid curves on a neutral horizontal baseline, very slight asymmetry and a few flowing tapered lashes. Avoid aggressive raised outer corners, V-shaped eyes, eyebrows, creases and realistic detail. No eye option is selected; wait for a user selection before placing one on Cana.
+At 12:38 UTC the user approved seeing ONE minimal full-character lash-free study: “Yeah yeah, share it to me.” Use relaxed softly curved, slightly asymmetric near-horizontal LINE eyes for Cana, with NO LASHES and NO EYEBROWS. Preserve the existing mouth and express sass through its smirk and restrained eye asymmetry. No sharply raised outer corners, V-shaped eyes or heavy tilt. Ranca and all other artwork stay unchanged. This authorizes a preview only, not a rollout or an open-ended series of full-face revisions.
 
-Current sketches live in `review-evidence/cana-eye-sketches/`. “Actual size” uses the eye scale from the previous 1000px-wide pair preview (approximately 1.8145 pixels per local artwork unit). The same paths are enlarged 2.25× for inspection. A has two soft curls, B one quiet sweep, C two low flowing wisps. None is applied to a character.
+The isolated study lives in `review-evidence/cana-lash-free-study/`, with a normal-size pair, Cana close-up, editable SVGs, named layer JSON and self-contained HTML. It is constructed from the latest full-pair layer tree with only Cana’s eye groups changed. The eyes keep their group origins and widths; both rotations are removed, lids use shallow horizontal-endpoint curves, and lash paths are removed. Existing full-pair files remain frozen.
+
+The earlier `review-evidence/cana-eye-sketches/` A/B/C options remain unselected. This study does not apply any of those options blindly.
 
 ## Frozen artwork constraints
 
