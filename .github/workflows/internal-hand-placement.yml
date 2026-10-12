@@ -1,0 +1,35 @@
+name: Compact internal hand placement review
+on:
+  push:
+    branches: [review/internal-hand-placement-20261012]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  early-still:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compact-internal-hand-placement-still
+          path: review-evidence/internal-hands-output/
+  check-placement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8137 --bind 127.0.0.1 > /tmp/internal-hands-server.log 2>&1 &
+          node check-internal-hands.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compact-internal-hand-placement-ci
+          path: review-evidence/internal-hands-output/
