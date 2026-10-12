@@ -15,6 +15,15 @@ jobs:
         with:
           name: first-full-character-pose-sheet
           path: review-evidence/character-poses/first-review-sheet.png
+  motion-delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: validated-character-motion-preview
+          path: review-evidence/character-motion-delivery/
   isolated-greetings:
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -33,3 +42,23 @@ jobs:
         with:
           name: canonical-full-character-greetings
           path: review-evidence/canonical-greeting-output/
+  expanded-character-poses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: node check-character-poses.mjs
+      - run: bash review-evidence/character-poses/encode.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-character-poses-and-motion
+          path: |
+            review-evidence/character-pose-output/
+            !review-evidence/character-pose-output/frames/**

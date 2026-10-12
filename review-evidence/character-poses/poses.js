@@ -1,24 +1,24 @@
 (async()=>{'use strict';
 const NS='http://www.w3.org/2000/svg',make=(tag,attrs={})=>{const n=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);return n;},clamp=x=>Math.max(0,Math.min(1,x)),mix=(a,b,t)=>a+(b-a)*t,ease=x=>x*x*x*(x*(x*6-15)+10),lerp=(a,b,t)=>a.map((x,i)=>Array.isArray(x)?lerp(x,b[i],t):mix(x,b[i],t));
 const poseNames=['Wave','Present','Point','Hold','Peek'],emotions=['happy','curious','thinking','playful','surprised'],duration=13000;
-const configs={ranca:{width:244,color:'#f6fff8',stroke:3.6,leftShoulder:[77,203],rightShoulder:[207,197],faceROI:[118,109,195,187],handROI:[192,186,235,230]},cana:{width:236,color:'#fff9fc',stroke:3.7,leftShoulder:[57,209],rightShoulder:[175,194],faceROI:[52,135,140,194],handROI:[168,149,224,220]}};
-const open=[[-4,11],[-8,9,-11,5,-14,0],[-18,-5,-17,-9,-14,-9],[-11,-9,-10,-5,-7,-3],[-8,-7,-9,-12,-9,-15],[-9,-20,-4,-21,-3,-16],[-2,-14,-1,-11,-1,-10],[-1,-12,-1,-16,-1,-18],[-1,-23,5,-23,5,-18],[5,-16,5,-12,5,-10],[5.7,-11.7,6.3,-13.3,7,-15],[9,-20,14,-18,13,-13],[12.3,-9,11.7,-5,11,-1],[10,4,8,9,4,11]];
-const point=[[-4,11],[-8,9,-11,5,-13,1],[-17,-3,-16,-7,-13,-7],[-10,-7,-9,-4,-7,-3],[-8,-8,-8,-16,-8,-21],[-8,-26,-3,-26,-3,-21],[-3,-14,-2,-7,-2,-4],[-1,-5,1,-6,3,-5],[5,-5,7,-3,6,-1],[5,-.5,4,0,4,1],[7,-2,9,-2,11,0],[14,3,12,6,10,7],[8,8,6,9,5,10],[4.5,10.4,4.3,10.8,4,11]];
-const relaxed=[[-4,11],[-8,9,-11,4,-12,0],[-15,-4,-13,-8,-10,-7],[-7,-6,-7,-3,-5,-2],[-5,-5,-6,-8,-5,-10],[-3,-13,0,-12,0,-9],[0,-7,0,-5,0,-4],[1,-6,2,-8,3,-9],[5,-11,8,-9,7,-6],[6,-4,6,-3,5,-2],[7,-4,9,-5,11,-3],[13,-1,11,3,9,5],[8,7,7,9,6,10],[5,10.5,4.5,10.8,4,11]];
-const grip=[[-4,11],[-5.6,7,-6, -1,-3.2,-5],[-.8,-9.8,5.6,-13,10.4,-10.6],[13.6,-9.8,15.2,-5.8,12,-5],[10.4,-4.2,8,-3.4,6.4,-3.4],[10.4,-5.8,13.6,-5.8,15.2,-2.6],[17.6,-.2,16.8,2.2,12.8,2.2],[12,2.2,10.4,3,9.6,3],[13.6,.6,16.8,1.4,17.6,4.6],[19.2,7.8,13.6,11,11.2,12.6],[9.6,13.6,8,14.1,6.4,14.1],[5.6,14.1,4.8,14,4,13.6],[4,12.8,4,12,4,11.6],[4,11.4,4,11.2,4,11]];
+const configs={ranca:{width:244,color:'#f6fff8',stroke:3.6,leftShoulder:[77,203],rightShoulder:[223,190],faceROI:[118,109,195,187],handROI:[192,186,235,230]},cana:{width:236,color:'#fff9fc',stroke:3.7,leftShoulder:[57,209],rightShoulder:[175,194],faceROI:[52,135,140,194],handROI:[168,149,224,220]}};
+const open=[[-4,11],[-8,9,-11,5,-14,0],[-18,-5,-17,-9,-14,-9],[-11,-9,-10,-5,-7,-3],[-8,-7,-9,-12,-9,-15],[-9,-20,-4,-21,-3,-16],[-2,-14,-1,-11,-1,-10],[-1,-12,-1,-16,-1,-18],[-1,-23,5,-23,5,-18],[5,-16,5,-12,5,-10],[5.7,-11.7,6.3,-13.3,7,-15],[9,-20,14,-18,13,-13],[12.3,-9,11.7,-5,11,-1],[10,4,5,8,4,11]];
+const point=[[-4,11],[-8,9,-11,5,-13,1],[-17,-3,-16,-7,-13,-7],[-10,-7,-9,-4,-7,-3],[-8,-8,-8,-16,-8,-21],[-8,-26,-3,-26,-3,-21],[-3,-14,-2,-7,-2,-4],[-1,-5,1,-6,3,-5],[5,-5,7,-3,6,-1],[5,-.5,4,0,4,1],[7,-2,9,-2,11,0],[14,3,12,6,10,7],[8,8,6,9,5,10],[5,10.4,4,9,4,11]];
+const relaxed=[[-4,11],[-8,9,-11,4,-12,0],[-15,-4,-13,-8,-10,-7],[-7,-6,-7,-3,-5,-2],[-5,-5,-6,-8,-5,-10],[-3,-13,0,-12,0,-9],[0,-7,0,-5,0,-4],[1,-6,2,-8,3,-9],[5,-11,8,-9,7,-6],[6,-4,6,-3,5,-2],[7,-4,9,-5,11,-3],[13,-1,11,3,9,5],[8,7,7,9,6,10],[5,10.5,4,9,4,11]];
+const grip=[[-4,11],[-8,9,-11,5,-12,0],[-15,-4,-13,-8,-10,-7],[-7,-6,-7,-3,-5,-2],[-6,-5,-6,-9,-4,-11],[-1,-15,4,-13,3,-9],[3,-7,1,-6,0,-5],[2,-7,5,-8,7,-6],[10,-4,9,-1,6,0],[5,0,4,1,3,2],[6,-1,9,0,11,2],[14,5,11,9,8,10],[6,11,5,11,4,11],[4,12,4,14,4,15]];
 const hands={open,point,relaxed,grip};
 // Wrist position, rotation, contour, mirror, elbow. Each character has its own placements.
 const layouts={
  ranca:[
   {l:[64,174,-8,'open',1,59,222],r:[183,224,174,'relaxed',-1,214,211],body:[-2,0,-2]},
-  {l:[60,207,-72,'open',1,54,235],r:[183,224,174,'relaxed',-1,214,211],body:[4,1,0]},
+  {l:[60,207,-72,'open',1,101,234],r:[183,224,174,'relaxed',-1,214,211],body:[4,1,0]},
   {l:[71,192,-26,'point',1,54,229],r:[183,224,174,'relaxed',-1,214,211],body:[-4,-1,-1]},
   {l:[94,207,0,'grip',1,64,231],r:[209,211,17,'grip',-1,229,226],body:[2,0,1]},
   {l:[133,137,78,'open',1,88,218],r:[183,224,174,'relaxed',-1,214,211],body:[-7,-10,1]}
  ],
  cana:[
   {l:[34,183,-4,'open',1,23,225],r:[178,224,170,'relaxed',-1,203,206],body:[3,0,0]},
-  {l:[42,214,-75,'open',1,29,238],r:[178,224,170,'relaxed',-1,203,206],body:[-4,2,-1]},
+  {l:[42,214,-75,'open',1,78,242],r:[178,224,170,'relaxed',-1,203,206],body:[-4,2,-1]},
   {l:[55,226,186,'relaxed',1,35,207],r:[200,181,18,'point',-1,204,226],body:[4,2,-1]},
   {l:[78,216,-23,'grip',1,42,241],r:[150,217,27,'grip',-1,184,242],body:[-2,0,-1]},
   {l:[55,226,186,'relaxed',1,35,207],r:[112,141,-78,'open',-1,179,215],body:[7,10,1]}
@@ -74,7 +74,9 @@ function face(key,expression,blink){
  }g.append(mouth);return g;
 }
 let counter=0;
-function rig(key){const cfg=configs[key],svg=make('svg',{xmlns:NS,viewBox:`-12 -12 ${cfg.width+24} 344`,width:cfg.width+24,height:344,class:'character',role:'img','aria-label':key+' animated pose review','data-character':key}),body=make('g',{'data-body':key}),art=make('image',{href:cleanplates[key],width:cfg.width,height:320,'data-original-art':key});body.append(art);const faceLayer=make('g',{'data-face':key}),prop=make('g',{'data-prop':key}),limbs=make('g',{fill:'none',stroke:cfg.color,'stroke-width':cfg.stroke,'stroke-linecap':'round','stroke-linejoin':'round'});const larm=make('path',{'data-arm':'left'}),rarm=make('path',{'data-arm':'right'}),lpalm=make('path',{'data-palm':'left'}),rpalm=make('path',{'data-palm':'right'});limbs.append(larm,rarm,lpalm,rpalm);body.append(faceLayer,prop,limbs);svg.append(body);return{key,cfg,svg,body,faceLayer,prop,arms:[larm,rarm],palms:[lpalm,rpalm],id:++counter};}
+function rig(key){const cfg=configs[key],svg=make('svg',{xmlns:NS,viewBox:`-12 -12 ${cfg.width+24} 344`,width:cfg.width+24,height:344,class:'character',role:'img','aria-label':key+' animated pose review','data-character':key}),body=make('g',{'data-body':key}),art=make('image',{href:cleanplates[key],width:cfg.width,height:320,'data-original-art':key});body.append(art);const faceLayer=make('g',{'data-face':key}),prop=make('g',{'data-prop':key}),limbs=make('g',{fill:'none',stroke:cfg.color,'stroke-width':cfg.stroke,'stroke-linecap':'round','stroke-linejoin':'round'});const larm=make('path',{'data-arm':'left'}),rarm=make('path',{'data-arm':'right'}),lpalm=make('path',{'data-palm':'left'}),rpalm=make('path',{'data-palm':'right'});limbs.append(larm,rarm,lpalm,rpalm);body.append(faceLayer,prop,limbs);const id=++counter,defs=make('defs'),occlusion=[];
+ for(let side=0;side<2;side++){const mask=make('mask',{id:`palm-occlusion-${id}-${side}`,maskUnits:'userSpaceOnUse',x:-100,y:-100,width:500,height:500});mask.append(make('rect',{x:-100,y:-100,width:500,height:500,fill:'white'}));const front=make('path',{fill:'black',stroke:'black','stroke-width':cfg.stroke+1,'stroke-linejoin':'round'}),join=make('circle',{r:3.5,fill:'white'});mask.append(front,join);defs.append(mask);[larm,rarm][side].setAttribute('mask',`url(#palm-occlusion-${id}-${side})`);occlusion.push({front,join});}
+ svg.append(defs,body);return{key,cfg,svg,body,faceLayer,prop,occlusion,arms:[larm,rarm],palms:[lpalm,rpalm],id};}
 function stateAt(time){const t=((time%duration)+duration)%duration,index=Math.floor(t/2600),local=t%2600,u=ease(clamp((local-2075)/525));return{index,next:(index+1)%5,u,local,t};}
 function draw(r,state,still=false){
  const{index,next,u,local,t}=state,active=u>.5?next:index,cfg=r.cfg,from=layouts[r.key][index],to=layouts[r.key][next];
@@ -83,9 +85,10 @@ function draw(r,state,still=false){
  r.body.setAttribute('transform',`translate(${body[1]} ${body[2]}) rotate(${body[0]} ${cfg.width/2} 180)`);
  for(let side=0;side<2;side++){
   const field=side===0?'l':'r',a=from[field],b=to[field],hand=a.map((v,i)=>typeof v==='number'?mix(v,b[i],u):v);if(!still&&index===0&&side===0)hand[2]+=Math.sin(phase*Math.PI*(r.key==='ranca'?4:2))*Math.sin(phase*Math.PI)*(r.key==='ranca'?9:7)*(1-u);
+    hand[2]=a[2]+(((b[2]-a[2]+180)%360+360)%360-180)*u;
   const contour=lerp(hands[a[3]],hands[b[3]],u);if(r.key==='cana')for(let n=1;n<contour.length;n++)for(let j=0;j<6;j++)if(j%2===1&&contour[n][j]<0)contour[n][j]*=.93;
-  const end=contour[contour.length-1].slice(4),last=contour[contour.length-1].slice(2,4),wrist=world(end,hand),incoming=world([end[0]+(end[0]-last[0])*2,end[1]+(end[1]-last[1])*2],hand),shoulder=side===0?cfg.leftShoulder:cfg.rightShoulder;
-  r.arms[side].setAttribute('d',`M ${shoulder.join(' ')} C ${hand[5]} ${hand[6]} ${incoming.join(' ')} ${wrist.join(' ')}`);r.palms[side].setAttribute('d',pathOf(contour));r.palms[side].setAttribute('transform',`translate(${hand[0]} ${hand[1]}) rotate(${hand[2]}) scale(${hand[4]} 1)`);
+  const end=contour[contour.length-1].slice(4),last=contour[contour.length-1].slice(2,4),wrist=world(end,hand),norm=Math.hypot(end[0]-last[0],end[1]-last[1])||1,incoming=world([end[0]+(end[0]-last[0])/norm*10,end[1]+(end[1]-last[1])/norm*10],hand),shoulder=side===0?cfg.leftShoulder:cfg.rightShoulder;
+  r.arms[side].setAttribute('d',`M ${shoulder.join(' ')} C ${hand[5]} ${hand[6]} ${incoming.join(' ')} ${wrist.join(' ')}`);r.palms[side].setAttribute('d',pathOf(contour));r.palms[side].setAttribute('transform',`translate(${hand[0]} ${hand[1]}) rotate(${hand[2]}) scale(${hand[4]} 1)`);r.occlusion[side].front.setAttribute('d',pathOf(contour)+' Z');r.occlusion[side].front.setAttribute('transform',r.palms[side].getAttribute('transform'));r.occlusion[side].join.setAttribute('cx',wrist[0]);r.occlusion[side].join.setAttribute('cy',wrist[1]);
  }
  // Blink at each held pose and during the expression change between poses.
  const blink=still?0:Math.max(Math.max(0,1-Math.abs(local-1510)/115),u>0?Math.max(0,1-Math.abs(u-.5)/.25):0);

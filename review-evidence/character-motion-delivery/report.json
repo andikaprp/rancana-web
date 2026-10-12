@@ -1,0 +1,84 @@
+{
+  "references": {
+    "ranca": "5dc88e3c525f530d7fd28df0c011ec4a3326f9ebb22f1ab1b6c4869ae704e1af",
+    "cana": "c97a6a2a5792b9905f04f85478b24468eeca6dc9331607c1583d80866da75775"
+  },
+  "geometry": {
+    "samples": 261,
+    "maxJoinGap": 0.00002234687372178411,
+    "poses": [
+      "Wave",
+      "Present",
+      "Point",
+      "Hold",
+      "Peek"
+    ],
+    "blink": true,
+    "bodyMotion": true,
+    "minNonJoinDistance": 0.2695646406828397
+  },
+  "responsive": [
+    {
+      "width": 320,
+      "noOverflow": true,
+      "repeatedInterruptions": true,
+      "hiddenTab": true,
+      "offscreenPause": true,
+      "reducedMotion": true,
+      "manualPoseInspection": true
+    },
+    {
+      "width": 390,
+      "noOverflow": true,
+      "repeatedInterruptions": true,
+      "hiddenTab": true,
+      "offscreenPause": true,
+      "reducedMotion": true,
+      "manualPoseInspection": true
+    },
+    {
+      "width": 1440,
+      "noOverflow": true,
+      "repeatedInterruptions": true,
+      "hiddenTab": true,
+      "offscreenPause": true,
+      "reducedMotion": true,
+      "manualPoseInspection": true
+    }
+  ],
+  "complete": true,
+  "repairs": {
+    "ranca": {
+      "pixels": 3261,
+      "faceROI": [
+        118,
+        109,
+        195,
+        187
+      ],
+      "otherHandROI": [
+        192,
+        186,
+        235,
+        230
+      ],
+      "coveredEdgePixels": 519
+    },
+    "cana": {
+      "pixels": 3405,
+      "faceROI": [
+        52,
+        135,
+        140,
+        194
+      ],
+      "otherHandROI": [
+        168,
+        149,
+        224,
+        220
+      ],
+      "coveredEdgePixels": 715
+    }
+  }
+}
