@@ -1,36 +1,39 @@
 # Ranca and Cana: current review instructions
 
-## Rejected full-face version
-
-`c598c91f7c3a65e56ff5a327d8f544e1d0488339` is explicitly REJECTED. The user said “oh god this is worse”. The paired outward-eye treatment is not an approved direction. Its full-pair files remain frozen as historical evidence. A later explicit user instruction authorizes the separate single study below; it does not approve the rejected orientation.
-
 ## Current authorized scope
 
-The user requests exactly three new white-eyelash alternatives, side by side, based on `0cc81a1eafa24adce523866fa3082ccad851116b`. Preserve the exact existing relaxed curved lids and their direction, mouth, body, hands, size, color and all Ranca artwork. No eyebrows, new pose, diagonal eye rotation or mirrored V.
+The user approved retrying the static open-eye preview for all three current lash alternatives from `ddb7c008bb81d5e3e4f44256cf63240c8802efb9`. Each CLOSED state is exactly that baseline. Each proposed OPEN state uses a small solid white graphic half-oval under a relaxed raised upper lid. The lashes follow the upper lid, retaining their existing count, shape, spacing and weight. No realistic eyeballs, pupils, irises, eye highlights, eyebrows, V-eyes or diagonal rotations.
 
-- A, Soft curves: three short rounded downward strokes per eye, widely spaced.
-- B, Graduated fan: four softly tapered curves distributed along each lid, gently longer toward the outer side with restrained outward curvature.
-- C, Fine wisps: five thinner softly tapered wisps across each lid, with lower total density than the prior six-lash treatment.
+- A, Soft curves: three short rounded lashes per eye.
+- B, Graduated fan: four softly tapered lashes, gently longer toward the outer side.
+- C, Fine wisps: five finer softly tapered lashes.
 
-The options are in `review-evidence/cana-three-lash-options/`. The labeled comparison shows full Cana at exactly the same scale in all three columns (matching Cana in a 1000px-wide full-pair preview), followed by corresponding face close-ups using an identical crop. Each option also has a normal-size full-pair PNG, preserving Ranca, and native editable SVG/layer JSON. All artwork outside the lash groups is identical to the baseline. No option is selected or applied to the website.
+The current comparison is `review-evidence/cana-open-closed-options/`. Each labeled card shows CLOSED and OPEN at the same full-character scale, with corresponding enlarged face crops. The bundle also includes six full-pair PNGs, preserving Ranca, plus editable SVG and layer JSON. All artwork outside Cana's eye groups is identical to the baseline. No option is selected or applied to the website.
 
-The earlier eye-only A/B/C strip is archived and is not the current comparison. The user’s annotation still supplies the downward white-lash direction; the three alternatives are clean interpretations rather than literal uneven tracing.
+The previous CLOSED-only comparison in `review-evidence/cana-three-lash-options/` remains frozen. The older eye-only A/B/C strip is a separate archived exploration. The user annotation supplied the downward direction for the closed lashes; the alternatives are clean interpretations, not literal uneven tracing.
+
+## Canonical references and access
+
+The actual local files `assets/mascots/ranca-backpack-option-3.webp` (Pelajar) and `assets/mascots/cana-academic-cap-option-3.webp` (Mahasiswa) were visually inspected for this open-eye revision. The Mahasiswa reference supplies the simple filled white half-oval under an upper lid. Its eyebrows were not copied. This study adds no realistic facial detail.
+
+The earlier user-annotated Library image was resolved, but supported materialization did not deliver readable local bytes here. Its drawing direction came from the parent's explicit visual inspection. The earlier Fleischer reference also remained uninspected after HTTP 403 and is not a claimed match. These earlier access limitations do not apply to the canonical local images inspected for the current task.
 
 ## Visual-review workflow
 
-For every mascot revision, inspect actual renders at normal display and enlarged size using exact source frames. Compare matching frames in a contact sheet, identify specific issues, make targeted fixes, and verify final exports. For future authorized animations, also inspect transition, loop and interrupted-visibility checkpoints. This task is static; the contact sheet compares the prior and proposed still frames and does not imply animation approval.
+For every mascot revision, inspect actual renders at normal display and enlarged size using exact source frames. Compare matching frames in a contact sheet, identify specific issues, make targeted fixes, and verify final exports. For future authorized animation, inspect transition, loop and interrupted-visibility checkpoints. This task is static and does not imply approval of motion or a permanent option.
 
-The final A/B/C comparison and same-frame face close-ups were visually inspected. Normal-size full-pair exports were also rendered for each option. Checks verify exactly three alternatives, identical framing/scale, unchanged lid paths/transforms, white downward lashes, controlled attachment/spacing, expected 3/4/5 counts and pixel-identical SVG/HTML exports.
+All three final full-character closed/open cards and the six-face contact sheet were visually inspected. Checks verify exactly three options and six states, identical scale/framing, preserved closed trees, unchanged artwork outside Cana's eye groups, unchanged lid paths, expected 3/4/5 lash counts, lash attachment to each raised lid, and pixel-identical SVG/HTML exports. No animation or live-site responsive test is claimed for this static eye study.
+
 ## Frozen artwork constraints
 
-GREEN RANCA represents the playful/happy BOY, with longer simple white line eyes, NO LASHES and NO EYEBROWS. PINK CANA represents the sassy/confident GIRL, with minimal white marks and NO EYEBROWS; her exact relaxed eyelids from 0023cb6 are preserved and now receive the new downward white lashes. Preserve both mouths, original distinct body silhouettes/colors and smooth texture without a new rim/outline. Cana remains 90% of Ranca’s visible body height, uniformly scaled, preserving her wider asymmetric silhouette.
+GREEN RANCA is the playful/happy BOY, with longer white line eyes, NO LASHES and NO EYEBROWS. PINK CANA is the sassy/confident GIRL, with minimal white marks and NO EYEBROWS. Her closed relaxed lids remain unchanged; the explicit current request authorizes lifting those lids and adding simple white open-eye shapes only in the separate open states. Preserve both mouths, original distinct body silhouettes/colors and smooth texture without a new rim or outline. Cana remains 90% of Ranca's visible body height, uniformly scaled, with her wider asymmetric silhouette.
 
-Preserve outward-connected waving palms with their open wrist gaps inward toward each body center. Preserve the long straight descending Ranca resting arm and its selected palm. The preferred earlier active hand-style source is `e8af2396b35c1ba6c5752a8a83cff2eaa3100725`; later explicit eye instructions override its eye style. Current hand corrections from d1d034f remain frozen.
+Preserve outward-connected waving palms with open wrist gaps inward toward each body center. Preserve Ranca's long straight descending resting arm and selected palm. Earlier active hand-style source `e8af2396b35c1ba6c5752a8a83cff2eaa3100725` is superseded only by explicit later eye instructions. Hand corrections from `d1d034f` remain frozen.
 
-Prop-free bodies use `assets/mascots/poses/ranca-body.webp` and `cana-body.webp`; cleanup provenance is in `assets/mascots/poses/art-provenance.json`. Original audience references are `assets/mascots/ranca-backpack-option-3.webp` and `assets/mascots/cana-academic-cap-option-3.webp`. Existing full-character previews retain the same prop-free body artwork.
+Prop-free bodies are `assets/mascots/poses/ranca-body.webp` and `cana-body.webp`; cleanup provenance is in `assets/mascots/poses/art-provenance.json`. Current previews retain those exact body files.
 
-## Reference access limitation
+## Rejected direction and limits
 
-The current user-annotated Library image was resolved successfully. Supported materialization failed to deliver readable local bytes, and Library read returned metadata/caption rather than directly viewable pixels. No claim is made that this executor visually inspected the annotation; the parent’s explicit visual inspection in the task supplies the drawing direction. The earlier Fleischer image also remained uninspected after HTTP 403 and is not used as a claimed match.
+`c598c91f7c3a65e56ff5a327d8f544e1d0488339` is explicitly rejected: the user said “oh god this is worse”. Its paired outward-eye treatment is not approved and must not be restored. Historical files stay frozen.
 
-No animation, MagicPath retry/import, website rollout, merge, production deployment or publishing is authorized. Stop for user review. MagicPath quota denial remains a parent-reported blocker.
+No animation, MagicPath retry/import, website rollout, PR24 edits, merge, production deployment or publishing is authorized. Stop for user review. MagicPath quota denial remains a parent-reported limitation; no import was attempted in this task.

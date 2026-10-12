@@ -1,0 +1,459 @@
+{
+  "options": [
+    {
+      "option": "A",
+      "states": [
+        {
+          "state": "closed",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 0,
+          "noBrows": true,
+          "eyes": [
+            {
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.001845961130748359,
+                  "tipVerticalOffset": 4.000000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006120209105058884,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006229139942754501,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                }
+              ]
+            },
+            {
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.0007702274997535067,
+                  "tipVerticalOffset": 4.000000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.00023460411928521535,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0012406813110073245,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "state": "open",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 2,
+          "noBrows": true,
+          "eyes": [
+            {
+              "groupTransform": "translate(72 167)",
+              "lidTransform": "translate(0 -3.6)",
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.0018460087687551332,
+                  "tipVerticalOffset": -4.000000000000002,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.07) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0006120205389928622,
+                  "tipVerticalOffset": -4.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -9.6) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0006229662696971658,
+                  "tipVerticalOffset": -3.9000000000000004,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.07) scale(1 -1)"
+                }
+              ]
+            },
+            {
+              "groupTransform": "translate(117 166)",
+              "lidTransform": "translate(0 -3.4)",
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 3,
+              "strokes": [
+                {
+                  "attachment": 0.0007702606810672682,
+                  "tipVerticalOffset": -4.000000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -12.278) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.00023460470079267632,
+                  "tipVerticalOffset": -4.4,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.2) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.001240712857873455,
+                  "tipVerticalOffset": -3.9000000000000012,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -12.278) scale(1 -1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "option": "B",
+      "states": [
+        {
+          "state": "closed",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 0,
+          "noBrows": true,
+          "eyes": [
+            {
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.0005285840978592918,
+                  "tipVerticalOffset": 6.200000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0013552021964625034,
+                  "tipVerticalOffset": 5.300000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.00013499424204781415,
+                  "tipVerticalOffset": 4.6000000000000005,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006949472588174178,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                }
+              ]
+            },
+            {
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.001024329664790537,
+                  "tipVerticalOffset": 3.900000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0021273823253609805,
+                  "tipVerticalOffset": 4.600000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0016574073265769652,
+                  "tipVerticalOffset": 5.300000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0005507541121100964,
+                  "tipVerticalOffset": 6.200000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "state": "open",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 2,
+          "noBrows": true,
+          "eyes": [
+            {
+              "groupTransform": "translate(72 167)",
+              "lidTransform": "translate(0 -3.6)",
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.0005284271450043299,
+                  "tipVerticalOffset": -6.200000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.52) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0013552043071118872,
+                  "tipVerticalOffset": -5.300000000000002,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -9.87) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.00013499909280269653,
+                  "tipVerticalOffset": -4.6000000000000005,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -9.87) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.000695066610815216,
+                  "tipVerticalOffset": -3.9000000000000004,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.52) scale(1 -1)"
+                }
+              ]
+            },
+            {
+              "groupTransform": "translate(117 166)",
+              "lidTransform": "translate(0 -3.4)",
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 4,
+              "strokes": [
+                {
+                  "attachment": 0.0010242899423682326,
+                  "tipVerticalOffset": -3.9000000000000004,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -12.608) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0021273658111223563,
+                  "tipVerticalOffset": -4.600000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.398) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.001657391572019968,
+                  "tipVerticalOffset": -5.300000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.398) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0005507183804181704,
+                  "tipVerticalOffset": -6.200000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -12.608) scale(1 -1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "option": "C",
+      "states": [
+        {
+          "state": "closed",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 0,
+          "noBrows": true,
+          "eyes": [
+            {
+              "groupTransform": "translate(72 167)",
+              "lidTransform": null,
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.0005285840978592918,
+                  "tipVerticalOffset": 4.700000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0005321887752655939,
+                  "tipVerticalOffset": 5.400000000000002,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006120209105058884,
+                  "tipVerticalOffset": 5.800000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006922164469016957,
+                  "tipVerticalOffset": 5.200000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0006949472588174178,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                }
+              ]
+            },
+            {
+              "groupTransform": "translate(117 166)",
+              "lidTransform": null,
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.001024329664790537,
+                  "tipVerticalOffset": 4.700000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0002807029310391569,
+                  "tipVerticalOffset": 5.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.00023460411928521535,
+                  "tipVerticalOffset": 5.800000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0007497583092561259,
+                  "tipVerticalOffset": 5.200000000000002,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                },
+                {
+                  "attachment": 0.0005507541121100964,
+                  "tipVerticalOffset": 4.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "state": "open",
+          "normalWidth": 462.5,
+          "frame": "830 130 740 580",
+          "openWhiteShapes": 2,
+          "noBrows": true,
+          "eyes": [
+            {
+              "groupTransform": "translate(72 167)",
+              "lidTransform": "translate(0 -3.6)",
+              "lidPath": "M -7 -4.5 Q 2.5 -1.5 12 -4.5",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.0005284271450043299,
+                  "tipVerticalOffset": -4.700000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.52) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0005321858529168682,
+                  "tipVerticalOffset": -5.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -10.08) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0006120205389928622,
+                  "tipVerticalOffset": -5.800000000000002,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -9.6) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.000692218457148282,
+                  "tipVerticalOffset": -5.200000000000002,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -10.08) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.000695066610815216,
+                  "tipVerticalOffset": -4.4,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.52) scale(1 -1)"
+                }
+              ]
+            },
+            {
+              "groupTransform": "translate(117 166)",
+              "lidTransform": "translate(0 -3.4)",
+              "lidPath": "M -11 -5 Q 0.5 -2.8 12 -5",
+              "count": 5,
+              "strokes": [
+                {
+                  "attachment": 0.0010242899423682326,
+                  "tipVerticalOffset": -4.700000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -12.608) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.00028070861729108474,
+                  "tipVerticalOffset": -5.400000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.552) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.00023460470079267632,
+                  "tipVerticalOffset": -5.800000000000001,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.2) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0007497628351354834,
+                  "tipVerticalOffset": -5.200000000000002,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -11.552) scale(1 -1)"
+                },
+                {
+                  "attachment": 0.0005507183804181704,
+                  "tipVerticalOffset": -4.4,
+                  "rootMovedWithLid": true,
+                  "transform": "translate(0 -12.608) scale(1 -1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "svgHtmlPixelIdentical": true,
+  "pageErrors": []
+}

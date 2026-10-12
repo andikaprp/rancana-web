@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "ddb7c008bb81d5e3e4f44256cf63240c8802efb9",
+  "status": "Three unselected lash options, each with closed and proposed open state",
+  "canonicalReferencesVisuallyInspected": [
+    "assets/mascots/ranca-backpack-option-3.webp",
+    "assets/mascots/cana-academic-cap-option-3.webp"
+  ],
+  "openEyeTreatment": "Simple filled white half-oval beneath a relaxed raised upper lid, based on the Mahasiswa graphic eye; no pupils, iris, eye highlights or brows",
+  "states": [
+    "closed",
+    "open"
+  ],
+  "closedStatesExactBaseline": true,
+  "allArtworkOutsideCanaEyesUnchanged": true,
+  "lashTreatmentsPreserved": true,
+  "upperLidLift": {
+    "left": 3.6,
+    "right": 3.4
+  },
+  "normalDisplayScale": 0.625,
+  "canaBodyHeightRatio": 0.9,
+  "bodyHashes": {
+    "ranca": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+    "cana": "d7a0b618c5153cd6f026fe21ba69749b81a7a4acd7f57b77839e890c46d79547"
+  }
+}

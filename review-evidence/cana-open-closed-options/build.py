@@ -1,0 +1,71 @@
+from pathlib import Path
+import json,copy,base64,html,hashlib
+root=Path(__file__).resolve().parent
+source=root.parent/'cana-three-lash-options'
+options=[('A','Soft curves','3 short rounded lashes per eye'),('B','Graduated fan','4 graduated lashes per eye'),('C','Fine wisps','5 finer tapered lashes per eye')]
+bodydata={};(root/'assets').mkdir(exist_ok=True)
+for key in ['ranca','cana']:
+ data=(source/'assets'/(key+'-body.webp')).read_bytes();(root/'assets'/(key+'-body.webp')).write_bytes(data);bodydata[key]='data:image/webp;base64,'+base64.b64encode(data).decode()
+def walk(n):
+ if isinstance(n,str):return
+ yield n
+ for c in n['children']:
+  if isinstance(c,dict):yield from walk(c)
+def without_cana_eyes(t):
+ t=copy.deepcopy(t)
+ for n in walk(t):
+  if n['attributes'].get('id')=='cana-face':n['children']=[c for c in n['children'] if c['attributes'].get('id') not in ['cana-left-eye-group','cana-right-eye-group']]
+ return t
+def xml(n,prefix=''):
+ if isinstance(n,str):return html.escape(n)
+ a=n['attributes'].copy()
+ if 'id'in a:a['id']=prefix+a['id']
+ if n['tag']=='image':a['href']=bodydata[a['data-body-art']]
+ return '<'+n['tag']+''.join(' '+k+'="'+html.escape(str(v),quote=True)+'"' for k,v in a.items())+'>'+''.join(xml(c,prefix) for c in n['children'])+'</'+n['tag']+'>'
+def framed(tree,box,cana_only=False):
+ t=copy.deepcopy(tree);t['attributes']['viewBox']=box
+ if cana_only:t['children']=[n for n in t['children'] if not isinstance(n,dict) or n['attributes'].get('data-character')!='ranca']
+ t['children'].insert(0,{'tag':'rect','attributes':{'width':'1600','height':'715','fill':'#24493b'},'children':[]});return t
+def page(svg,title):return '<!doctype html><html lang="en"><meta charset="utf-8"><title>'+title+'</title><style>html,body{margin:0;background:#24493b}svg{display:block;width:100%;height:auto}</style>'+svg+'</html>'
+def number(v):return f'{v:.5f}'.rstrip('0').rstrip('.')
+rows=[];face_rows=[]
+for option,title,description in options:
+ baseline=json.loads((source/option/'editable-layers.json').read_text())
+ state_cards=[];face_cards=[]
+ for state in ['closed','open']:
+  tree=copy.deepcopy(baseline)
+  if state=='open':
+   for side,start,width,base,curve,lift,body_width,bottom in [('left',-7,19,-4.5,6,3.6,10.4,.8),('right',-11,23,-5,4.4,3.4,11.4,1.2)]:
+    group=next(n for n in walk(tree) if n['attributes'].get('id')=='cana-'+side+'-eye-group')
+    lid=next(n for n in group['children'] if n['attributes'].get('data-line-eye'))
+    lashes=next(n for n in group['children'] if n['attributes'].get('data-lashes'))
+    lid['attributes']['transform']='translate(0 '+number(-lift)+')'
+    center=start+width/2;x0=center-body_width/2;x1=center+body_width/2;t=(x0-start)/width
+    top=base+curve*t*(1-t)-lift;mid=base+curve*.25-lift;control=2*mid-top
+    d=f'M {number(x0)} {number(top)} Q {number(center)} {number(control)} {number(x1)} {number(top)} C {number(x1+.2)} {number(top+5)} {number(center+3.2)} {number(bottom)} {number(center)} {number(bottom)} C {number(center-3.2)} {number(bottom)} {number(x0-.2)} {number(top+5)} {number(x0)} {number(top)} Z'
+    group['children'].insert(0,{'tag':'path','attributes':{'id':'cana-'+side+'-open-eye','data-open-eye':side,'d':d,'fill':'#fff9fc','stroke':'none'},'children':[]})
+    import re
+    for lash in lashes['children']:
+     nums=[float(x) for x in re.findall(r'-?\d*\.?\d+',lash['attributes']['d'])]
+     y=nums[1] if lashes['attributes'].get('data-style')=='rounded' else (nums[1]+nums[13])/2
+     lash['attributes']['transform']='translate(0 '+number(2*y-lift)+') scale(1 -1)'
+  assert without_cana_eyes(tree)==without_cana_eyes(baseline)
+  if state=='closed':assert tree==baseline
+  folder=root/option/state;folder.mkdir(parents=True,exist_ok=True)
+  (folder/'editable-layers.json').write_text(json.dumps(tree,indent=2)+'\n')
+  pair=framed(tree,'0 0 1600 715');full=framed(tree,'830 130 740 580',True);face=framed(tree,'1030 275 285 180',True)
+  (folder/'RancaCana.svg').write_text(xml(pair));(folder/'Cana.svg').write_text(xml(full))
+  for name,svg in [('pair',pair),('Cana',full),('face',face)]:
+   (folder/(name+'.html')).write_text(page(xml(svg),option+' · '+state))
+  label='Closed · baseline' if state=='closed' else 'Open · relaxed half-lid'
+  prefix=option+'-'+state+'-'
+  state_cards.append('<article data-state="'+state+'"><h3>'+label+'</h3><div class="normal">'+xml(full,prefix+'normal-')+'</div><h4>FACE CLOSE-UP · SAME CROP</h4><div class="face">'+xml(face,prefix+'face-')+'</div></article>')
+  face_cards.append('<article><h3>'+label+'</h3>'+xml(face,prefix+'sheet-')+'</article>')
+ rows.append('<section data-option="'+option+'"><h2>'+option+' · '+title+' <span>'+description+'</span></h2><div class="states">'+''.join(state_cards)+'</div></section>')
+ face_rows.append('<section data-option="'+option+'"><h2>'+option+' · '+title+'</h2><div class="states">'+''.join(face_cards)+'</div></section>')
+css='''*{box-sizing:border-box}html,body{margin:0;background:#f1f3eb;color:#203f33;font-family:system-ui,sans-serif}main{width:1000px;padding:26px}h1{font-size:29px;margin:0 0 8px}.intro{font-size:16px;line-height:1.4;margin:0 0 22px;color:#536c5d}section{margin-bottom:26px}h2{font-size:24px;margin:0 0 12px}h2 span{font-size:16px;font-weight:400;margin-left:12px}.states{display:grid;grid-template-columns:462.5px 462.5px;gap:22px}article{background:#24493b;color:#f1f7ee;border-radius:10px;overflow:hidden}h3{font-size:19px;margin:0;padding:15px 18px}h4{font-size:12px;letter-spacing:.025em;background:#1c3b2f;margin:0;padding:12px 18px}svg{display:block;width:100%;height:auto}footer{font-size:14px;color:#536c5d}'''
+header='<header><h1>Cana · open and closed eye states</h1><p class="intro">A/B/C lash options, with the same relaxed expression and body.<br>Static state studies only. No option is selected.</p></header>'
+(root/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Cana A/B/C · open and closed</title><style>'+css+'</style><main>'+header+''.join(rows)+'<footer>Upper lids and lashes move together. No brows, pupils, body changes or animation.</footer></main></html>')
+(root/'face-contact-sheet.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Cana A/B/C · face state contact sheet</title><style>'+css+'</style><main>'+header+''.join(face_rows)+'</main></html>')
+(root/'manifest.json').write_text(json.dumps({'sourceCommit':'ddb7c008bb81d5e3e4f44256cf63240c8802efb9','status':'Three unselected lash options, each with closed and proposed open state','canonicalReferencesVisuallyInspected':['assets/mascots/ranca-backpack-option-3.webp','assets/mascots/cana-academic-cap-option-3.webp'],'openEyeTreatment':'Simple filled white half-oval beneath a relaxed raised upper lid, based on the Mahasiswa graphic eye; no pupils, iris, eye highlights or brows','states':['closed','open'],'closedStatesExactBaseline':True,'allArtworkOutsideCanaEyesUnchanged':True,'lashTreatmentsPreserved':True,'upperLidLift':{'left':3.6,'right':3.4},'normalDisplayScale':.625,'canaBodyHeightRatio':.9,'bodyHashes':{k:hashlib.sha256((root/'assets'/(k+'-body.webp')).read_bytes()).hexdigest() for k in ['ranca','cana']}},indent=2)+'\n')
+print('Built 6 static states: exact A/B/C closed baselines and proposed half-lidded open states.')
