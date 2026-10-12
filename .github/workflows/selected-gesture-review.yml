@@ -1,0 +1,35 @@
+name: Selected baseline hand refinement review
+on:
+  push:
+    branches: [review/selected-gesture-rest-refinement-20261012]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  early-still:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selected-baseline-before-after-review
+          path: review-evidence/selected-gesture-output/
+  verify-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8140 --bind 127.0.0.1 > /tmp/selected-gesture-server.log 2>&1 &
+          node check-selected-gesture-review.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selected-baseline-before-after-ci
+          path: review-evidence/selected-gesture-output/

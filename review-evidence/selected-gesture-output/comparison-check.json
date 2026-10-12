@@ -1,0 +1,16 @@
+{
+  "baseline": "e8af2396b35c1ba6c5752a8a83cff2eaa3100725",
+  "rancaActiveHandUnchanged": true,
+  "rancaFaceUnchanged": true,
+  "rancaBodyUnchanged": true,
+  "rancaRestPalmPathUnchanged": true,
+  "canaHandsUnchanged": true,
+  "canaBodyHeightRatio": 0.5,
+  "restLine": {
+    "straight": true,
+    "vertical": true
+  },
+  "restingHandMinimumBodyAlpha": 255,
+  "restingHandSamples": 2200,
+  "pageErrors": []
+}
