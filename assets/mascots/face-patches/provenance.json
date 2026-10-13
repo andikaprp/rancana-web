@@ -1,0 +1,10 @@
+{
+  "scope": "Only old white facial ink in original static audience illustrations",
+  "originalsPreserved": ["ranca-backpack-option-3.webp", "cana-academic-cap-option-3.webp"],
+  "approvedFaceSourceCommit": "8336f9994ecdce986ab8603b5507d909700c5aa6",
+  "cleanup": "ImageGen removed facial marks in reference copies. Only clean texture behind a bounded original facial-ink mask is used; boundary matching removes color seams. No generated silhouette, costume or hand is used.",
+  "rancaFaceBox": [117,109,80,80],
+  "canaFaceBox": [52,134,91,61],
+  "reproduction": "scripts/static-mascot-art.js can regenerate blended patches with audience(character,{rebuildCleanup:true}); normal exports embed the checked cleaned-ink PNGs for byte-stable output.",
+  "pixelGate": "check-static-mascot-review.mjs asserts zero changed pixels outside each face box"
+}

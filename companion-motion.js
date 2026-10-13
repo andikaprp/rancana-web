@@ -117,17 +117,18 @@
     const gesture = (x, y, tilt, scale = 1) =>
       `translate(${direction * x}%, ${y}%) rotate(${-direction * tilt}deg) scale(${scale})`;
     return [
-      [0, neutral, 'ready'], [650 + delay, neutral, 'ready'],
-      [800 + delay, gesture(.4, -.5, .7), 'lift1'],
-      [1100 + delay, gesture(1.5, -1.6, 3), 'lift2'],
-      [1400 + delay, gesture(3, -3, 6, 1.01), 'present'],
-      [3400 + delay, gesture(3, -3, 6, 1.01), 'present'],
-      [3900 + delay, gesture(2.5, -2, 4.5), 'present'],
-      [4500 + delay, gesture(3, -3, 6, 1.01), 'present'],
-      [5700 + delay, gesture(3, -3, 6, 1.01), 'present'],
-      [6000 + delay, gesture(2, -2, 4), 'settle1'],
-      [6300 + delay, gesture(1, -1, 2), 'settle2'],
-      [6500 + delay, neutral, 'ready'], [11000, neutral, 'ready']
+      [0, neutral, 'ready'], [450 + delay, neutral, 'ready'],
+      [800 + delay, gesture(-.6, 1, -1), 'anticipate'],
+      [1150 + delay, gesture(.4, -.5, .7), 'lift1'],
+      [1500 + delay, gesture(1.5, -1.6, 3), 'lift2'],
+      [1950 + delay, gesture(3, -3, 6, 1.01), 'present'],
+      [3100 + delay, gesture(3, -3, 6, 1.01), 'present'],
+      [3850 + delay, gesture(2.5, -2, 4.5), 'presentHold'],
+      [4650 + delay, gesture(3, -3, 6, 1.01), 'present'],
+      [5900 + delay, gesture(3, -3, 6, 1.01), 'present'],
+      [6550 + delay, gesture(2, -2, 4), 'settle1'],
+      [7100 + delay, gesture(1, -1, 2), 'settle2'],
+      [7600 + delay, neutral, 'ready'], [11000, neutral, 'ready']
     ];
   }
 
@@ -180,28 +181,46 @@
     // 4. Cana searches from the right while Ranca peeks out beside R.
     // Only the hider is concealed. Open glyph counters remain transparent.
     return green ? [
-      [0, neutral, 'ready'], [600, neutral, 'ready'],
-      [1500, at(side, -.22, -4), 'search'],
-      [4500, at(side, -.22, -4), 'search'],
+      [0, neutral, 'ready'], [350, neutral, 'ready'],
+      [1050, at(side, -.12, -2), 'feel'],
+      [1800, at(side, -.22, -4), 'search'],
+      [2950, at(side, -.22, -4), 'scan'],
+      [3850, at(side, -.2, -2), 'search'],
+      [4600, at(side, -.22, -4), 'scan'],
+      [5050, at(glyphs[1], -.35, -1), 'feel'],
       [5600, at(glyphs[2], -.56, 2), 'found'],
-      [7700, at(glyphs[2], -.56, 2), 'found'],
-      [9100, at(behindR, .01, -3, .9), 'duck'],
-      [11800, at(behindR, .01, -3, .9), 'duck'],
+      [6350, at(glyphs[2], -.56, 2), 'celebrate'],
+      [7250, at(glyphs[2], -.56, 2), 'found'],
+      [7900, at(glyphs[1], -.3, -2), 'peek'],
+      [9100, at(behindR, .01, -3, .9), 'hide'],
+      [10400, at(behindR, .01, -3, .9), 'duck'],
+      [11800, at(behindR, .01, -3, .9), 'hide'],
       [13000, at(besideR, -.02, -3, .94), 'peek'],
-      [15800, at(besideR, -.02, -3, .94), 'peek'],
-      [16800, neutral, 'ready'], [18000, neutral, 'ready']
+      [14200, at(besideR, -.06, -1, .94), 'peekHigh'],
+      [15300, at(besideR, -.02, -3, .94), 'peek'],
+      [16100, at(side, -.12, -1), 'feel'],
+      [17300, neutral, 'ready'], [18000, neutral, 'ready']
     ] : [
-      [0, neutral, 'ready'], [600, neutral, 'ready'],
-      [1500, at(behindA, .01, 3, .9), 'duck'],
-      [2300, at(behindA, -.3, 3, .94), 'peek'],
-      [4500, at(behindA, -.3, 3, .94), 'peek'],
+      [0, neutral, 'ready'], [350, neutral, 'ready'],
+      [1050, at(behindA, .01, 3, .9), 'duck'],
+      [1800, at(behindA, .01, 3, .9), 'hide'],
+      [2450, at(behindA, -.3, 3, .94), 'peek'],
+      [3500, at(behindA, -.33, 1, .94), 'peekHigh'],
+      [4550, at(behindA, -.3, 3, .94), 'peek'],
+      [5100, at(rightFound, -.4, 1), 'peekHigh'],
       [5600, at(rightFound, -.56, -2), 'found'],
-      [7700, at(rightFound, -.56, -2), 'found'],
-      [9100, at(side, -.3, 2), 'cover'],
-      [11800, at(side, -.3, 2), 'cover'],
-      [13000, at(side, -.22, 4), 'search'],
-      [15800, at(side, -.22, 4), 'search'],
-      [16800, neutral, 'ready'], [18000, neutral, 'ready']
+      [6600, at(rightFound, -.56, -2), 'celebrate'],
+      [7400, at(rightFound, -.56, -2), 'found'],
+      [8450, at(side, -.3, 2), 'cover'],
+      [9500, at(side, -.3, 2), 'count'],
+      [10500, at(side, -.3, 2), 'cover'],
+      [11500, at(side, -.3, 2), 'count'],
+      [12300, at(side, -.22, 4), 'feel'],
+      [13100, at(side, -.22, 4), 'search'],
+      [14200, at(side, -.22, 4), 'scan'],
+      [15300, at(side, -.22, 4), 'search'],
+      [16100, at(side, -.12, 2), 'feel'],
+      [17300, neutral, 'ready'], [18000, neutral, 'ready']
     ];
   }
 
@@ -226,7 +245,7 @@
   }
 
   function setPose(item, pose, originalOnly = false, time = 0, context = {}) {
-    if (item.rig && !originalOnly) {
+    if (item.rig) {
       try {
         // One shared native scene clock drives both body movement and vector
         // articulation. Interpolation also works after deterministic seeks/resizes.
@@ -294,8 +313,8 @@
       });
     });
     const phase = scene.name === 'present'
-      ? (time < 1400 || time >= 6850 ? 'ready' : 'present')
-      : time < 600 || time >= 16800 ? 'ready'
+      ? (time < 800 || time >= 7950 ? 'ready' : 'present')
+      : time < 350 || time >= 17300 ? 'ready'
       : time < 5600 ? 'ranca-searches' : time < 7700 ? 'found'
       : time < 13000 ? 'swap-roles' : 'cana-searches';
     if (scene.root.dataset.companionPhase !== phase) scene.root.dataset.companionPhase = phase;

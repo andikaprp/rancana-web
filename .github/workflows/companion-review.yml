@@ -1,4 +1,4 @@
-name: Companion motion review
+name: Selected mascot website review
 on:
   pull_request:
   workflow_dispatch:
@@ -11,26 +11,39 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 9692a9a83f49cbf701f1651327d3ec862e220c7c
+          path: .mascot-main-baseline
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
+      - uses: actions/checkout@v4
+        with:
+          ref: e08df59b3d84dc159c7f7e8820b2617eb2683e25
+          path: .mascot-search-baseline
+          persist-credentials: false
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: node check-companion-motion.mjs --storyboard-only
-        env:
-          COMPANION_REQUIRE_POSES: "1"
+      - run: node scripts/export-mascot-assets.mjs && git diff --exit-code -- assets/mascots/selected-A assets/mascots/ranca-header.svg
+      - run: cp REVIEW-CHECKLIST.md review-evidence/selected-A-website/REVIEW-CHECKLIST.md
+      - run: node scripts/capture-mascot-comparison.mjs --baseline=.mascot-main-baseline
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selected-A-before-after
+          path: |
+            review-evidence/selected-A-website/before/
+            review-evidence/selected-A-website/after/
+      - run: node check-static-mascot-review.mjs --baseline=.mascot-main-baseline
+      - run: node check-search-contours.mjs --baseline=.mascot-search-baseline
+      - run: node check-selected-website-mascots.mjs
+      - run: python3 scripts/package-mascot-preview.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: companion-storyboard-preview
-          path: review-evidence/companion-motion/
-      - run: node check-companion-motion.mjs
-        env:
-          COMPANION_REQUIRE_POSES: "1"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: companion-motion-review
-          path: review-evidence/companion-motion/
+          name: selected-A-website-review
+          path: review-evidence/selected-A-website/

@@ -96,3 +96,6 @@
     transform: none !important;
   }
 }
+/* Static benefits artwork: retain the existing PR24 placement only. */
+.benefit-mascot{display:block;width:180px;height:auto;margin:0 0 24px}
+@media(max-width:899px){.benefit-mascot{width:150px;margin-bottom:20px}}
