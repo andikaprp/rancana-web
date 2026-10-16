@@ -18,6 +18,50 @@
     } catch { return null; }
   };
   let choice = readChoice();
+  // Proposed campaign registry: changing values requires code review, never free text.
+  const campaignPlacements = {
+    instagram: {organic_social: ['profile_bio', 'story'], paid_social: ['feed_ad', 'story_ad']},
+    tiktok: {organic_social: ['profile_bio'], paid_social: ['video_ad']},
+    x: {organic_social: ['profile_bio', 'post'], paid_social: ['feed_ad']}
+  };
+  const campaignFromURL = () => {
+    const params = new URLSearchParams(location.search);
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+    if (keys.some(key => params.getAll(key).length !== 1)) return null;
+    const [source, medium, name, content] = keys.map(key => params.get(key));
+    if (name !== 'rancana_study_2026q4' ||
+        !Object.hasOwn(campaignPlacements, source) ||
+        !Object.hasOwn(campaignPlacements[source], medium) ||
+        !campaignPlacements[source][medium].includes(content)) return null;
+    return {campaign_source: source, campaign_medium: medium, campaign_name: name, campaign_content: content};
+  };
+  // Document-only lifetime: no campaign storage, user identifier or cross-device join.
+  let campaign = null;
+  const playBase = 'https://play.google.com/store/apps/details?id=com.planora.labs';
+  const isPlayLink = anchor => {
+    let url; try { url = new URL(anchor.href, location.href); } catch { return false; }
+    if (url.username || url.password) return false;
+    return (url.origin === 'https://play.google.com' && url.pathname === '/store/apps/details' &&
+      url.searchParams.getAll('id').length === 1 && url.searchParams.get('id') === 'com.planora.labs') ||
+      (url.origin === location.origin && url.pathname === '/go/play');
+  };
+  const preparePlayLink = anchor => {
+    if (!isPlayLink(anchor)) return false;
+    const url = new URL(playBase);
+    if (choice === 'granted' && readChoice() === 'granted' && campaign) {
+      const referrer = new URLSearchParams({utm_source: campaign.campaign_source,
+        utm_medium: campaign.campaign_medium, utm_campaign: campaign.campaign_name,
+        utm_content: campaign.campaign_content});
+      url.searchParams.set('referrer', referrer.toString());
+    }
+    // Rebuild the destination; never forward link queries, click IDs or redirect targets.
+    anchor.href = url.href;
+    anchor.referrerPolicy = 'no-referrer';
+    anchor.relList.add('noreferrer', 'noopener');
+    return true;
+  };
+  const preparePlayLinks = () => document.querySelectorAll('a[href]').forEach(preparePlayLink);
+
   const language = () => document.documentElement.lang === 'en' ? 'en' : 'id';
   const pageName = () => {
     const parts = location.pathname.replace(/\.html$/, '').split('/').filter(Boolean);
@@ -61,6 +105,7 @@
   };
   const stop = (removeCookies = true, reload = true) => {
     window[disabled] = true;
+    campaign = null; preparePlayLinks();
     if (removeCookies) clearCookies();
     // Executed SDK code cannot be unloaded by removing a script element.
     // Persist denial/expiry first, disable collection, then replace this document.
@@ -69,7 +114,9 @@
   const send = message => {
     if (choice === 'granted' && readChoice() !== 'granted') { refreshChoice(); return; }
     if (choice !== 'granted' || !tag || !gtag) return;
-    const context = {page_location: 'https://rancana.id/' + message.language + '/' + (message.page === 'home' ? '' : message.page), page_title: 'Rancana — ' + message.page, page_referrer: '', language: message.language};
+    const context = {page_location: 'https://rancana.id/' + message.language + '/' + (message.page === 'home' ? '' : message.page), page_title: 'Rancana — ' + message.page, page_referrer: '', language: message.language,
+      campaign_source: '', campaign_medium: '', campaign_name: '', campaign_content: '',
+      campaign_id: '', campaign_term: '', ...(campaign || {})};
     if (!configured) {
       gtag('config', id, {...context, send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'none', cookie_path: '/', cookie_prefix: 'rancana', cookie_expires: 15552000, cookie_update: false});
       configured = true;
@@ -88,6 +135,7 @@
   const start = () => {
     if (choice !== 'granted' || readChoice() !== 'granted' || !pageName() || !/^G-[A-Z0-9]+$/.test(id || '')) return;
     if (tag) { if (window[disabled]) location.reload(); return; }
+    campaign = campaignFromURL(); preparePlayLinks();
     window[disabled] = false;
     window.dataLayer = window.dataLayer || [];
     gtag = function () { window.dataLayer.push(arguments); };
@@ -114,18 +162,22 @@
     panel.hidden = choice !== null; render(); scheduleExpiry();
   });
   new MutationObserver(() => { render(); view(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
-  document.addEventListener('click', event => {
-    if (choice !== 'granted' || !tag || !event.isTrusted) return;
+  const seenClicks = new WeakSet();
+  const onPlayInteraction = event => {
     const anchor = event.target.closest?.('a[href]');
-    if (!anchor) return;
-    let url; try { url = new URL(anchor.href, location.href); } catch { return; }
-    const direct = url.protocol === 'https:' && url.hostname === 'play.google.com' && url.pathname === '/store/apps/details' && url.searchParams.get('id') === 'com.planora.labs';
-    const redirect = url.origin === location.origin && url.pathname === '/go/play';
+    if (!anchor || !preparePlayLink(anchor)) return;
+    if (!['click', 'auxclick'].includes(event.type) || (event.type === 'auxclick' && event.button !== 1) ||
+        choice !== 'granted' || !tag || !event.isTrusted || seenClicks.has(event)) return;
+    seenClicks.add(event);
     const page = pageName();
-    if ((!direct && !redirect) || !page) return;
+    if (!page) return;
     const placement = anchor.closest('.site-header') ? 'header' : anchor.closest('.hero-ctas') ? 'hero' : anchor.closest('.preview-footer') ? 'footer' : 'body';
     send({type: 'rancana-analytics', event: 'google_play_click', page, language: language(), placement});
-  }, {capture: true});
+  };
+  // Prepare before default navigation (including middle-click/context-menu), without delaying it.
+  for (const type of ['pointerdown', 'contextmenu', 'click', 'auxclick']) {
+    document.addEventListener(type, onPlayInteraction, {capture: true});
+  }
   const scheduleExpiry = () => {
     clearTimeout(expiryTimer);
     if (choice === null || storageFailed) return;
@@ -146,7 +198,7 @@
     if (!event.persisted) return;
     choice = readChoice(); if (choice === 'granted') { window[disabled] = false; start(); } else stop(); panel.hidden = choice !== null; render(); scheduleExpiry();
   });
-  panel.hidden = choice !== null; render();
+  panel.hidden = choice !== null; render(); preparePlayLinks();
   if (choice === 'granted') start(); else clearCookies();
   scheduleExpiry();
 })();
