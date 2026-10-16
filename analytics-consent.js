@@ -24,19 +24,75 @@
     tiktok: {organic_social: ['profile_bio'], paid_social: ['video_ad']},
     x: {organic_social: ['profile_bio', 'post'], paid_social: ['feed_ad']}
   };
+  const validCampaign = (source, medium, name, content) => name === 'rancana_study_2026q4' &&
+    Object.hasOwn(campaignPlacements, source) && Object.hasOwn(campaignPlacements[source], medium) &&
+    campaignPlacements[source][medium].includes(content);
   const campaignFromURL = () => {
     const params = new URLSearchParams(location.search);
     const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
     if (keys.some(key => params.getAll(key).length !== 1)) return null;
     const [source, medium, name, content] = keys.map(key => params.get(key));
-    if (name !== 'rancana_study_2026q4' ||
-        !Object.hasOwn(campaignPlacements, source) ||
-        !Object.hasOwn(campaignPlacements[source], medium) ||
-        !campaignPlacements[source][medium].includes(content)) return null;
+    if (!validCampaign(source, medium, name, content)) return null;
     return {campaign_source: source, campaign_medium: medium, campaign_name: name, campaign_content: content};
   };
-  // Document-only lifetime: no campaign storage, user identifier or cross-device join.
-  let campaign = null;
+  // Same-origin, tab-session storage only, with a fixed 30-minute maximum lifetime.
+  const campaignKey = 'rancana_campaign_session_v1';
+  const campaignAge = 30 * 60000;
+  const campaignFields = ['campaign_source', 'campaign_medium', 'campaign_name', 'campaign_content'];
+  let campaign = null, campaignTimer, campaignStorageFailed = false;
+  const consentAt = () => {
+    try { return readChoice() === 'granted' ? JSON.parse(localStorage.getItem(key)).at : null; }
+    catch { return null; }
+  };
+  const clearCampaign = () => {
+    campaign = null; clearTimeout(campaignTimer);
+    try { sessionStorage.removeItem(campaignKey); } catch { campaignStorageFailed = true; }
+  };
+  const readCampaign = () => {
+    if (campaignStorageFailed) return null;
+    try {
+      if (choice !== 'granted' || readChoice() !== 'granted') { clearCampaign(); return null; }
+      const record = JSON.parse(sessionStorage.getItem(campaignKey));
+      if (!record) return null;
+      const c = record.campaign;
+      if (Object.keys(record).sort().join() !== 'at,campaign,consentAt,version' || record.version !== 1 ||
+          record.consentAt !== consentAt() || !Number.isFinite(record.at) || record.at > Date.now() ||
+          Date.now() - record.at >= campaignAge || !c ||
+          Object.keys(c).sort().join() !== [...campaignFields].sort().join() ||
+          !campaignFields.every(field => typeof c[field] === 'string') ||
+          !validCampaign(c.campaign_source, c.campaign_medium, c.campaign_name, c.campaign_content)) {
+        clearCampaign(); return null;
+      }
+      return record;
+    } catch { campaignStorageFailed = true; clearCampaign(); return null; }
+  };
+  const refreshCampaign = () => {
+    clearTimeout(campaignTimer);
+    const previous = campaign;
+    const record = readCampaign(); campaign = record?.campaign || null;
+    if (previous && !campaign && configured && choice === 'granted' && readChoice() === 'granted') {
+      gtag('config', id, {update: true, send_page_view: false,
+        campaign_source: '', campaign_medium: '', campaign_name: '', campaign_content: ''});
+    }
+    if (record) campaignTimer = setTimeout(() => {
+      refreshCampaign(); preparePlayLinks();
+    }, Math.max(0, record.at + campaignAge - Date.now()));
+  };
+  const startCampaign = () => {
+    // A supplied but invalid tuple clears prior attribution instead of silently inheriting it.
+    const params = new URLSearchParams(location.search);
+    if (['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].some(field => params.has(field))) {
+      const incoming = campaignFromURL();
+      const existing = readCampaign();
+      if (!incoming) clearCampaign();
+      else if (!existing || campaignFields.some(field => existing.campaign[field] !== incoming[field])) {
+        try { sessionStorage.setItem(campaignKey, JSON.stringify({version: 1, at: Date.now(),
+          consentAt: consentAt(), campaign: incoming})); }
+        catch { campaignStorageFailed = true; clearCampaign(); }
+      }
+    }
+    refreshCampaign();
+  };
   const playBase = 'https://play.google.com/store/apps/details?id=com.planora.labs';
   const isPlayLink = anchor => {
     let url; try { url = new URL(anchor.href, location.href); } catch { return false; }
@@ -47,6 +103,7 @@
   };
   const preparePlayLink = anchor => {
     if (!isPlayLink(anchor)) return false;
+    refreshCampaign();
     const url = new URL(playBase);
     if (choice === 'granted' && readChoice() === 'granted' && campaign) {
       const referrer = new URLSearchParams({utm_source: campaign.campaign_source,
@@ -105,7 +162,7 @@
   };
   const stop = (removeCookies = true, reload = true) => {
     window[disabled] = true;
-    campaign = null; preparePlayLinks();
+    clearCampaign(); preparePlayLinks();
     if (removeCookies) clearCookies();
     // Executed SDK code cannot be unloaded by removing a script element.
     // Persist denial/expiry first, disable collection, then replace this document.
@@ -114,6 +171,7 @@
   const send = message => {
     if (choice === 'granted' && readChoice() !== 'granted') { refreshChoice(); return; }
     if (choice !== 'granted' || !tag || !gtag) return;
+    refreshCampaign();
     const context = {page_location: 'https://rancana.id/' + message.language + '/' + (message.page === 'home' ? '' : message.page), page_title: 'Rancana — ' + message.page, page_referrer: '', language: message.language,
       campaign_source: '', campaign_medium: '', campaign_name: '', campaign_content: '',
       campaign_id: '', campaign_term: '', ...(campaign || {})};
@@ -135,7 +193,7 @@
   const start = () => {
     if (choice !== 'granted' || readChoice() !== 'granted' || !pageName() || !/^G-[A-Z0-9]+$/.test(id || '')) return;
     if (tag) { if (window[disabled]) location.reload(); return; }
-    campaign = campaignFromURL(); preparePlayLinks();
+    startCampaign(); preparePlayLinks();
     window[disabled] = false;
     window.dataLayer = window.dataLayer || [];
     gtag = function () { window.dataLayer.push(arguments); };
@@ -189,6 +247,7 @@
   const refreshChoice = () => {
     const next = readChoice();
     if (next !== choice) { choice = next; if (choice === 'granted') start(); else stop(); panel.hidden = choice !== null; render(); }
+    refreshCampaign(); preparePlayLinks();
     scheduleExpiry();
   };
   addEventListener('pagehide', () => { window[disabled] = true; });
@@ -199,6 +258,6 @@
     choice = readChoice(); if (choice === 'granted') { window[disabled] = false; start(); } else stop(); panel.hidden = choice !== null; render(); scheduleExpiry();
   });
   panel.hidden = choice !== null; render(); preparePlayLinks();
-  if (choice === 'granted') start(); else clearCookies();
+  if (choice === 'granted') start(); else { clearCampaign(); clearCookies(); }
   scheduleExpiry();
 })();

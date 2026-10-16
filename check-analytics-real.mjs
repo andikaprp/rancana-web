@@ -93,6 +93,10 @@ try {
   const campaignView = events('page_view').at(-1);
   check(campaignView.get('cs'), 'instagram'); check(campaignView.get('cm'), 'paid_social');
   check(campaignView.get('cn'), 'rancana_study_2026q4'); check(campaignView.get('cc'), 'feed_ad');
+  await page.goto(origin + '/en/privacy');
+  await waitFor(() => events('page_view').length >= 4); await pause(1000);
+  check(events('page_view').at(-1).get('cs'), 'instagram');
+  check(events('page_view').at(-1).get('cm'), 'paid_social');
   for (const params of captures) {
     check(params.get('tid'), id);
     check(['https://rancana.id/en/', 'https://rancana.id/en/privacy'].includes(params.get('dl')), true);
