@@ -1,5 +1,5 @@
 const PLAY =
-  'https://play.google.com/store/apps/details?id=com.planora.labs&utm_source=rancana.id&utm_medium=web&utm_campaign=play_cta';
+  'https://play.google.com/store/apps/details?id=com.planora.labs';
 
 export default {
   async fetch(request, env) {

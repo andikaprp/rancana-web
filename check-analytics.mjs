@@ -29,6 +29,7 @@ const contexts=[];
 async function session(locale='en',initial=null) {
   const context = await browser.newContext({viewport:{width:390,height:844}});contexts.push(context);
   const requests=[],events=[];
+  await context.route('**/*', route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
   if(initial)await context.addInitScript(({key,initial})=>localStorage.setItem(key,JSON.stringify(initial)),{key,initial});
   await context.route('https://www.googletagmanager.com/**',async route=>{requests.push(route.request().url());await route.fulfill({contentType:'text/javascript',body:sdk});});
   await context.route('https://www.google-analytics.com/**',async route=>{requests.push(route.request().url());events.push(JSON.parse(route.request().postData()));await route.fulfill({status:204});});
@@ -140,6 +141,95 @@ try {
     check(bf.events.filter(event => event[1] === 'page_view').length, previousViews + 1);
     check(bf.events.at(-1)[2].page_location, 'https://rancana.id/' + locale + '/' + guide);
   }
+  // Campaign registry and encoded Play handoff: never deliver live analytics.
+  const tags = 'utm_source=instagram&utm_medium=organic_social&utm_campaign=rancana_study_2026q4&utm_content=profile_bio';
+  const campaignSession = await session();
+  await campaignSession.page.goto(origin + '/en/?' + tags + '&email=private@example.test&gclid=private-click#private');
+  await campaignSession.settle();
+  const campaignPlay = campaignSession.page.locator('.hero-ctas a[href*="play.google.com"]').first();
+  const barePlay = 'https://play.google.com/store/apps/details?id=com.planora.labs';
+  check(await campaignPlay.getAttribute('href'), barePlay);
+  check(campaignSession.requests.length, 0);
+  await campaignSession.page.locator('[data-consent-accept]').click(); await campaignSession.settle();
+  check(campaignSession.events.at(-1)[2].campaign_source, 'instagram');
+  check(campaignSession.events.at(-1)[2].campaign_medium, 'organic_social');
+  check(campaignSession.events.at(-1)[2].page_location, 'https://rancana.id/en/');
+  check(campaignSession.events.at(-1)[2].page_referrer, '');
+  check(await campaignSession.page.locator('link[rel="canonical"]').getAttribute('href'), 'https://rancana.id/en/');
+  let destination = new URL(await campaignPlay.getAttribute('href'));
+  check([...destination.searchParams.keys()], ['id', 'referrer']);
+  check(destination.searchParams.get('referrer'), tags);
+  check(await campaignPlay.getAttribute('referrerpolicy'), 'no-referrer');
+  check((await campaignPlay.getAttribute('rel')).includes('noreferrer'), true);
+  check(JSON.stringify(campaignSession.events).includes('private'), false);
+  await campaignPlay.evaluate(a => a.addEventListener('click', e => e.preventDefault()));
+  await campaignSession.page.addScriptTag({url: origin + '/analytics-consent.js'});
+  await campaignPlay.click(); await campaignSession.settle();
+  check(campaignSession.events.filter(e => e[1] === 'google_play_click').length, 1);
+  await campaignPlay.evaluate(a => a.click()); await campaignSession.settle();
+  check(campaignSession.events.filter(e => e[1] === 'google_play_click').length, 1);
+  await campaignPlay.evaluate(a => a.addEventListener('auxclick', e => e.preventDefault()));
+  await campaignPlay.click({button:'middle'}); await campaignSession.settle();
+  check(campaignSession.events.filter(e => e[1] === 'google_play_click').length, 2);
+  await campaignSession.page.locator('[data-consent-reject]').evaluate(e => e.click()); await campaignSession.settle();
+  check(await campaignPlay.getAttribute('href'), barePlay);
+  check(await campaignSession.page.locator('script[src*="googletagmanager"]').count(), 0);
+  // Consent denial must also strip existing arbitrary destination parameters.
+  await campaignPlay.evaluate(a => { a.addEventListener('click', e => e.preventDefault()); a.href += '&referrer=private&gclid=private&url=https://evil.test'; });
+  await campaignPlay.click(); await campaignSession.settle();
+  check(await campaignPlay.getAttribute('href'), barePlay);
+  // Invalid and injected registry values fail closed, including duplicates and prototype names.
+  const invalid = [tags + '&utm_source=x', tags.replace('instagram', '__proto__'),
+    tags.replace('organic_social', 'constructor'), tags.replace('profile_bio', 'feed_ad'),
+    tags.replace('rancana_study_2026q4', 'private%40example.test'),
+    tags.replace('profile_bio', 'profile_bio%26url%3Dhttps%3A%2F%2Fevil.test'),
+    tags.replace('instagram', 'Instagram'), tags.replace('utm_content=profile_bio', ''),
+    tags.replace('profile_bio', '%2570rofile_bio')];
+  const registry = await session();
+  await registry.page.locator('[data-consent-accept]').click();
+  for (const query of invalid) {
+    await registry.page.goto(origin + '/id/?' + query); await registry.settle();
+    check(registry.events.at(-1)[2].campaign_source, '');
+    check(await registry.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
+  }
+  for (const locale of ['id', 'en']) for (const source of ['instagram', 'tiktok', 'x']) for (const medium of ['organic_social', 'paid_social']) {
+    const content = medium === 'organic_social' ? 'profile_bio' : source === 'tiktok' ? 'video_ad' : 'feed_ad';
+    const query = new URLSearchParams({utm_source:source,utm_medium:medium,utm_campaign:'rancana_study_2026q4',utm_content:content});
+    await registry.page.goto(origin + '/' + locale + '/?' + query); await registry.settle();
+    check(registry.events.at(-1)[2].campaign_source, source);
+    check(registry.events.at(-1)[2].campaign_medium, medium);
+    check(registry.events.at(-1)[2].page_location, 'https://rancana.id/' + locale + '/');
+    destination = new URL(await registry.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'));
+    check(destination.searchParams.get('referrer'), query.toString());
+  }
+  // /go/play is rewritten to a fixed Play destination, never an attacker-provided target.
+  await registry.page.evaluate(() => {
+    const a = document.createElement('a'); a.id = 'redirect-probe'; a.href = '/go/play?url=https://evil.test&referrer=private'; a.textContent = 'probe';
+    a.addEventListener('click', e => e.preventDefault()); document.body.prepend(a);
+  });
+  await registry.page.locator('#redirect-probe').click(); await registry.settle();
+  destination = new URL(await registry.page.locator('#redirect-probe').getAttribute('href'));
+  check(destination.origin, 'https://play.google.com'); check(destination.searchParams.has('url'), false);
+  check(destination.searchParams.get('referrer').includes('private'), false);
+  const beforeUnsafe = registry.events.length;
+  for (const href of ['https://play.google.com.evil.test/store/apps/details?id=com.planora.labs',
+    'https://user@play.google.com/store/apps/details?id=com.planora.labs',
+    'https://play.google.com:444/store/apps/details?id=com.planora.labs',
+    'https://play.google.com/store/apps/details?id=com.other.app',
+    'https://play.google.com/store/apps/details?id=com.planora.labs&id=com.other.app']) {
+    await registry.page.locator('#redirect-probe').evaluate((a, href) => {a.href=href;}, href);
+    await registry.page.locator('#redirect-probe').click(); await registry.settle();
+    check(await registry.page.locator('#redirect-probe').getAttribute('href'), href);
+  }
+  check(registry.events.length, beforeUnsafe);
+  // Campaign attribution is deliberately not persisted into another document.
+  await registry.page.goto(origin + '/en/privacy'); await registry.settle();
+  check(registry.events.at(-1)[2].campaign_source, '');
+  // Withdrawal with failed persistence still removes tags immediately.
+  await failure.page.goto(origin + '/en/?' + tags); await failure.settle();
+  await failure.page.evaluate(() => {Storage.prototype.setItem=()=>{throw Error('blocked')};});
+  await failure.page.locator('[data-consent-reject]').evaluate(e=>e.click()); await failure.settle();
+  check(await failure.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
   // Revocation actually creates a fresh document; expired consent does likewise.
   check(await s.page.evaluate(()=>window.dataLayer === undefined),true);
   check(await deadline.page.evaluate(()=>window.dataLayer === undefined),true);
