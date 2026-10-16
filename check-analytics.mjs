@@ -222,14 +222,73 @@ try {
     check(await registry.page.locator('#redirect-probe').getAttribute('href'), href);
   }
   check(registry.events.length, beforeUnsafe);
-  // Campaign attribution is deliberately not persisted into another document.
+  // Consented campaign survives same-origin page navigation without URL decoration.
   await registry.page.goto(origin + '/en/privacy'); await registry.settle();
-  check(registry.events.at(-1)[2].campaign_source, '');
+  check(registry.events.at(-1)[2].campaign_source, 'x');
   // Withdrawal with failed persistence still removes tags immediately.
   await failure.page.goto(origin + '/en/?' + tags); await failure.settle();
   await failure.page.evaluate(() => {Storage.prototype.setItem=()=>{throw Error('blocked')};});
   await failure.page.locator('[data-consent-reject]').evaluate(e=>e.click()); await failure.settle();
   check(await failure.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
+  // Session lifetime, tampering, navigation and regrant boundaries.
+  const sessionKey = 'rancana_campaign_session_v1';
+  const flow = await session();
+  await flow.page.goto(origin + '/en/?' + tags + '&gclid=private-id&email=private@example.test');
+  check(await flow.page.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
+  await flow.page.locator('[data-consent-accept]').click(); await flow.settle();
+  const saved = await flow.page.evaluate(k => JSON.parse(sessionStorage.getItem(k)), sessionKey);
+  check(Object.keys(saved).sort(), ['at', 'campaign', 'consentAt', 'version']);
+  check(JSON.stringify(saved).includes('private'), false);
+  await flow.page.goto(origin + '/en/privacy'); await flow.settle();
+  check(flow.events.at(-1)[2].campaign_source, 'instagram');
+  check(flow.events.at(-1)[2].page_location, 'https://rancana.id/en/privacy');
+  await flow.page.goto(origin + '/id/'); await flow.settle();
+  check(flow.events.at(-1)[2].campaign_source, 'instagram');
+  check(await flow.page.evaluate(k => JSON.parse(sessionStorage.getItem(k)).at, sessionKey), saved.at);
+  let handoff = new URL(await flow.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'));
+  check(handoff.searchParams.get('referrer'), tags);
+  // New independent tab does not inherit a campaign; no localStorage campaign record.
+  const independent = await flow.context.newPage(); await independent.goto(origin + '/en/');
+  check(await independent.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
+  check(await flow.page.evaluate(k => localStorage.getItem(k), sessionKey), null);
+  await independent.close();
+  await flow.page.evaluate(k => {const v=JSON.parse(sessionStorage.getItem(k));v.at=Date.now()-30*60000+300;sessionStorage.setItem(k,JSON.stringify(v));dispatchEvent(new Event('focus'));}, sessionKey);
+  await flow.page.waitForTimeout(500);
+  check(await flow.page.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
+  check(await flow.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
+  await flow.page.goto(origin + '/en/privacy'); await flow.settle();
+  check(flow.events.at(-1)[2].campaign_source, '');
+  // Stored injection and extra fields are rejected rather than forwarded.
+  for (const mutate of ['source', 'extra', 'future', 'consent', 'malformed']) {
+    await flow.page.goto(origin + '/en/?' + tags); await flow.settle();
+    await flow.page.evaluate(({k,mutate}) => {
+      const v=JSON.parse(sessionStorage.getItem(k));
+      if(mutate==='source')v.campaign.campaign_source='private@example.test';
+      if(mutate==='extra')v.campaign.gclid='private-id';
+      if(mutate==='future')v.at=Date.now()+60000;
+      if(mutate==='consent')v.consentAt=1;
+      sessionStorage.setItem(k,mutate==='malformed'?'bad json':JSON.stringify(v));
+    }, {k:sessionKey,mutate});
+    await flow.page.goto(origin + '/id/privacy'); await flow.settle();
+    check(flow.events.at(-1)[2].campaign_source, '');
+    check(await flow.page.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
+  }
+  // Withdrawal clears session data; a later grant on an untagged page cannot resurrect it.
+  await flow.page.goto(origin + '/en/?' + tags); await flow.settle();
+  await flow.page.goto(origin + '/en/privacy'); await flow.settle();
+  await flow.page.locator('[data-consent-reject]').evaluate(e=>e.click()); await flow.settle();
+  check(await flow.page.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
+  await flow.page.locator('[data-consent-accept]').evaluate(e=>e.click()); await flow.settle();
+  check(flow.events.at(-1)[2].campaign_source, '');
+  // Session storage failure does not block normal navigation or permit campaign collection.
+  await flow.page.evaluate(() => {Storage.prototype.setItem=function(){throw Error('blocked')};});
+  await flow.page.goto(origin + '/en/?' + tags); await flow.settle();
+  // Install the fault before script execution on the next document.
+  await flow.context.addInitScript(() => {const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(this===sessionStorage)throw Error('blocked session');return original.call(this,k,v);};});
+  await flow.page.evaluate(k=>sessionStorage.removeItem(k),sessionKey);
+  await flow.page.reload(); await flow.settle();
+  check(flow.events.at(-1)[2].campaign_source, '');
+  check(await flow.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
   // Revocation actually creates a fresh document; expired consent does likewise.
   check(await s.page.evaluate(()=>window.dataLayer === undefined),true);
   check(await deadline.page.evaluate(()=>window.dataLayer === undefined),true);
