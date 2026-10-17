@@ -80,9 +80,7 @@
       gtag('config', id, {update: true, send_page_view: false,
         campaign_source: '', campaign_medium: '', campaign_name: '', campaign_content: ''});
     }
-    if (record) campaignTimer = setTimeout(() => {
-      refreshCampaign(); preparePlayLinks();
-    }, Math.max(0, record.at + campaignAge - Date.now()));
+    if (record) campaignTimer = setTimeout(refreshCampaign, Math.max(0, record.at + campaignAge - Date.now()));
   };
   const startCampaign = () => {
     // A supplied but invalid tuple clears prior attribution instead of silently inheriting it.
@@ -99,31 +97,13 @@
     }
     refreshCampaign();
   };
-  const playBase = 'https://play.google.com/store/apps/details?id=com.planora.labs';
+  const legacyPlay = 'https://play.google.com/store/apps/details?id=com.planora.labs';
   const isPlayLink = anchor => {
     let url; try { url = new URL(anchor.href, location.href); } catch { return false; }
     if (url.username || url.password) return false;
-    return (url.origin === 'https://play.google.com' && url.pathname === '/store/apps/details' &&
-      url.searchParams.getAll('id').length === 1 && url.searchParams.get('id') === 'com.planora.labs') ||
+    return url.href === legacyPlay ||
       (url.origin === location.origin && url.pathname === '/go/play');
   };
-  const preparePlayLink = anchor => {
-    if (!isPlayLink(anchor)) return false;
-    refreshCampaign();
-    const url = new URL(playBase);
-    if (choice === 'granted' && readChoice() === 'granted' && campaign) {
-      const referrer = new URLSearchParams({utm_source: campaign.campaign_source,
-        utm_medium: campaign.campaign_medium, utm_campaign: campaign.campaign_name,
-        utm_content: campaign.campaign_content});
-      url.searchParams.set('referrer', referrer.toString());
-    }
-    // Rebuild the destination; never forward link queries, click IDs or redirect targets.
-    anchor.href = url.href;
-    anchor.referrerPolicy = 'no-referrer';
-    anchor.relList.add('noreferrer', 'noopener');
-    return true;
-  };
-  const preparePlayLinks = () => document.querySelectorAll('a[href]').forEach(preparePlayLink);
 
   const language = () => document.documentElement.lang === 'en' ? 'en' : 'id';
   const pageName = () => {
@@ -168,7 +148,7 @@
   };
   const stop = (removeCookies = true, reload = true) => {
     window[disabled] = true;
-    clearCampaign(); preparePlayLinks();
+    clearCampaign();
     if (removeCookies) clearCookies();
     // Executed SDK code cannot be unloaded by removing a script element.
     // Persist denial/expiry first, disable collection, then replace this document.
@@ -199,7 +179,7 @@
   const start = () => {
     if (choice !== 'granted' || readChoice() !== 'granted' || !pageName() || !/^G-[A-Z0-9]+$/.test(id || '')) return;
     if (tag) { if (window[disabled]) location.reload(); return; }
-    startCampaign(); preparePlayLinks();
+    startCampaign();
     window[disabled] = false;
     window.dataLayer = window.dataLayer || [];
     gtag = function () { window.dataLayer.push(arguments); };
@@ -229,7 +209,7 @@
   const seenClicks = new WeakSet();
   const onPlayInteraction = event => {
     const anchor = event.target.closest?.('a[href]');
-    if (!anchor || !preparePlayLink(anchor)) return;
+    if (!anchor || !isPlayLink(anchor)) return;
     if (!['click', 'auxclick'].includes(event.type) || (event.type === 'auxclick' && event.button !== 1) ||
         choice !== 'granted' || !tag || !event.isTrusted || seenClicks.has(event)) return;
     seenClicks.add(event);
@@ -253,7 +233,7 @@
   const refreshChoice = () => {
     const next = readChoice();
     if (next !== choice) { choice = next; if (choice === 'granted') start(); else stop(); panel.hidden = choice !== null; render(); }
-    refreshCampaign(); preparePlayLinks();
+    refreshCampaign();
     scheduleExpiry();
   };
   addEventListener('pagehide', () => { window[disabled] = true; });
@@ -263,7 +243,7 @@
     if (!event.persisted) return;
     choice = readChoice(); if (choice === 'granted') { window[disabled] = false; start(); } else stop(); panel.hidden = choice !== null; render(); scheduleExpiry();
   });
-  panel.hidden = choice !== null; render(); preparePlayLinks();
+  panel.hidden = choice !== null; render();
   if (choice === 'granted') start(); else { clearCampaign(); clearCookies(); }
   scheduleExpiry();
 })();

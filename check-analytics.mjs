@@ -8,9 +8,17 @@ const require = createRequire(import.meta.url);
 const {chromium} = require('playwright');
 const root = path.dirname(new URL(import.meta.url).pathname);
 const types = {'.js':'text/javascript','.css':'text/css','.html':'text/html','.svg':'image/svg+xml','.webp':'image/webp','.woff':'font/woff'};
+const play = 'https://play.google.com/store/apps/details?id=com.planora.labs';
 const server = http.createServer(async (req,res) => {
   try {
-    let name = decodeURIComponent(new URL(req.url,'http://localhost').pathname);
+    const url = new URL(req.url,'http://localhost');
+    if (url.pathname === '/go/play') {
+      res.statusCode = 302;
+      res.setHeader('Location', play);
+      res.end();
+      return;
+    }
+    let name = decodeURIComponent(url.pathname);
     if (name.endsWith('/')) name += 'index.html';
     if (!path.extname(name)) name += '.html';
     const file = path.resolve(root,'.' + name);
@@ -75,9 +83,10 @@ try {
   await s.page.evaluate(()=>{history.pushState({},'','?email=another@example.test#name');});await s.settle();check(s.events.length,1);
   // Trusted click dispatch in Chromium; abort only its destination, never delay navigation for analytics.
   await s.context.route('https://play.google.com/**',route=>route.abort());
-  const play=s.page.locator('.hero-ctas a[href*="play.google.com"]').first();
+  const play=s.page.locator('.hero-ctas a[href^="/go/play"]').first();
   await play.evaluate(a=>a.addEventListener('click',e=>e.preventDefault())); // Keep this analytics assertion isolated from outbound navigation.
   await play.click({noWaitAfter:true});await s.settle();
+  check(await play.getAttribute('href'),'/go/play');
   check(s.events.filter(x=>x[1]==='google_play_click').length,1);
   check(s.events.at(-1)[2].link_destination,'google_play');check(s.events.at(-1)[2].link_placement,'hero');
   await s.page.goto(origin+'/en/privacy?email=private@example.test');await s.settle();
@@ -151,14 +160,14 @@ try {
     check(bf.events.filter(event => event[1] === 'page_view').length, previousViews + 1);
     check(bf.events.at(-1)[2].page_location, 'https://rancana.id/' + locale + '/' + guide);
   }
-  // Campaign registry and encoded Play handoff: never deliver live analytics.
+  // Campaign registry and server-side Play handoff: never deliver live analytics.
   const tags = 'utm_source=instagram&utm_medium=organic_social&utm_campaign=rancana_study_2026q4&utm_content=profile_bio';
   const campaignSession = await session();
   await campaignSession.page.goto(origin + '/en/?' + tags + '&email=private@example.test&gclid=private-click#private');
   await campaignSession.settle();
-  const campaignPlay = campaignSession.page.locator('.hero-ctas a[href*="play.google.com"]').first();
-  const barePlay = 'https://play.google.com/store/apps/details?id=com.planora.labs';
-  check(await campaignPlay.getAttribute('href'), barePlay);
+  const campaignPlay = campaignSession.page.locator('.hero-ctas a[href^="/go/play"]').first();
+  const playHref = '/go/play';
+  check(await campaignPlay.getAttribute('href'), playHref);
   check(campaignSession.requests.length, 0);
   await campaignSession.page.locator('[data-consent-accept]').click(); await campaignSession.settle();
   check(campaignSession.events.at(-1)[2].campaign_source, 'instagram');
@@ -166,15 +175,12 @@ try {
   check(campaignSession.events.at(-1)[2].page_location, 'https://rancana.id/en/');
   check(campaignSession.events.at(-1)[2].page_referrer, '');
   check(await campaignSession.page.locator('link[rel="canonical"]').getAttribute('href'), 'https://rancana.id/en/');
-  let destination = new URL(await campaignPlay.getAttribute('href'));
-  check([...destination.searchParams.keys()], ['id', 'referrer']);
-  check(destination.searchParams.get('referrer'), tags);
-  check(await campaignPlay.getAttribute('referrerpolicy'), 'no-referrer');
-  check((await campaignPlay.getAttribute('rel')).includes('noreferrer'), true);
+  check(await campaignPlay.getAttribute('href'), playHref);
   check(JSON.stringify(campaignSession.events).includes('private'), false);
   await campaignPlay.evaluate(a => a.addEventListener('click', e => e.preventDefault()));
   await campaignSession.page.addScriptTag({url: origin + '/analytics-consent.js'});
   await campaignPlay.click(); await campaignSession.settle();
+  check(await campaignPlay.getAttribute('href'), playHref);
   check(campaignSession.events.filter(e => e[1] === 'google_play_click').length, 1);
   await campaignPlay.evaluate(a => a.click()); await campaignSession.settle();
   check(campaignSession.events.filter(e => e[1] === 'google_play_click').length, 1);
@@ -182,12 +188,12 @@ try {
   await campaignPlay.click({button:'middle'}); await campaignSession.settle();
   check(campaignSession.events.filter(e => e[1] === 'google_play_click').length, 2);
   await campaignSession.page.locator('[data-consent-reject]').evaluate(e => e.click()); await campaignSession.settle();
-  check(await campaignPlay.getAttribute('href'), barePlay);
+  check(await campaignPlay.getAttribute('href'), playHref);
   check(await campaignSession.page.locator('script[src*="googletagmanager"]').count(), 0);
-  // Consent denial must also strip existing arbitrary destination parameters.
-  await campaignPlay.evaluate(a => { a.addEventListener('click', e => e.preventDefault()); a.href += '&referrer=private&gclid=private&url=https://evil.test'; });
+  // The client does not rewrite an existing /go/play destination.
+  await campaignPlay.evaluate(a => { a.addEventListener('click', e => e.preventDefault()); a.setAttribute('href', a.getAttribute('href') + '?referrer=private&gclid=private&url=https://evil.test'); });
   await campaignPlay.click(); await campaignSession.settle();
-  check(await campaignPlay.getAttribute('href'), barePlay);
+  check(await campaignPlay.getAttribute('href'), '/go/play?referrer=private&gclid=private&url=https://evil.test');
   // Invalid and injected registry values fail closed, including duplicates and prototype names.
   const invalid = [tags + '&utm_source=x', tags.replace('instagram', '__proto__'),
     tags.replace('organic_social', 'constructor'), tags.replace('profile_bio', 'feed_ad'),
@@ -200,7 +206,7 @@ try {
   for (const query of invalid) {
     await registry.page.goto(origin + '/id/?' + query); await registry.settle();
     check(registry.events.at(-1)[2].campaign_source, '');
-    check(await registry.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
+    check(await registry.page.locator('.hero-ctas a[href="/go/play"]').first().getAttribute('href'), playHref);
   }
   for (const locale of ['id', 'en']) for (const source of ['instagram', 'tiktok', 'x']) for (const medium of ['organic_social', 'paid_social']) {
     const content = medium === 'organic_social' ? 'profile_bio' : source === 'tiktok' ? 'video_ad' : 'feed_ad';
@@ -209,18 +215,15 @@ try {
     check(registry.events.at(-1)[2].campaign_source, source);
     check(registry.events.at(-1)[2].campaign_medium, medium);
     check(registry.events.at(-1)[2].page_location, 'https://rancana.id/' + locale + '/');
-    destination = new URL(await registry.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'));
-    check(destination.searchParams.get('referrer'), query.toString());
+    check(await registry.page.locator('.hero-ctas a[href="/go/play"]').first().getAttribute('href'), playHref);
   }
-  // /go/play is rewritten to a fixed Play destination, never an attacker-provided target.
+  // /go/play remains the client destination; the Worker owns its fixed Play handoff.
   await registry.page.evaluate(() => {
     const a = document.createElement('a'); a.id = 'redirect-probe'; a.href = '/go/play?url=https://evil.test&referrer=private'; a.textContent = 'probe';
     a.addEventListener('click', e => e.preventDefault()); document.body.prepend(a);
   });
   await registry.page.locator('#redirect-probe').click(); await registry.settle();
-  destination = new URL(await registry.page.locator('#redirect-probe').getAttribute('href'));
-  check(destination.origin, 'https://play.google.com'); check(destination.searchParams.has('url'), false);
-  check(destination.searchParams.get('referrer').includes('private'), false);
+  check(await registry.page.locator('#redirect-probe').getAttribute('href'), '/go/play?url=https://evil.test&referrer=private');
   const beforeUnsafe = registry.events.length;
   for (const href of ['https://play.google.com.evil.test/store/apps/details?id=com.planora.labs',
     'https://user@play.google.com/store/apps/details?id=com.planora.labs',
@@ -239,7 +242,7 @@ try {
   await failure.page.goto(origin + '/en/?' + tags); await failure.settle();
   await failure.page.evaluate(() => {Storage.prototype.setItem=()=>{throw Error('blocked')};});
   await failure.page.locator('[data-consent-reject]').evaluate(e=>e.click()); await failure.settle();
-  check(await failure.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
+  check(await failure.page.locator('.hero-ctas a[href="/go/play"]').first().getAttribute('href'), playHref);
   // Session lifetime, tampering, navigation and regrant boundaries.
   const sessionKey = 'rancana_campaign_session_v1';
   const flow = await session();
@@ -255,8 +258,7 @@ try {
   await flow.page.goto(origin + '/id/'); await flow.settle();
   check(flow.events.at(-1)[2].campaign_source, 'instagram');
   check(await flow.page.evaluate(k => JSON.parse(sessionStorage.getItem(k)).at, sessionKey), saved.at);
-  let handoff = new URL(await flow.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'));
-  check(handoff.searchParams.get('referrer'), tags);
+  check(await flow.page.locator('.hero-ctas a[href="/go/play"]').first().getAttribute('href'), playHref);
   // New independent tab does not inherit a campaign; no localStorage campaign record.
   const independent = await flow.context.newPage(); await independent.goto(origin + '/en/');
   check(await independent.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
@@ -265,7 +267,7 @@ try {
   await flow.page.evaluate(k => {const v=JSON.parse(sessionStorage.getItem(k));v.at=Date.now()-30*60000+300;sessionStorage.setItem(k,JSON.stringify(v));dispatchEvent(new Event('focus'));}, sessionKey);
   await flow.page.waitForTimeout(500);
   check(await flow.page.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
-  check(await flow.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
+  check(await flow.page.locator('.hero-ctas a[href="/go/play"]').first().getAttribute('href'), playHref);
   await flow.page.goto(origin + '/en/privacy'); await flow.settle();
   check(flow.events.at(-1)[2].campaign_source, '');
   // Stored injection and extra fields are rejected rather than forwarded.
@@ -298,7 +300,7 @@ try {
   await flow.page.evaluate(k=>sessionStorage.removeItem(k),sessionKey);
   await flow.page.reload(); await flow.settle();
   check(flow.events.at(-1)[2].campaign_source, '');
-  check(await flow.page.locator('.hero-ctas a[href*="play.google.com"]').first().getAttribute('href'), barePlay);
+  check(await flow.page.locator('.hero-ctas a[href="/go/play"]').first().getAttribute('href'), playHref);
   // Revocation actually creates a fresh document; expired consent does likewise.
   check(await s.page.evaluate(()=>window.dataLayer === undefined),true);
   check(await deadline.page.evaluate(()=>window.dataLayer === undefined),true);

@@ -79,9 +79,11 @@ try {
   await page.locator('[data-consent-accept]').evaluate(e=>e.click());
   await pause(500); check(sdkRequests, 1); check(events('page_view').length, 1);
   // Keep the test page open; product navigation handlers remain unchanged.
-  const play = page.locator('.hero-ctas a[href*="play.google.com"]').first();
+  const play = page.locator('.hero-ctas a[href="/go/play"]').first();
+  check(await play.getAttribute('href'), '/go/play');
   await play.evaluate(a => a.addEventListener('click', e => e.preventDefault()));
   await play.click(); await waitFor(() => events('google_play_click').length > 0);
+  check(await play.getAttribute('href'), '/go/play');
   check(events('google_play_click').length, 1);
   check(events('google_play_click')[0].get('ep.link_destination'), 'google_play');
   check(events('google_play_click')[0].get('ep.link_placement'), 'hero');
