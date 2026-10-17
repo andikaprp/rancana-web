@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -22,10 +23,11 @@ jobs:
           path: review-evidence/sitemap-http-report.json
   consent-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -39,7 +41,19 @@ jobs:
           name: consent-mobile-screenshots
           path: |
             review-evidence/*.png
+            review-evidence/header-ranca-motion.webm
             review-evidence/mascot-layout-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: header-ranca-context-preview
+          path: |
+            review-evidence/*.webm
+            review-evidence/header-context-*.png
+            review-evidence/header-ranca-*.png
+            review-evidence/header-ranca-context-report.json
+            review-evidence/header-ranca-layout-report.json
+            review-evidence/header-ranca-navigation-report.json
   real-sdk:
     needs: consent-tests
     runs-on: ubuntu-latest
@@ -47,6 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -60,3 +75,23 @@ jobs:
         with:
           name: real-sdk-intercepted-report
           path: review-evidence/real-sdk-report.json
+  rig-prototype:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node check-ranca-rig.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ranca-articulated-review-prototype
+          path: review-evidence/ranca-rig-output/

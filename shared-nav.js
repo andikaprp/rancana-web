@@ -32,5 +32,13 @@ if (navSlot && heroDownload) {
  addEventListener('hashchange', scheduleCheck);
  document.querySelectorAll('.lang-btn').forEach(button => button.addEventListener('click', scheduleCheck));
  checkHeroPosition();
- navSlot.addEventListener('focusout', () => queueMicrotask(updateNavigation));
+ navSlot.addEventListener('focusout', event => {
+  if (navSlot.contains(event.relatedTarget)) return;
+  requestAnimationFrame(updateNavigation);
+ });
 }
+
+// The navbar always uses Ranca. Navigation stays independent of decorative art.
+const headerMascot = document.querySelector('.site-header .brand-mark');
+if (typeof window !== 'undefined' && headerMascot) import(new URL('./header-mascot.js', document.currentScript.src).href)
+ .then(({mountHeaderMascot}) => mountHeaderMascot(headerMascot)).catch(() => { /* Selected static Ranca remains available. */ });

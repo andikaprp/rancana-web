@@ -1,0 +1,18 @@
+{
+  "selectedCommit": "8336f9994ecdce986ab8603b5507d909700c5aa6",
+  "option": "A",
+  "default": "normal-open",
+  "lashesPerCanaEye": 3,
+  "bodyFilesUnchanged": true,
+  "states": [
+    "normal-open",
+    "closed",
+    "contextual-sassy"
+  ],
+  "implementation": "One original raster body with articulated selected vector face and hands; neutral arms extended downward for website use.",
+  "staticExceptions": [
+    "Original Pelajar backpack artwork",
+    "Original Mahasiswa graduation-cap artwork",
+    "Benefits sunglasses Cana"
+  ]
+}

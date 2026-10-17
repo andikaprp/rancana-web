@@ -1,0 +1,101 @@
+/* Choreography draft: optional original-texture native rigs articulate smoothly.
+   The intact approved IMG remains the stable fallback and reduced-motion rest. */
+.hero-companion .hero-mascot,
+.preview-footer .footer-brand-row .footer-mascot,
+.companion-actor {
+  transform-origin: 50% 62%;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+/* Pose files share the original transparent canvas. Source changes cannot move
+   surrounding content, alter the actor box, or expose two bodies at once. */
+.hero-companion-ranca .hero-mascot,
+.preview-footer .footer-brand-row > .footer-mascot:first-child,
+.companion-actor[data-companion-character="ranca"] > img {
+  aspect-ratio: 741 / 532;
+  object-fit: contain;
+}
+.hero-companion-cana .hero-mascot,
+.preview-footer .footer-brand-row > .footer-mascot:last-child,
+.companion-actor[data-companion-character="cana"] > img {
+  aspect-ratio: 745 / 528;
+  object-fit: contain;
+}
+/* Keep both app interfaces and the presentation gestures inside the viewport. */
+@media (min-width: 900px) {
+  .hero-companion { width: min(260px, 18vw); }
+}
+@media (max-width: 899px) {
+  .hero-companion { width: min(27vw, 205px); bottom: 6px; }
+}
+@media (max-width: 600px) {
+  .preview-footer .footer-brand-row .footer-mascot { width: 88%; justify-self: center; }
+}
+/* Native artwork lives in precisely the original grid/image slot. The original
+   image supplies its dimensions even while its pixels are hidden; the SVG never
+   participates in layout. No added body, box, or independently moving text. */
+.companion-actor {
+  display: block;
+  position: relative;
+  width: 100%;
+  line-height: 0;
+}
+.companion-actor > svg {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.preview-footer .footer-brand-row > .companion-actor {
+  width: 100%;
+  justify-self: center;
+  z-index: 0;
+}
+.preview-footer .footer-brand-row .companion-actor > .footer-mascot {
+  width: 100%;
+  height: auto;
+}
+@media (max-width: 600px) {
+  .preview-footer .footer-brand-row > .companion-actor { width: 88%; }
+}
+/* The EXISTING Rancana glyphs are the only foreground occluder. Their footprint,
+   content, font, kerning and apparent gray remain unchanged. #b7b7b7 is #1e1e1e
+   at 32% over this footer's white; opaque paint keeps bodies from bleeding through.
+   Transparent letter counters and inter-letter spaces still reveal the actors. */
+.preview-footer .footer-brand-row[data-companion-scene-root] {
+  position: relative;
+  isolation: isolate;
+  /* Permanent stage clearance for discovery above the glyphs. Text and links
+     never animate; this space protects the copyright/social row at all widths. */
+  margin-top: clamp(64px, 10.4vw, 144px);
+  pointer-events: none;
+}
+.preview-footer .footer-brand-row[data-companion-scene-root] .footer-mascot {
+  position: relative;
+  z-index: 0;
+}
+.preview-footer .footer-brand-row[data-companion-scene-root] .footer-brand-text {
+  position: relative;
+  z-index: 1;
+  color: #b7b7b7;
+  opacity: 1;
+  background: none;
+  pointer-events: none;
+}
+[data-companion-art="unavailable"] { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-companion .hero-mascot,
+  .preview-footer .footer-brand-row .footer-mascot,
+  .companion-actor {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+/* Static benefits artwork: retain the existing PR24 placement only. */
+.benefit-mascot{display:block;width:180px;height:auto;margin:0 0 24px}
+@media(max-width:899px){.benefit-mascot{width:150px;margin-bottom:20px}}

@@ -1,0 +1,61 @@
+{
+  "canvas": [
+    741,
+    532
+  ],
+  "source_sha256": "6c4f21f106fb85fbb13d239c7293e5a98fc0b663e27d701b7d90a2d5af9e5154",
+  "source": "assets/mascots/ranca-cloud.webp",
+  "source_visible_pixels": 230167,
+  "body_visible_pixels": 222642,
+  "body_rgb_changed_pixels": 23459,
+  "body_rgb_preserved_pixels": 199183,
+  "preserved_visible_rgb_percent": 89.463,
+  "pixels_in_repair_mask": 39665,
+  "alpha_changed_pixels": 7930,
+  "max_rgb_difference_outside_repair_mask": 0,
+  "max_alpha_difference_outside_arm_zones_or_repair_mask": 0,
+  "repaired_internal_alpha_pixels": 0,
+  "contour_models": {
+    "left": {
+      "parameters": [
+        248.83851163788955,
+        251.67341865570958,
+        145.76831925842495,
+        131.78467373500396
+      ],
+      "fit_rmse_px": 0.4039186134110162
+    },
+    "lower_right": {
+      "parameters": [
+        457.29036935768966,
+        362.5657019519345,
+        198.32854833304688,
+        153.4837354124845
+      ],
+      "fit_rmse_px": 0.33577882526371994
+    },
+    "upper_right": {
+      "parameters": [
+        582.6242483321578,
+        276.40168607488283,
+        138.04695867893219,
+        125.85641472470957
+      ],
+      "fit_rmse_px": 0.32123379632609506
+    }
+  },
+  "limitations": [
+    "Original artwork has no recoverable body colors or contour directly underneath opaque white strokes. These pixels are locally interpolated; they are not claimed as original pixels.",
+    "No body recoloring, scaling, contour redesign or generative texture is used. RGB is byte-identical outside the exported repair mask.",
+    "At arm-body intersections a few subpixel contour segments are inferred from immediately adjacent original contours; the inferred-contour and alpha-change masks identify them."
+  ],
+  "lossless_webp_rgba_identical_to_png": true,
+  "png_bytes": 239817,
+  "webp_bytes": 141414,
+  "validated_original_canvas_unchanged": true,
+  "validated_rgba_identical_outside_rgb_repair_and_alpha_change_masks": true,
+  "method": "Original RGBA pixels; local biharmonic arm inpainting, robust cubic neighboring-color face interpolation with a 5-pixel internal feather, and original-adjacent contour inference only at former arm crossings.",
+  "visual_qa": "Inspected full canvas on light and dark backgrounds; inspected face and former hand/arm areas at 3x resolution. No white flecks, alpha pinholes, recognizable old face ghosts, or arm protrusions remain.",
+  "body_sha256": "3808db0e90cf26493bd78e91dee03c541dd115051f958adfca4ddfe2b566a93a",
+  "header_use": "Embedded unchanged as the only body image; separate existing SVG face and hand paths preserve articulation. No body outline or rim strokes."
+}

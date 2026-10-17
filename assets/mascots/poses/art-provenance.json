@@ -1,0 +1,107 @@
+{
+  "ranca": {
+    "canvas": [
+      741,
+      532
+    ],
+    "source_sha256": "6c4f21f106fb85fbb13d239c7293e5a98fc0b663e27d701b7d90a2d5af9e5154",
+    "source": "assets/mascots/ranca-cloud.webp",
+    "source_visible_pixels": 230167,
+    "body_visible_pixels": 222642,
+    "body_rgb_changed_pixels": 23459,
+    "body_rgb_preserved_pixels": 199183,
+    "preserved_visible_rgb_percent": 89.463,
+    "pixels_in_repair_mask": 39665,
+    "alpha_changed_pixels": 7930,
+    "max_rgb_difference_outside_repair_mask": 0,
+    "max_alpha_difference_outside_arm_zones_or_repair_mask": 0,
+    "repaired_internal_alpha_pixels": 0,
+    "contour_models": {
+      "left": {
+        "parameters": [
+          248.83851163788955,
+          251.67341865570958,
+          145.76831925842495,
+          131.78467373500396
+        ],
+        "fit_rmse_px": 0.4039186134110162
+      },
+      "lower_right": {
+        "parameters": [
+          457.29036935768966,
+          362.5657019519345,
+          198.32854833304688,
+          153.4837354124845
+        ],
+        "fit_rmse_px": 0.33577882526371994
+      },
+      "upper_right": {
+        "parameters": [
+          582.6242483321578,
+          276.40168607488283,
+          138.04695867893219,
+          125.85641472470957
+        ],
+        "fit_rmse_px": 0.32123379632609506
+      }
+    },
+    "limitations": [
+      "Original artwork has no recoverable body colors or contour directly underneath opaque white strokes. These pixels are locally interpolated; they are not claimed as original pixels.",
+      "No body recoloring, scaling, contour redesign or generative texture is used. RGB is byte-identical outside the exported repair mask.",
+      "At arm-body intersections a few subpixel contour segments are inferred from immediately adjacent original contours; the inferred-contour and alpha-change masks identify them."
+    ],
+    "lossless_webp_rgba_identical_to_png": true,
+    "png_bytes": 239817,
+    "webp_bytes": 141414
+  },
+  "cana": {
+    "canvas": [
+      745,
+      528
+    ],
+    "source_sha256": "cdb8ee20752265f5b1e6906ce3091ef1992daacf5769e0a4c96bb8682b6e9492",
+    "source": "assets/mascots/cana-cloud.webp",
+    "source_visible_pixels": 251793,
+    "body_visible_pixels": 248129,
+    "body_rgb_changed_pixels": 26014,
+    "body_rgb_preserved_pixels": 222115,
+    "preserved_visible_rgb_percent": 89.516,
+    "pixels_in_repair_mask": 35376,
+    "alpha_changed_pixels": 4375,
+    "max_rgb_difference_outside_repair_mask": 0,
+    "max_alpha_difference_outside_arm_zones_or_repair_mask": 0,
+    "repaired_internal_alpha_pixels": 137,
+    "contour_models": {
+      "lower_left": {
+        "method": "Smoothed cubic interpolation through observed boundary pixels; applied only at arm crossings",
+        "occluded_x_spans": [
+          [
+            70,
+            85
+          ],
+          [
+            127,
+            145
+          ]
+        ]
+      },
+      "right": {
+        "parameters": [
+          562.5334293407246,
+          335.9456070730888,
+          150.00000000000003,
+          142.2544365862538
+        ],
+        "fit_rmse_px": 0.4324141742770954
+      }
+    },
+    "limitations": [
+      "Original artwork has no recoverable body colors or contour directly underneath opaque white strokes. These pixels are locally interpolated; they are not claimed as original pixels.",
+      "No body recoloring, scaling, contour redesign or generative texture is used. RGB is byte-identical outside the exported repair mask.",
+      "At arm-body intersections a few subpixel contour segments are inferred from immediately adjacent original contours; the inferred-contour and alpha-change masks identify them."
+    ],
+    "lossless_webp_rgba_identical_to_png": true,
+    "png_bytes": 242602,
+    "webp_bytes": 145256
+  }
+}

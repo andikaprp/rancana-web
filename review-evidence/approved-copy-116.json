@@ -1,0 +1,1513 @@
+[
+  {
+    "id": 1,
+    "section": "Beranda",
+    "local_id": 1,
+    "context": "Hero",
+    "page": "index.html",
+    "before": "Tugas, jadwal kelas, sampai flashcard, kumpulin di Rancana.",
+    "after": "Catat tugas, atur jadwal kelas, dan buat flashcard di Rancana.",
+    "source_locations": [
+      "/html/body/main/div/header/p[1]/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 2,
+    "section": "Beranda",
+    "local_id": 2,
+    "context": "Audiens",
+    "page": "index.html",
+    "before": "Dari SD, SMP, SMA, sampai kuliah, Rancana bisa jadi teman belajar kamu.",
+    "after": "Rancana bisa jadi teman belajarmu, dari SD sampai kuliah.",
+    "source_locations": [
+      "/html/body/main/section[1]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 3,
+    "section": "Beranda",
+    "local_id": 3,
+    "context": "Pelajar",
+    "page": "index.html",
+    "before": "Pisahkan tugas sesuai mata pelajaran. Buat flashcard dari materi yang ingin kamu ingat, lalu buka lagi saat belajar.",
+    "after": "Kelompokkan tugas berdasarkan mata pelajaran. Buat flashcard untuk mengulang materi yang sedang kamu pelajari.",
+    "source_locations": [
+      "/html/body/main/section[1]/div[2]/article[1]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 4,
+    "section": "Beranda",
+    "local_id": 4,
+    "context": "Mahasiswa",
+    "page": "index.html",
+    "before": "Dari mahasiswa baru sampai semester akhir, Rancana bantu kamu atur kegiatan belajar selama kuliah.",
+    "after": "Dari semester pertama sampai semester akhir, Rancana bantu kamu mengatur tugas dan jadwal kuliah.",
+    "source_locations": [
+      "/html/body/main/section[1]/div[2]/article[2]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 5,
+    "section": "Beranda",
+    "local_id": 5,
+    "context": "Pengantar fitur",
+    "page": "index.html",
+    "before": "Semua yang bantu kamu belajar",
+    "after": "Atur tugas, jadwal, dan materi belajarmu",
+    "source_locations": [
+      "/html/body/main/section[2]/h2/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 6,
+    "section": "Beranda",
+    "local_id": 6,
+    "context": "Pengantar fitur",
+    "page": "index.html",
+    "before": "Catat tugas, cek jadwal kelas, dan latihan pakai flashcard. Semua bisa kamu buka di Rancana.",
+    "after": "Catat yang perlu dikerjakan, lihat kelas berikutnya, dan ulangi materi dengan flashcard.",
+    "source_locations": [
+      "/html/body/main/section[2]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 7,
+    "section": "Beranda",
+    "local_id": 7,
+    "context": "Fitur Flashcard",
+    "page": "index.html",
+    "before": "Coba jawab dulu, lalu cek jawabannya. Ulang lagi saat kamu mau belajar.",
+    "after": "Baca pertanyaannya, coba jawab, lalu balik kartu untuk melihat jawabannya.",
+    "source_locations": [
+      "/html/body/main/section[2]/div[2]/article[1]/div/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 8,
+    "section": "Beranda",
+    "local_id": 8,
+    "context": "Fitur Pelajaran",
+    "page": "index.html",
+    "before": "Tugas, jadwal, dan flashcard dalam satu pelajaran.",
+    "after": "Kelompokkan tugas, jadwal, dan flashcard berdasarkan pelajarannya.",
+    "source_locations": [
+      "/html/body/main/section[2]/div[2]/article[2]/div[1]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 9,
+    "section": "Beranda",
+    "local_id": 9,
+    "context": "Fitur To-do",
+    "page": "index.html",
+    "before": "Catat yang perlu dikerjakan, tambah tenggat, lalu centang kalau sudah selesai.",
+    "after": "Catat tugas, tentukan deadline, lalu tandai kalau sudah selesai.",
+    "source_locations": [
+      "/html/body/main/section[2]/div[2]/article[3]/div[1]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 10,
+    "section": "Beranda",
+    "local_id": 10,
+    "context": "Fitur Jadwal",
+    "page": "index.html",
+    "before": "Cek jadwal pelajaran atau kuliah dan jam kelas hari ini, biar tahu kelas berikutnya.",
+    "after": "Lihat kelas berikutnya, lengkap dengan hari dan jamnya.",
+    "source_locations": [
+      "/html/body/main/section[2]/div[2]/article[4]/div[1]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 11,
+    "section": "Beranda",
+    "local_id": 11,
+    "context": "Pengantar manfaat",
+    "page": "index.html",
+    "before": "Tahu tugas yang perlu dikerjakan, kelas yang akan datang, dan materi yang mau diulang. Jadi, kamu nggak perlu mengingat semuanya sendiri.",
+    "after": "Cek tugas yang belum selesai, jadwal kelas berikutnya, dan materi yang ingin diulang. Kamu nggak perlu mengingat semuanya sendiri.",
+    "source_locations": [
+      "/html/body/main/section[3]/div[1]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 12,
+    "section": "Beranda",
+    "local_id": 12,
+    "context": "Manfaat tugas",
+    "page": "index.html",
+    "before": "Nggak ada tugas yang terlewat",
+    "after": "Tahu tugas yang belum selesai",
+    "source_locations": [
+      "/html/body/main/section[3]/div[2]/article[1]/div/h3/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 13,
+    "section": "Beranda",
+    "local_id": 13,
+    "context": "Manfaat tugas",
+    "page": "index.html",
+    "before": "Cek yang belum selesai di to-do",
+    "after": "Buka To-do untuk melihat tugas yang masih perlu kamu kerjakan.",
+    "source_locations": [
+      "/html/body/main/section[3]/div[2]/article[1]/div/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 14,
+    "section": "Beranda",
+    "local_id": 14,
+    "context": "Manfaat jadwal",
+    "page": "index.html",
+    "before": "Cek pelajaran berikutnya dan jam masuknya di ponselmu.",
+    "after": "Lihat kelas berikutnya dan jam mulainya langsung di ponselmu.",
+    "source_locations": [
+      "/html/body/main/section[3]/div[2]/article[2]/div/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 15,
+    "section": "Beranda",
+    "local_id": 15,
+    "context": "Manfaat mengulang materi",
+    "page": "index.html",
+    "before": "Mau mengulang materi? Tinggal mulai.",
+    "after": "Mau mengulang materi? Buka flashcard.",
+    "source_locations": [
+      "/html/body/main/section[3]/div[2]/article[3]/div/h3/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 16,
+    "section": "Beranda",
+    "local_id": 16,
+    "context": "Manfaat mengulang materi",
+    "page": "index.html",
+    "before": "Flashcard tersimpan per pelajaran, siap kamu pakai latihan.",
+    "after": "Pilih pelajaran, lalu berlatih dengan flashcard yang sudah kamu buat.",
+    "source_locations": [
+      "/html/body/main/section[3]/div[2]/article[3]/div/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 17,
+    "section": "Beranda",
+    "local_id": 17,
+    "context": "Manfaat durasi",
+    "page": "index.html",
+    "before": "Sudah belajar berapa lama? Kelihatan.",
+    "after": "Tahu berapa lama kamu belajar",
+    "source_locations": [
+      "/html/body/main/section[3]/div[2]/article[4]/div/h3/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 18,
+    "section": "Beranda",
+    "local_id": 18,
+    "context": "Manfaat durasi",
+    "page": "index.html",
+    "before": "Lihat durasi yang tercatat setelah sesi belajar.",
+    "after": "Cek durasi setiap sesi belajar setelah selesai.",
+    "source_locations": [
+      "/html/body/main/section[3]/div[2]/article[4]/div/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 19,
+    "section": "Beranda",
+    "local_id": 19,
+    "context": "Ajakan mulai",
+    "page": "index.html",
+    "before": "Mulai gratis, buat belajar lebih teratur.",
+    "after": "Mulai gratis dan atur kegiatan belajarmu.",
+    "source_locations": [
+      "/html/body/main/section[4]/div/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 20,
+    "section": "Beranda",
+    "local_id": 20,
+    "context": "FAQ unduhan",
+    "page": "index.html",
+    "before": "Ada di Google Play untuk Android. Tinggal ketuk “Dapatkan di Google Play” di halaman ini.",
+    "after": "Rancana tersedia untuk Android di Google Play. Ketuk “Dapatkan di Google Play” di halaman ini untuk mengunduhnya.",
+    "source_locations": [
+      "/html/body/main/section[5]/div[1]/details[1]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 21,
+    "section": "Beranda",
+    "local_id": 21,
+    "context": "FAQ gratis",
+    "page": "index.html",
+    "before": "Bisa! Kamu bisa mulai gratis. Kalau mau berlangganan Premium, cek dulu fitur dan harganya di aplikasi.",
+    "after": "Bisa. Mulai dengan paket Gratis, lalu pilih Premium sesuai kebutuhanmu. Cek fitur dan harganya di aplikasi sebelum berlangganan.",
+    "source_locations": [
+      "/html/body/main/section[5]/div[1]/details[2]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 22,
+    "section": "Beranda",
+    "local_id": 22,
+    "context": "FAQ audiens",
+    "page": "index.html",
+    "before": "Masih sekolah atau sudah kuliah, bisa pakai?",
+    "after": "Bisa dipakai untuk sekolah dan kuliah?",
+    "source_locations": [
+      "/html/body/main/section[5]/div[1]/details[3]/summary/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 23,
+    "section": "Beranda",
+    "local_id": 23,
+    "context": "FAQ audiens",
+    "page": "index.html",
+    "before": "Bisa. Pakai pelajaran buat sekolah atau mata kuliah buat kampus, lalu tambahkan tugas, jadwal kelas, dan flashcard.",
+    "after": "Bisa. Tambahkan mata pelajaran atau mata kuliah, lalu lengkapi dengan tugas, jadwal kelas, dan flashcard.",
+    "source_locations": [
+      "/html/body/main/section[5]/div[1]/details[3]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 24,
+    "section": "Beranda",
+    "local_id": 24,
+    "context": "FAQ fitur",
+    "page": "index.html",
+    "before": "Pelajaran, tugas, jadwal kelas, dan flashcard. Ada juga timer belajar dan laporan buat mencatat waktu belajarmu.",
+    "after": "Kamu bisa mengatur pelajaran, tugas, jadwal kelas, dan flashcard. Ada juga timer belajar dan laporan untuk melihat durasi belajarmu.",
+    "source_locations": [
+      "/html/body/main/section[5]/div[1]/details[4]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 25,
+    "section": "Beranda",
+    "local_id": 25,
+    "context": "FAQ bantuan",
+    "page": "index.html",
+    "before": "Email aja ke help@rancana.id. Ceritakan kendalanya dan versi aplikasi yang kamu pakai, biar kami bisa bantu.",
+    "after": "Kirim email ke help@rancana.id. Ceritakan kendalanya dan sebutkan versi aplikasi yang kamu pakai supaya kami bisa membantu.",
+    "source_locations": [
+      "/html/body/main/section[5]/div[1]/details[5]/p/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 26,
+    "section": "Premium",
+    "local_id": 1,
+    "context": "Metadata description",
+    "page": "premium.html",
+    "before": "Bandingkan paket Free, Premium, dan Premium+ Rancana: batas pelajaran, tugas, jadwal, dan flashcard. Pelajari cara memulihkan dan mengelola langganan.",
+    "after": "Bandingkan batas jumlah pelajaran, tugas, jadwal, dan flashcard di paket Gratis, Premium, dan Premium+ Rancana. Cari tahu cara memulihkan akses Premium dan mengelola langganan.",
+    "source_locations": [
+      "/html/head/meta[3]/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 27,
+    "section": "Premium",
+    "local_id": 2,
+    "context": "Gratis plan description",
+    "page": "premium.html",
+    "before": "Buat mulai merapikan belajarmu.",
+    "after": "Buat mulai mengatur kegiatan belajarmu.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/div/article[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 28,
+    "section": "Premium",
+    "local_id": 3,
+    "context": "Premium plan description",
+    "page": "premium.html",
+    "before": "Buat kamu yang perlu lebih banyak pelajaran dan tugas.",
+    "after": "Buat kamu yang ingin mencatat lebih banyak pelajaran dan tugas.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/div/article[2]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 29,
+    "section": "Premium",
+    "local_id": 4,
+    "context": "Premium+ plan description",
+    "page": "premium.html",
+    "before": "Buat belajar dengan lebih banyak pilihan.",
+    "after": "Buat kamu yang ingin menyesuaikan timer belajar dan melihat laporan yang lebih detail.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/div/article[3]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 30,
+    "section": "Premium",
+    "local_id": 5,
+    "context": "Comparison table, subject quota row",
+    "page": "premium.html",
+    "before": "Pelajaran (di luar arsip)",
+    "after": "Pelajaran yang belum diarsipkan",
+    "source_locations": [
+      "/html/body/main/div[2]/section[2]/div/table/tbody/tr[1]/th"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 31,
+    "section": "Premium",
+    "local_id": 6,
+    "context": "Restore section heading",
+    "page": "premium.html",
+    "before": "Sudah berlangganan? Pulihkan pembelianmu",
+    "after": "Sudah berlangganan? Pulihkan akses Premium",
+    "source_locations": [
+      "/html/body/main/div[2]/section[4]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 32,
+    "section": "Premium",
+    "local_id": 7,
+    "context": "Restore step 1",
+    "page": "premium.html",
+    "before": "Pakai akun Google Play yang kamu gunakan saat membeli, lalu masuk dengan akun Rancana yang terkait.",
+    "after": "Pakai akun Google Play yang kamu gunakan untuk berlangganan, lalu masuk dengan akun Rancana yang terkait.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[4]/ol/li[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 33,
+    "section": "Premium",
+    "local_id": 8,
+    "context": "Restore step 2",
+    "page": "premium.html",
+    "before": "Pastikan internetmu terhubung, lalu buka Profil → Premium.",
+    "after": "Pastikan perangkatmu terhubung ke internet, lalu buka Profil → Rancana Premium.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[4]/ol/li[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 34,
+    "section": "Premium",
+    "local_id": 9,
+    "context": "Restore step 3",
+    "page": "premium.html",
+    "before": "Ketuk Pulihkan pembelian, lalu tunggu sampai pemeriksaannya selesai.",
+    "after": "Ketuk Restore purchase untuk memeriksa akses langgananmu, lalu tunggu sampai prosesnya selesai.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[4]/ol/li[3]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 35,
+    "section": "Premium",
+    "local_id": 10,
+    "context": "Restore explanatory note",
+    "page": "premium.html",
+    "before": "Pulihkan pembelian mengecek akses langgananmu. Fitur ini tidak memulihkan cadangan data perencana.",
+    "after": "Fitur Restore purchase memeriksa akses langgananmu. Fitur ini tidak memulihkan data pelajaran, tugas, jadwal, atau flashcard dari cadangan.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[4]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 36,
+    "section": "Premium",
+    "local_id": 11,
+    "context": "FAQ, quota explanation",
+    "page": "premium.html",
+    "before": "Batasnya dihitung dari item yang ada saat itu, bukan semua yang pernah kamu buat. Pelajaran yang diarsipkan dan tugas yang sudah selesai tidak ikut dihitung. Jadwal ikut dihitung kalau berulang atau berakhir hari ini maupun setelahnya. Semua flashcard yang tersimpan tetap dihitung. Kalau jumlahnya sudah di bawah batas, kamu bisa menambah lagi.",
+    "after": "Yang dihitung adalah jumlah item yang tersimpan saat ini, bukan semua yang pernah kamu buat. Pelajaran yang diarsipkan dan tugas yang sudah selesai tidak ikut dihitung. Jadwal dihitung kalau berulang atau berakhir hari ini atau setelahnya. Semua flashcard yang tersimpan tetap dihitung. Kalau jumlah item untuk fitur yang ingin kamu pakai sudah di bawah batas, kamu bisa menambah lagi.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[5]/div/details[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 37,
+    "section": "Premium",
+    "local_id": 12,
+    "context": "FAQ, legacy Premium question",
+    "page": "premium.html",
+    "before": "Kalau pakai Premium lama, dapat fitur belajar lanjutan juga?",
+    "after": "Kalau punya langganan Premium versi lama, dapat fitur belajar lanjutan juga?",
+    "source_locations": [
+      "/html/body/main/div[2]/section[5]/div/details[2]/summary"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 38,
+    "section": "Premium",
+    "local_id": 13,
+    "context": "FAQ, legacy Premium answer",
+    "page": "premium.html",
+    "before": "Sebagian langganan Premium lama sudah termasuk fitur belajar lanjutan. Cek akses yang tersedia buat akunmu di Profil → Premium.",
+    "after": "Sebagian langganan Premium versi lama sudah mencakup fitur belajar lanjutan. Cek fitur yang bisa kamu pakai di Profil → Rancana Premium.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[5]/div/details[2]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 39,
+    "section": "Premium",
+    "local_id": 14,
+    "context": "FAQ, access after cancellation",
+    "page": "premium.html",
+    "before": "Setelah kamu membatalkan langganan, akses Premium tetap aktif sampai akhir periode yang sudah dibayar. Cek tanggalnya di Google Play. Cek panduan resmi Google Play.",
+    "after": "Setelah kamu membatalkan langganan, akses Premium tetap aktif sampai akhir periode yang sudah dibayar. Cek tanggal berakhirnya di Google Play. Untuk informasi lebih lanjut, baca panduan resmi Google Play.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[5]/div/details[4]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 40,
+    "section": "Premium",
+    "local_id": 15,
+    "context": "FAQ, data after Premium ends",
+    "page": "premium.html",
+    "before": "Pelajaran, tugas, jadwal, dan flashcard yang sudah kamu buat tetap ada. Semuanya tidak dihapus atau disembunyikan saat Premium berakhir. Kamu masih bisa membuka, mengedit, dan mempelajarinya. Untuk menambah item baru, batas paket Gratis berlaku lagi.",
+    "after": "Saat Premium berakhir, pelajaran, tugas, jadwal, dan flashcard yang sudah kamu buat tetap ada dan tidak disembunyikan. Kamu masih bisa membuka dan mengeditnya, serta belajar dengan flashcard yang sudah ada. Kalau ingin menambah item baru, batas paket Gratis berlaku lagi.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[5]/div/details[5]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 41,
+    "section": "Tentang dan misi",
+    "local_id": 1,
+    "context": "Metadata description",
+    "page": "about.html",
+    "before": "Kenali Rancana, teman mengatur kegiatan belajar pelajar dan mahasiswa, dibuat oleh Andika Pramudya. Baca misi kami dan temukan kontak tim.",
+    "after": "Kenalan dengan Rancana, teman belajar untuk pelajar dan mahasiswa. Aplikasi ini dibuat oleh Andika Pramudya. Baca misi kami dan cari tahu cara menghubungi kami.",
+    "source_locations": [
+      "/html/head/meta[3]/@data-id"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 42,
+    "section": "Tentang dan misi",
+    "local_id": 2,
+    "context": "Mission lead (punctuation only; not a rewritten slogan)",
+    "page": "about.html",
+    "before": "Biar belajar lebih ringan, dan kamu lebih siap menjalaninya.",
+    "after": "Biar belajar lebih ringan dan kamu lebih siap menjalaninya.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/p[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 43,
+    "section": "Tentang dan misi",
+    "local_id": 3,
+    "context": "Mission introductory paragraph",
+    "page": "about.html",
+    "before": "Kami ingin membantu pelajar dan mahasiswa menjalani kegiatan belajar sehari-hari dengan lebih tenang. Dari menyiapkan diri sebelum kelas sampai meluangkan waktu untuk belajar, Rancana hadir sebagai teman yang membantu kamu merasa lebih siap.",
+    "after": "Kami ingin membantu pelajar dan mahasiswa belajar dengan lebih tenang setiap hari. Mulai dari bersiap sebelum kelas sampai mengatur waktu belajar, Rancana hadir untuk membantu kamu merasa lebih siap.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/p[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 44,
+    "section": "Tentang dan misi",
+    "local_id": 4,
+    "context": "Principle 1 description",
+    "page": "about.html",
+    "before": "Biar urusan belajar sehari-hari lebih mudah dijalani, tanpa harus mengingat semuanya sendiri.",
+    "after": "Biar kegiatan belajarmu lebih mudah diatur dan kamu nggak harus mengingat semuanya sendiri.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/div[1]/article[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 45,
+    "section": "Tentang dan misi",
+    "local_id": 5,
+    "context": "Principle 2 description",
+    "page": "about.html",
+    "before": "Kami ingin waktu yang kamu luangkan di ponsel juga berguna buat belajarmu.",
+    "after": "Kami ingin waktu yang kamu habiskan di ponsel juga bermanfaat buat belajarmu.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/div[1]/article[2]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 46,
+    "section": "Tentang dan misi",
+    "local_id": 6,
+    "context": "Mission closing paragraph 1",
+    "page": "about.html",
+    "before": "Buat kami, teman belajar yang baik membantu kamu menjalani hari dengan lebih siap. Itulah yang ingin kami bangun lewat Rancana, sedikit demi sedikit, dari kebutuhan belajar sehari-hari.",
+    "after": "Buat kami, teman belajar yang baik membantu kamu lebih siap menjalani hari. Karena itu, kami mengembangkan Rancana sedikit demi sedikit, berangkat dari kebutuhan belajar sehari-hari.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/div[2]/p[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 47,
+    "section": "Tentang dan misi",
+    "local_id": 7,
+    "context": "Mission closing paragraph 2",
+    "page": "about.html",
+    "before": "Kami ingin Rancana jadi bagian yang berguna dari cara kamu belajar. Ponsel bisa membantu, pena dan kertas tetap punya tempat, dan kamu bisa memakai keduanya sesuai kebutuhan.",
+    "after": "Kami ingin Rancana mendukung cara belajar yang cocok buat kamu. Kamu tetap bisa memakai ponsel, pena, dan kertas sesuai kebutuhan.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/div[2]/p[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 48,
+    "section": "Daftar artikel",
+    "local_id": 1,
+    "context": "Pengantar",
+    "page": "articles.html",
+    "before": "Mulai dari satu pelajaran. Bikin jadwal kelas, catat tugas, lalu siapkan flashcard buat latihan.",
+    "after": "Tambahkan pelajaran pertama, lalu buat jadwal kelas, catat tugas, dan siapkan flashcard untuk belajar.",
+    "source_locations": [
+      "/html/body/main/section[1]/header/p[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 49,
+    "section": "Daftar artikel",
+    "local_id": 2,
+    "context": "Pengantar aplikasi",
+    "page": "articles.html",
+    "before": "Rancana adalah aplikasi Android untuk mengatur pelajaran, jadwal kelas, to-do list, dan flashcard. Lihat aplikasi Rancana di Google Play .",
+    "after": "Rancana membantu kamu mengatur pelajaran, jadwal kelas, to-do, dan flashcard di Android. Lihat Rancana di Google Play.",
+    "source_locations": [
+      "/html/body/main/section[1]/header/p[3]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 50,
+    "section": "Daftar artikel",
+    "local_id": 3,
+    "context": "Deskripsi panduan jadwal",
+    "page": "articles.html",
+    "before": "Kelas rutin atau pertemuan sekali? Catat hari, jam, dan pelajarannya di satu tempat.",
+    "after": "Atur jadwal kelas mingguan atau pertemuan satu kali dengan menentukan hari, jam, dan pelajarannya.",
+    "source_locations": [
+      "/html/body/main/section[1]/div/a[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 51,
+    "section": "Daftar artikel",
+    "local_id": 4,
+    "context": "Deskripsi panduan To-do",
+    "page": "articles.html",
+    "before": "Dari tugas yang baru masuk sampai selesai: tulis detailnya, hubungkan ke pelajaran, lalu cek progresnya.",
+    "after": "Catat tugas, lengkapi detailnya, lalu pantau sampai selesai. Kelompokkan tugas berdasarkan pelajaran supaya lebih mudah ditemukan.",
+    "source_locations": [
+      "/html/body/main/section[1]/div/a[2]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 52,
+    "section": "Daftar artikel",
+    "local_id": 5,
+    "context": "Deskripsi panduan Flashcard",
+    "page": "articles.html",
+    "before": "Buat pertanyaan dan jawaban singkat, simpan ke pelajaran, lalu coba jawab sebelum membalik kartu.",
+    "after": "Tulis pertanyaan dan jawaban singkat, lalu pilih pelajarannya. Saat belajar, coba jawab pertanyaannya sebelum membalik kartu.",
+    "source_locations": [
+      "/html/body/main/section[1]/div/a[3]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 53,
+    "section": "Panduan jadwal kelas",
+    "local_id": 1,
+    "context": "Deskripsi panduan jadwal",
+    "page": "college-schedule.html",
+    "before": "Kelas rutin atau pertemuan sekali? Catat hari, jam, dan pelajarannya di satu tempat.",
+    "after": "Atur jadwal kelas mingguan atau pertemuan satu kali dengan menentukan hari, jam, dan pelajarannya.",
+    "source_locations": [
+      "/html/head/meta[3]/@data-id",
+      "/html/body/main/article[1]/header/p[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 54,
+    "section": "Panduan jadwal kelas",
+    "local_id": 2,
+    "context": "Langkah awal",
+    "page": "college-schedule.html",
+    "before": "Mulai dari pelajaran dulu",
+    "after": "Tambahkan pelajaran dulu",
+    "source_locations": [
+      "/html/body/main/article[1]/section[1]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 55,
+    "section": "Panduan jadwal kelas",
+    "local_id": 3,
+    "context": "Langkah awal",
+    "page": "college-schedule.html",
+    "before": "Buka Rancana di Android. Di bagian Pelajaran , pilih Tambah pelajaran , isi Judul dan Deskripsi, lalu konfirmasi. Misalnya, buat “Matematika”. Pelajaran ini jadi penghubung jadwal, to-do, dan flashcard kamu.",
+    "after": "Buka Rancana di Android. Di bagian Pelajaran, pilih Tambah pelajaran. Isi Judul dan Deskripsi, lalu konfirmasi. Misalnya, tambahkan “Matematika” untuk mengelompokkan jadwal, to-do, dan flashcard matematika.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 56,
+    "section": "Panduan jadwal kelas",
+    "local_id": 4,
+    "context": "Panduan terkait",
+    "page": "college-schedule.html",
+    "before": "Lanjut dari pelajaran yang sama",
+    "after": "Lengkapi kebutuhan belajarmu",
+    "source_locations": [
+      "/html/body/main/article[1]/section[6]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 57,
+    "section": "Panduan jadwal kelas",
+    "local_id": 5,
+    "context": "Panduan terkait",
+    "page": "college-schedule.html",
+    "before": "Hubungkan kelas dengan tugas dan kartu latihan lewat pelajaran yang sama.",
+    "after": "Jadwal kelas sudah ada? Tambahkan tugas dan flashcard ke pelajaran yang sama.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[6]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 58,
+    "section": "Panduan jadwal kelas",
+    "local_id": 6,
+    "context": "Form jadwal",
+    "page": "college-schedule.html",
+    "before": "Isi Judul Jadwal . Contoh: “Kelas Matematika”.",
+    "after": "Isi Judul jadwal, misalnya “Kelas matematika”.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 59,
+    "section": "Panduan jadwal kelas",
+    "local_id": 7,
+    "context": "Form jadwal",
+    "page": "college-schedule.html",
+    "before": "Isi Jam mulai dan Jam selesai . Jam selesai harus setelah jam mulai.",
+    "after": "Tentukan Jam mulai dan Jam selesai. Pastikan jam selesai lebih lambat daripada jam mulai.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[4]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 60,
+    "section": "Panduan jadwal kelas",
+    "local_id": 8,
+    "context": "Form jadwal",
+    "page": "college-schedule.html",
+    "before": "Pastikan Pelajaran sudah benar. Nama guru/dosen boleh dikosongkan. Tekan Tambah jadwal , lalu konfirmasi.",
+    "after": "Pastikan Pelajaran yang dipilih sudah sesuai. Nama guru/dosen boleh dikosongkan. Ketuk Tambah jadwal, lalu konfirmasi.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[5]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 61,
+    "section": "Panduan jadwal kelas",
+    "local_id": 9,
+    "context": "Contoh jadwal",
+    "page": "college-schedule.html",
+    "before": "Untuk kelas pengganti hari Jumat, buat jadwal Sekali dengan tanggal yang sesuai. Jangan tambahkan sebagai kelas mingguan kalau cuma berlangsung sekali.",
+    "after": "Untuk kelas pengganti yang hanya berlangsung pada hari Jumat itu, pilih Sekali dan tentukan tanggalnya. Gunakan Berulang hanya untuk kelas yang berlangsung rutin setiap minggu.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[3]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 62,
+    "section": "Panduan jadwal kelas",
+    "local_id": 10,
+    "context": "Mengubah jadwal",
+    "page": "college-schedule.html",
+    "before": "Buka daftar Jadwal. Gunakan tampilan Tanggal untuk satu hari atau Mingguan untuk satu minggu. Kalau jam kelas berubah, gunakan ikon ubah pada jadwal, perbarui waktunya, lalu Simpan perubahan . Ikon hapus membuka konfirmasi; jadwal yang dihapus tidak bisa dikembalikan.",
+    "after": "Buka Jadwal. Pilih tampilan Tanggal untuk melihat jadwal pada hari tertentu, atau Mingguan untuk melihat jadwal selama satu minggu. Kalau jam kelas berubah, ketuk ikon ubah, perbarui waktunya, lalu pilih Simpan perubahan. Saat kamu mengetuk ikon hapus, aplikasi akan meminta konfirmasi. Jadwal yang sudah dihapus tidak bisa dikembalikan.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[4]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 63,
+    "section": "Panduan jadwal kelas",
+    "local_id": 11,
+    "context": "Pemecahan masalah",
+    "page": "college-schedule.html",
+    "before": "Cek judul, pilihan hari/tanggal, jam, dan pelajaran aktif. Pastikan jam selesai lebih akhir dari jam mulai. Paket Free membatasi 10 jadwal; cek pilihan paket di aplikasi kalau kuotanya sudah penuh.",
+    "after": "Pastikan judul sudah diisi, hari atau tanggal sudah dipilih, dan jadwal terhubung ke pelajaran yang masih aktif. Jam selesai harus lebih lambat daripada jam mulai. Paket Gratis memiliki batas 10 jadwal. Kalau batasnya sudah tercapai, cek pilihan paket di aplikasi.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[5]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 64,
+    "section": "Panduan jadwal kelas",
+    "local_id": 12,
+    "context": "Judul contoh",
+    "page": "college-schedule.html",
+    "before": "Contoh satu kelas",
+    "after": "Contoh jadwal kelas",
+    "source_locations": [
+      "/html/body/main/article[1]/section[3]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 65,
+    "section": "Panduan To-do",
+    "local_id": 1,
+    "context": "Deskripsi panduan To-do",
+    "page": "todo-guide.html",
+    "before": "Dari tugas yang baru masuk sampai selesai: tulis detailnya, hubungkan ke pelajaran, lalu cek progresnya.",
+    "after": "Catat tugas, lengkapi detailnya, lalu pantau sampai selesai. Kelompokkan tugas berdasarkan pelajaran supaya lebih mudah ditemukan.",
+    "source_locations": [
+      "/html/head/meta[3]/@data-id",
+      "/html/body/main/article[1]/header/p[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 66,
+    "section": "Panduan To-do",
+    "local_id": 2,
+    "context": "Langkah awal",
+    "page": "todo-guide.html",
+    "before": "Mulai dari pelajaran dulu",
+    "after": "Tambahkan pelajaran dulu",
+    "source_locations": [
+      "/html/body/main/article[1]/section[1]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 67,
+    "section": "Panduan To-do",
+    "local_id": 3,
+    "context": "Langkah awal",
+    "page": "todo-guide.html",
+    "before": "Buka Rancana di Android. Di bagian Pelajaran , pilih Tambah pelajaran , isi Judul dan Deskripsi, lalu konfirmasi. Misalnya, buat “Matematika”. Pelajaran ini jadi penghubung jadwal, to-do, dan flashcard kamu.",
+    "after": "Buka Rancana di Android. Di bagian Pelajaran, pilih Tambah pelajaran. Isi Judul dan Deskripsi, lalu konfirmasi. Misalnya, tambahkan “Matematika” untuk mengelompokkan jadwal, to-do, dan flashcard matematika.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 68,
+    "section": "Panduan To-do",
+    "local_id": 4,
+    "context": "Panduan terkait",
+    "page": "todo-guide.html",
+    "before": "Lanjut dari pelajaran yang sama",
+    "after": "Lengkapi kebutuhan belajarmu",
+    "source_locations": [
+      "/html/body/main/article[1]/section[6]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 69,
+    "section": "Panduan To-do",
+    "local_id": 5,
+    "context": "Panduan terkait",
+    "page": "todo-guide.html",
+    "before": "Hubungkan kelas dengan tugas dan kartu latihan lewat pelajaran yang sama.",
+    "after": "Lengkapi pelajaran yang sama dengan jadwal kelas dan flashcard.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[6]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 70,
+    "section": "Panduan To-do",
+    "local_id": 6,
+    "context": "Langkah pembuatan",
+    "page": "todo-guide.html",
+    "before": "Isi Judul yang jelas, misalnya “Kerjakan latihan bab 2”. Isi juga Deskripsi : “Soal 1–5, kumpulkan lewat kelas”. Keduanya perlu diisi.",
+    "after": "Isi Judul dengan nama tugas yang jelas, misalnya “Kerjakan latihan bab 2”. Pada Deskripsi, tulis rinciannya, misalnya “Kerjakan soal 1–5”. Kedua kolom ini perlu diisi.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 71,
+    "section": "Panduan To-do",
+    "local_id": 7,
+    "context": "Langkah pembuatan",
+    "page": "todo-guide.html",
+    "before": "Kalau ada batas waktu, aktifkan Pakai deadline? lalu pilih tanggal dan jam. Tanpa deadline juga bisa.",
+    "after": "Kalau tugas punya batas waktu, aktifkan “Pakai deadline?”, lalu pilih tanggal dan jamnya. Kamu juga bisa membuat tugas tanpa deadline.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[4]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 72,
+    "section": "Panduan To-do",
+    "local_id": 8,
+    "context": "Langkah pembuatan",
+    "page": "todo-guide.html",
+    "before": "Kalau perlu, aktifkan Pakai pengingat? dan pilih kapan ingin diingatkan sebelum deadline. Izinkan notifikasi Android agar pengingat bisa tampil.",
+    "after": "Kalau ingin diingatkan, aktifkan “Pakai pengingat?” dan pilih waktunya sebelum deadline. Pastikan notifikasi Rancana diizinkan di pengaturan Android agar pengingat bisa muncul.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[5]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 73,
+    "section": "Panduan To-do",
+    "local_id": 9,
+    "context": "Contoh tugas",
+    "page": "todo-guide.html",
+    "before": "Contoh tugas yang gampang dicek",
+    "after": "Contoh tugas dengan detail yang jelas",
+    "source_locations": [
+      "/html/body/main/article[1]/section[3]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 74,
+    "section": "Panduan To-do",
+    "local_id": 10,
+    "context": "Contoh tugas",
+    "page": "todo-guide.html",
+    "before": "Deskripsi: Soal 1–5, kumpulkan lewat kelas. Pelajaran: Matematika Deadline contoh: Jumat, 16.00",
+    "after": "Deskripsi: Kerjakan soal 1–5.\nPelajaran: Matematika\nContoh deadline: Jumat, pukul 16.00",
+    "source_locations": [
+      "/html/body/main/article[1]/section[3]/div/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 75,
+    "section": "Panduan To-do",
+    "local_id": 11,
+    "context": "Contoh tugas",
+    "page": "todo-guide.html",
+    "before": "Tanggal dan jam ini cuma contoh. Ikuti deadline dari guru atau dosen kamu.",
+    "after": "Hari dan jam ini cuma contoh. Ikuti deadline dari guru atau dosenmu.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[3]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 76,
+    "section": "Panduan To-do",
+    "local_id": 12,
+    "context": "Mengelola tugas",
+    "page": "todo-guide.html",
+    "before": "Di To-Do list , gunakan filter Semua , Aktif , Terlewat , atau Selesai . Setelah tugas beres, tandai selesai lewat tombol status pada tugas. Gunakan ikon ubah untuk memperbarui detail dan Simpan perubahan . Ikon hapus meminta konfirmasi.",
+    "after": "Buka To-do, lalu gunakan filter Semua, Aktif, Terlewat, atau Selesai untuk melihat tugas yang kamu butuhkan. Setelah tugas dikerjakan, tandai sebagai selesai lewat tombol status. Untuk mengubah rinciannya, ketuk ikon ubah, perbarui isinya, lalu pilih Simpan perubahan. Saat kamu mengetuk ikon hapus, aplikasi akan meminta konfirmasi.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[4]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 77,
+    "section": "Panduan To-do",
+    "local_id": 13,
+    "context": "Pemecahan masalah",
+    "page": "todo-guide.html",
+    "before": "Isi Judul, Deskripsi, dan Pelajaran. Kalau deadline aktif, tanggal dan jam perlu dipilih. Kalau pengingat aktif, pilih waktunya juga. Paket Free membatasi 10 to-do aktif; tandai tugas yang benar-benar beres sebagai selesai.",
+    "after": "Pastikan Judul dan Deskripsi sudah diisi, lalu pilih Pelajaran. Kalau deadline aktif, pilih tanggal dan jam. Kalau pengingat aktif, pilih waktu pengingatnya. Paket Gratis memiliki batas 10 to-do aktif. Tandai tugas yang sudah kamu kerjakan sebagai selesai.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[5]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 78,
+    "section": "Panduan Flashcard",
+    "local_id": 1,
+    "context": "Deskripsi panduan Flashcard",
+    "page": "flashcard-guide.html",
+    "before": "Buat pertanyaan dan jawaban singkat, simpan ke pelajaran, lalu coba jawab sebelum membalik kartu.",
+    "after": "Tulis pertanyaan dan jawaban singkat, lalu pilih pelajarannya. Saat belajar, coba jawab pertanyaannya sebelum membalik kartu.",
+    "source_locations": [
+      "/html/head/meta[3]/@data-id",
+      "/html/body/main/article[1]/header/p[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 79,
+    "section": "Panduan Flashcard",
+    "local_id": 2,
+    "context": "Langkah awal",
+    "page": "flashcard-guide.html",
+    "before": "Mulai dari pelajaran dulu",
+    "after": "Tambahkan pelajaran dulu",
+    "source_locations": [
+      "/html/body/main/article[1]/section[1]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 80,
+    "section": "Panduan Flashcard",
+    "local_id": 3,
+    "context": "Langkah awal",
+    "page": "flashcard-guide.html",
+    "before": "Buka Rancana di Android. Di bagian Pelajaran , pilih Tambah pelajaran , isi Judul dan Deskripsi, lalu konfirmasi. Misalnya, buat “Matematika”. Pelajaran ini jadi penghubung jadwal, to-do, dan flashcard kamu.",
+    "after": "Buka Rancana di Android. Di bagian Pelajaran, pilih Tambah pelajaran. Isi Judul dan Deskripsi, lalu konfirmasi. Misalnya, tambahkan “Matematika” untuk mengelompokkan jadwal, to-do, dan flashcard matematika.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 81,
+    "section": "Panduan Flashcard",
+    "local_id": 4,
+    "context": "Panduan terkait",
+    "page": "flashcard-guide.html",
+    "before": "Lanjut dari pelajaran yang sama",
+    "after": "Lengkapi kebutuhan belajarmu",
+    "source_locations": [
+      "/html/body/main/article[1]/section[6]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 82,
+    "section": "Panduan Flashcard",
+    "local_id": 5,
+    "context": "Panduan terkait",
+    "page": "flashcard-guide.html",
+    "before": "Hubungkan kelas dengan tugas dan kartu latihan lewat pelajaran yang sama.",
+    "after": "Selain flashcard, kamu juga bisa menambahkan tugas dan jadwal kelas ke pelajaran yang sama.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[6]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 83,
+    "section": "Panduan Flashcard",
+    "local_id": 6,
+    "context": "Judul",
+    "page": "flashcard-guide.html",
+    "before": "Cara bikin dan latihan flashcard di Rancana",
+    "after": "Cara Membuat dan Menggunakan Flashcard di Rancana",
+    "source_locations": [
+      "/html/body/main/article[1]/header/h1"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 84,
+    "section": "Panduan Flashcard",
+    "local_id": 7,
+    "context": "Langkah pembuatan",
+    "page": "flashcard-guide.html",
+    "before": "Pilih Tambah Manual . Isi Pertanyaan untuk bagian depan kartu. Maksimal 70 karakter.",
+    "after": "Pilih Tambah manual, lalu isi Pertanyaan untuk bagian depan kartu. Kamu bisa menulis hingga 70 karakter.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[2]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 85,
+    "section": "Panduan Flashcard",
+    "local_id": 8,
+    "context": "Langkah pembuatan",
+    "page": "flashcard-guide.html",
+    "before": "Isi Jawaban untuk bagian belakang kartu. Maksimal 70 karakter juga.",
+    "after": "Isi Jawaban untuk bagian belakang kartu, juga hingga 70 karakter.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/ol/li[3]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 86,
+    "section": "Panduan Flashcard",
+    "local_id": 9,
+    "context": "Membagi materi",
+    "page": "flashcard-guide.html",
+    "before": "Kalau penjelasannya panjang, pecah jadi beberapa kartu dengan satu pertanyaan per kartu. Batas 70 karakter berlaku untuk tiap sisi.",
+    "after": "Kalau materinya panjang, bagi menjadi beberapa kartu. Isi setiap kartu dengan satu pertanyaan dan satu jawaban. Batas 70 karakter berlaku untuk masing-masing sisi kartu.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[3]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 87,
+    "section": "Panduan Flashcard",
+    "local_id": 10,
+    "context": "Menggunakan kartu",
+    "page": "flashcard-guide.html",
+    "before": "Kembali ke beranda dan pilih pelajaran yang berisi kartu kamu.",
+    "after": "Kembali ke beranda, lalu pilih pelajaran tempat kamu menyimpan flashcard.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[4]/ol/li[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 88,
+    "section": "Panduan Flashcard",
+    "local_id": 11,
+    "context": "Menggunakan kartu",
+    "page": "flashcard-guide.html",
+    "before": "Ketuk kartu untuk membalik dan cek jawaban. Geser ke kartu berikutnya untuk melanjutkan latihan.",
+    "after": "Ketuk kartu untuk membaliknya dan melihat jawaban. Geser ke kartu berikutnya untuk melanjutkan latihan.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[4]/ol/li[3]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 89,
+    "section": "Panduan Flashcard",
+    "local_id": 12,
+    "context": "Mengedit kartu",
+    "page": "flashcard-guide.html",
+    "before": "Kalau pertanyaannya kurang jelas, buka Semua flashcard , gunakan ikon ubah, lalu simpan lewat Ubah flashcard . Ikon hapus meminta konfirmasi.",
+    "after": "Kalau ingin memperbaiki pertanyaan, buka Semua flashcard dan ketuk ikon ubah pada kartu tersebut. Setelah selesai, ketuk Ubah flashcard untuk menyimpan. Saat kamu mengetuk ikon hapus, aplikasi akan meminta konfirmasi.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[4]/ol/li[4]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 90,
+    "section": "Panduan Flashcard",
+    "local_id": 13,
+    "context": "Pemecahan masalah",
+    "page": "flashcard-guide.html",
+    "before": "Kalau kartu belum muncul",
+    "after": "Cek jika ada kendala",
+    "source_locations": [
+      "/html/body/main/article[1]/section[5]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 91,
+    "section": "Panduan Flashcard",
+    "local_id": 14,
+    "context": "Pemecahan masalah",
+    "page": "flashcard-guide.html",
+    "before": "Pastikan pelajaran yang dipilih sesuai dengan kartu yang disimpan. Pertanyaan, Jawaban, dan Pelajaran wajib diisi. Paket Free membatasi 10 flashcard. Panduan ini memakai cara manual supaya kamu bisa menulis dan mengecek isi tiap kartu sendiri.",
+    "after": "Flashcard tidak terlihat? Pastikan kamu membuka pelajaran yang dipilih saat menyimpan kartu.\n\nFlashcard belum bisa dibuat? Isi Pertanyaan dan Jawaban, lalu pilih Pelajaran. Paket Gratis memiliki batas 10 flashcard.\n\nPanduan ini membahas pembuatan flashcard secara manual supaya kamu bisa menulis dan mengecek isi setiap kartu sendiri.",
+    "source_locations": [
+      "/html/body/main/article[1]/section[5]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 92,
+    "section": "Panduan Flashcard",
+    "local_id": 15,
+    "context": "Judul langkah",
+    "page": "flashcard-guide.html",
+    "before": "Bikin flashcard manual",
+    "after": "Bikin flashcard sendiri",
+    "source_locations": [
+      "/html/body/main/article[1]/section[2]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 93,
+    "section": "Bantuan",
+    "local_id": 1,
+    "context": "Introductory sentence",
+    "page": "help.html",
+    "before": "Temukan panduan memulai, jawaban untuk kendala umum, dan cara menghubungi tim Rancana.",
+    "after": "Temukan panduan untuk mulai memakai Rancana, solusi untuk kendala umum, dan cara menghubungi kami.",
+    "source_locations": [
+      "/html/body/main/div[2]/header/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 94,
+    "section": "Bantuan",
+    "local_id": 2,
+    "context": "Links to guides",
+    "page": "help.html",
+    "before": "Mulai dari template jadwal kuliah dan belajar mingguan, atau coba panduan belajar dengan flashcard dari catatanmu.",
+    "after": "Baca panduan bikin jadwal kelas atau pelajari cara membuat dan menggunakan flashcard.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 95,
+    "section": "Bantuan",
+    "local_id": 3,
+    "context": "Getting started, step 3",
+    "page": "help.html",
+    "before": "Tambahkan pelajaran pertama, lalu catat tugas atau kelas yang perlu kamu ingat.",
+    "after": "Tambahkan pelajaran pertamamu, lalu catat tugas atau jadwal kelasnya.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[2]/ol/li[3]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 96,
+    "section": "Bantuan",
+    "local_id": 4,
+    "context": "Link after getting started",
+    "page": "help.html",
+    "before": "Untuk mengenal kemampuan Rancana, lihat fitur di halaman utama.",
+    "after": "Mau tahu apa saja yang bisa kamu lakukan di Rancana? Lihat fitur di halaman utama.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[2]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 97,
+    "section": "Bantuan",
+    "local_id": 5,
+    "context": "FAQ section heading",
+    "page": "help.html",
+    "before": "Jawaban untuk kendala umum",
+    "after": "Solusi untuk kendala umum",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/h2"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 98,
+    "section": "Bantuan",
+    "local_id": 6,
+    "context": "FAQ, offline-use answer",
+    "page": "help.html",
+    "before": "Pelajaran, tugas, jadwal, dan flashcard tersimpan di perangkat dan dapat digunakan tanpa koneksi setelah kamu masuk. Proses masuk, verifikasi pembelian, dan pengiriman masukan memerlukan internet.",
+    "after": "Pelajaran, tugas, jadwal, dan flashcard tersimpan di perangkat. Setelah masuk, kamu bisa menggunakannya tanpa internet. Kamu tetap perlu internet untuk masuk, memverifikasi pembelian, dan mengirim masukan.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/div/details[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 99,
+    "section": "Bantuan",
+    "local_id": 7,
+    "context": "FAQ, changing phones answer",
+    "page": "help.html",
+    "before": "Tidak. Masuk dengan akun yang sama tidak memindahkan data perencana. Gunakan Profil → Cadangkan dan pulihkan data untuk membuat cadangan JSON. Simpan salinannya sebelum berganti HP atau menghapus aplikasi. Pemulihan cadangan mengganti data perencana di perangkat tujuan, jadi cadangkan data yang ada terlebih dahulu.",
+    "after": "Tidak. Masuk dengan akun yang sama tidak otomatis memindahkan pelajaran, tugas, jadwal, dan flashcard ke HP baru. Untuk membuat cadangan dalam format JSON, buka Profil → Cadangkan dan pulihkan data. Simpan file cadangannya sebelum berganti HP atau menghapus aplikasi. Saat kamu memulihkan cadangan, data perencana di HP tujuan akan diganti. Jadi, cadangkan dulu data yang sudah ada di HP tujuan.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/div/details[3]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 100,
+    "section": "Bantuan",
+    "local_id": 8,
+    "context": "FAQ, sign-in failure answer",
+    "page": "help.html",
+    "before": "Periksa koneksi internet dan akun Google yang dipilih, lalu coba masuk kembali. Jika tetap gagal, catat pesan yang muncul dan kirimkan bersama versi aplikasi.",
+    "after": "Cek koneksi internet dan akun Google yang kamu pilih, lalu coba masuk lagi. Kalau masih gagal, kirim pesan error yang muncul dan nomor versi Rancana ke help@rancana.id.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/div/details[4]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 101,
+    "section": "Bantuan",
+    "local_id": 9,
+    "context": "FAQ, cannot add items answer",
+    "page": "help.html",
+    "before": "Paket gratis memiliki batas untuk menambah pelajaran, tugas aktif, jadwal, dan flashcard. Item yang sudah ada tetap bisa dibuka dan diedit. Lihat penjelasan batas dan Premium.",
+    "after": "Paket Gratis membatasi penambahan pelajaran, tugas yang belum selesai, jadwal, dan flashcard. Kalau jumlahnya sudah mencapai batas, kamu belum bisa menambah item baru untuk fitur tersebut. Item yang sudah ada tetap bisa dibuka dan diedit. Lihat batas paket Gratis dan pilihan Premium.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/div/details[5]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 102,
+    "section": "Bantuan",
+    "local_id": 10,
+    "context": "FAQ, paid Premium not active answer",
+    "page": "help.html",
+    "before": "Periksa akun Google Play yang digunakan untuk membeli dan akun Rancana yang terkait. Dengan koneksi internet, buka halaman Premium di Profil dan pilih Pulihkan pembelian. Lihat langkah pemulihan.",
+    "after": "Pastikan kamu memakai akun Google Play yang digunakan untuk berlangganan dan akun Rancana yang terkait. Hubungkan perangkatmu ke internet, lalu buka Profil → Rancana Premium dan ketuk Restore purchase. Lihat panduan memulihkan akses Premium.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/div/details[6]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 103,
+    "section": "Bantuan",
+    "local_id": 11,
+    "context": "Contact, expected versus actual behavior",
+    "page": "help.html",
+    "before": "Apa yang kamu harapkan dan apa yang terjadi.",
+    "after": "Hasil yang kamu harapkan dan yang sebenarnya terjadi.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[4]/ul/li[3]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 104,
+    "section": "Bantuan",
+    "local_id": 12,
+    "context": "Contact, privacy warning",
+    "page": "help.html",
+    "before": "Tutup informasi pribadi pada tangkapan layar. Jangan kirim kata sandi, kode verifikasi, atau berkas cadangan lengkap.",
+    "after": "Tutupi informasi pribadi di tangkapan layar sebelum mengirimnya. Jangan kirim kata sandi, kode verifikasi, atau berkas cadangan lengkap.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[4]/p[3]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 105,
+    "section": "Kebijakan privasi",
+    "local_id": 1,
+    "context": "Data akun",
+    "page": "privacy.html",
+    "before": "Rancana menggunakan Google Sign-In dan Firebase Authentication untuk akun. Informasi akun mencakup pengenal autentikasi dan detail akun Google seperti nama, email, dan foto profil. Pelajaran, tugas, jadwal, dan flashcard disimpan secara lokal di perangkat. Masuk dengan akun yang sama tidak otomatis memindahkan data perencana tersebut ke HP lain.",
+    "after": "Rancana menggunakan Google Sign-In dan Firebase Authentication untuk proses masuk ke akun. Informasi akun mencakup pengenal autentikasi dan detail akun Google seperti nama, email, dan foto profil. Pelajaran, tugas, jadwal, dan flashcard disimpan secara lokal di perangkat. Masuk dengan akun yang sama tidak otomatis memindahkan data tersebut ke HP lain.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 106,
+    "section": "Kebijakan privasi",
+    "local_id": 2,
+    "context": "Masukan",
+    "page": "privacy.html",
+    "before": "Saat kamu mengirim masukan di aplikasi, Rancana menyimpan jenis masukan, judul, dan deskripsi di Firebase Firestore. Pengajuan juga mencakup email jika diisi, pengenal akun yang masuk jika tersedia, versi aplikasi, platform, versi sistem operasi, model perangkat, penanda perangkat fisik, dan waktu pengajuan. Detail ini membantu pemeriksaan kendala. Alur ini tidak mengirim pengajuan melalui Gmail dan tidak memerlukan akses untuk mengirim Gmail.",
+    "after": "Saat kamu mengirim masukan di aplikasi, Rancana menyimpan jenis masukan, judul, dan deskripsi di Firebase Firestore. Masukan yang dikirim juga mencakup email jika diisi, pengenal akun yang dipakai untuk masuk jika tersedia, versi aplikasi, platform, versi sistem operasi, model perangkat, penanda perangkat fisik, dan waktu pengiriman. Detail ini membantu kami memeriksa kendala yang kamu laporkan. Masukan tidak dikirim melalui Gmail, dan Rancana tidak memerlukan izin untuk mengirim email melalui Gmail.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 107,
+    "section": "Kebijakan privasi",
+    "local_id": 3,
+    "context": "Cadangan",
+    "page": "privacy.html",
+    "before": "Cadangan manual berupa berkas JSON biasa yang dibuat saat diminta. Rancana tidak mengenkripsi berkas tersebut dan tidak mengunggah cadangan perencana secara otomatis. Memulihkan cadangan mengganti data perencana di perangkat tujuan. Lindungi salinan yang diekspor. Akses foto/berkas dan izin notifikasi mendukung fitur yang kamu pilih.",
+    "after": "Cadangan manual berupa berkas JSON biasa yang dibuat saat kamu memintanya. Rancana tidak mengenkripsi berkas tersebut dan tidak mengunggah cadangan perencana secara otomatis. Memulihkan cadangan akan mengganti data perencana di perangkat tujuan. Lindungi salinan yang diekspor. Akses ke foto atau berkas serta izin notifikasi mendukung fitur yang kamu pilih.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[5]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 108,
+    "section": "Kebijakan privasi",
+    "local_id": 4,
+    "context": "Penghapusan",
+    "page": "privacy.html",
+    "before": "Membersihkan data lokal atau menghapus instalasi menghapus data aplikasi di perangkat; tindakan ini tidak otomatis menghapus catatan akun cloud, profil, atau masukan yang telah dikirim. Hapus berkas cadangan yang diekspor secara terpisah. Kamu dapat meminta penghapusan lewat formulir masukan di aplikasi atau email help@rancana.id. Mengirim permintaan berbeda dengan menghapus catatan tersebut.",
+    "after": "Menghapus data lokal atau menghapus instalasi aplikasi akan menghapus data aplikasi di perangkat. Tindakan ini tidak otomatis menghapus catatan akun di cloud, profil, atau masukan yang telah dikirim. Hapus berkas cadangan yang diekspor secara terpisah. Kamu bisa meminta penghapusan melalui formulir masukan di aplikasi atau dengan mengirim email ke help@rancana.id. Mengirim permintaan tidak otomatis menghapus catatan tersebut.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[8]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 109,
+    "section": "Kebijakan privasi",
+    "local_id": 5,
+    "context": "Diagnostik aplikasi",
+    "page": "privacy.html",
+    "before": "Aplikasi rilis memakai Firebase Analytics untuk peristiwa penggunaan aplikasi dan Firebase Crashlytics untuk diagnostik kerusakan. Layanan ini terpisah dari masukan yang kamu kirim.",
+    "after": "Versi aplikasi yang dirilis memakai Firebase Analytics untuk mencatat peristiwa penggunaan aplikasi dan Firebase Crashlytics untuk diagnostik crash. Layanan ini terpisah dari masukan yang kamu kirim.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[6]/p[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 110,
+    "section": "Ketentuan layanan",
+    "local_id": 1,
+    "context": "Pengantar",
+    "page": "terms.html",
+    "before": "Terjemahan ini disediakan untuk kemudahan. Jika ada perbedaan penafsiran, versi bahasa Inggris yang berlaku.",
+    "after": "Terjemahan ini disediakan untuk memudahkan kamu memahami ketentuan layanan. Jika ada perbedaan penafsiran, versi bahasa Inggris yang berlaku.",
+    "source_locations": [
+      "/html/body/main/div[2]/p[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 111,
+    "section": "Ketentuan layanan",
+    "local_id": 2,
+    "context": "Akun dan konten",
+    "page": "terms.html",
+    "before": "Sebagian fitur memerlukan proses masuk dengan Google. Kamu bertanggung jawab menjaga keamanan akun dan atas aktivitas yang dilakukan melaluinya. Kamu tetap bertanggung jawab atas data perencana, informasi profil, masukan, serta berkas cadangan yang kamu buat atau bagikan. Cadangan JSON yang diekspor tidak dienkripsi, jadi lindungi berkas tersebut dan simpan salinan informasi pentingmu sendiri.",
+    "after": "Untuk menggunakan sebagian fitur, kamu perlu masuk dengan akun Google. Kamu bertanggung jawab atas keamanan akun dan aktivitas yang dilakukan melalui akun tersebut. Kamu tetap bertanggung jawab atas data perencana, informasi profil, masukan, serta berkas cadangan yang kamu buat atau bagikan. Cadangan JSON yang diekspor tidak dienkripsi, jadi lindungi berkas tersebut dan simpan sendiri salinan informasi pentingmu.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[2]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 112,
+    "section": "Penghapusan akun",
+    "local_id": 1,
+    "context": "Judul",
+    "page": "delete-account.html",
+    "before": "Hapus akun Rancana kamu",
+    "after": "Minta penghapusan akun Rancana",
+    "source_locations": [
+      "/html/body/main/div[2]/header/h1"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 113,
+    "section": "Penghapusan akun",
+    "local_id": 2,
+    "context": "Langkah pertama",
+    "page": "delete-account.html",
+    "before": "Buka Rancana dan masuk dengan akun Google yang ingin dihapus.",
+    "after": "Buka Rancana dan masuk dengan akun Google yang terhubung ke akun Rancana yang ingin kamu hapus.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/ol/li[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 114,
+    "section": "Penghapusan akun",
+    "local_id": 3,
+    "context": "Identitas permintaan",
+    "page": "delete-account.html",
+    "before": "Aplikasi menyimpan permintaan di Firebase Firestore beserta pengenal akun yang masuk dan email jika diisi. Sertakan email akun Google agar dukungan dapat mengenali akun yang terkait dengan permintaanmu.",
+    "after": "Aplikasi menyimpan permintaan di Firebase Firestore beserta pengenal akun yang dipakai untuk masuk dan email jika diisi. Sertakan alamat email akun Google agar tim bantuan bisa mengenali akun yang terkait dengan permintaanmu.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[1]/p"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 115,
+    "section": "Penghapusan akun",
+    "local_id": 4,
+    "context": "Cakupan permintaan",
+    "page": "delete-account.html",
+    "before": "Jelaskan kepada dukungan apakah permintaanmu mencakup akun Rancana, profil cloud, atau masukan yang pernah kamu kirim. Mengirim permintaan tidak langsung menghapus catatan tersebut.",
+    "after": "Jelaskan kepada tim bantuan apakah permintaanmu mencakup akun Rancana, profil di cloud, atau masukan yang pernah kamu kirim. Mengirim permintaan tidak langsung menghapus catatan tersebut.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[2]/p[1]"
+    ],
+    "status": "applied"
+  },
+  {
+    "id": 116,
+    "section": "Penghapusan akun",
+    "local_id": 5,
+    "context": "Permintaan melalui email",
+    "page": "delete-account.html",
+    "before": "Jika kamu tidak bisa memakai formulir laporan di aplikasi, kirim email ke help@rancana.id dengan subjek Permintaan penghapusan akun Rancana dan email akun Google yang terhubung ke Rancana.",
+    "after": "Jika kamu tidak bisa memakai formulir masukan di aplikasi, kirim email ke help@rancana.id dengan subjek Permintaan penghapusan akun Rancana. Cantumkan alamat email akun Google yang terhubung ke Rancana di dalam pesan.",
+    "source_locations": [
+      "/html/body/main/div[2]/section[3]/p"
+    ],
+    "status": "applied"
+  }
+]
