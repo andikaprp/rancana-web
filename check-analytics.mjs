@@ -2,10 +2,19 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import vm from 'node:vm';
 import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const {chromium} = require('playwright');
 const root = path.dirname(new URL(import.meta.url).pathname);
+const analyticsSource = await fs.readFile(path.join(root, 'analytics-consent.js'), 'utf8');
+for (const hostname of ['rancana-og-square.rancana.workers.dev', 'preview.pages.dev', 'staging.rancana.id']) {
+  const previewWindow = {RancanaAnalyticsConfig:{measurementId:'G-2KDN1C2G3L'}};
+  vm.runInNewContext(analyticsSource, {window:previewWindow, location:{hostname}});
+  assert.equal(previewWindow['ga-disable-G-2KDN1C2G3L'], true, hostname);
+  assert.equal(previewWindow.__rancanaAnalyticsInitialized, true, hostname);
+  assert.deepEqual(Object.keys(previewWindow).sort(), ['RancanaAnalyticsConfig','__rancanaAnalyticsInitialized','ga-disable-G-2KDN1C2G3L'].sort(), hostname);
+}
 const types = {'.js':'text/javascript','.css':'text/css','.html':'text/html','.svg':'image/svg+xml','.webp':'image/webp','.woff':'font/woff'};
 const server = http.createServer(async (req,res) => {
   try {
