@@ -3,7 +3,10 @@
   "private": true,
   "scripts": {
     "test": "node check-lang.mjs && node check-preview.mjs && node check-navigation.mjs && node check-anchors.mjs && node check-seo.mjs && node check-articles.mjs && node check-analytics.mjs && node check-mascots.mjs && node check-reviewed-copy.mjs && node check-selected-website-mascots.mjs --no-video",
-    "test:real-sdk": "node check-analytics-real.mjs"
+    "test:real-sdk": "node check-analytics-real.mjs",
+    "build:staging": "python3 staging/build.py",
+    "test:staging": "node check-staging.mjs",
+    "deploy:staging": "npm run build:staging && npx --yes wrangler@4.151.1 deploy --config wrangler.staging.toml"
   },
   "devDependencies": {
     "playwright": "1.62.1"

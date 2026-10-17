@@ -1,0 +1,14 @@
+name = "rancana-staging"
+compatibility_date = "2026-08-08"
+main = "staging/worker.mjs"
+workers_dev = false
+preview_urls = false
+routes = [{ pattern = "staging.rancana.id", custom_domain = true }]
+
+[assets]
+directory = "./dist-staging"
+binding = "ASSETS"
+run_worker_first = true
+
+[observability]
+enabled = false

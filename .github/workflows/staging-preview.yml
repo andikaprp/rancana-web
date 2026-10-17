@@ -1,0 +1,38 @@
+name: Staging preview artifact
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: staging-preview
+  cancel-in-progress: true
+jobs:
+  staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - run: node check-play-redirect.mjs
+      - run: npm run build:staging
+      - run: npm run test:staging
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rancana-staging-${{ github.sha }}
+          path: |
+            dist-staging/
+            staging/
+            wrangler.staging.toml
+            review-evidence/staging/
+          retention-days: 14

@@ -35,3 +35,9 @@ MASCOT-REFERENCES.md
 scripts/
 
 REVIEW-CHECKLIST.md
+
+staging/
+dist-staging/
+wrangler.staging.toml
+STAGING.md
+CAMPAIGN-ATTRIBUTION-REVIEW.md
