@@ -19,7 +19,7 @@
     "context": "Audiens",
     "page": "index.html",
     "before": "Dari SD, SMP, SMA, sampai kuliah, Rancana bisa jadi teman belajar kamu.",
-    "after": "Rancana bisa jadi teman belajarmu, dari SD sampai kuliah.",
+    "after": "Rancana bisa jadi teman belajarmu, dari SMP sampai kuliah.",
     "source_locations": [
       "/html/body/main/section[1]/p/@data-id"
     ],
