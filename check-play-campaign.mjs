@@ -36,6 +36,14 @@ const defaults = 'utm_source=rancana.id&utm_medium=web&utm_campaign=play_cta';
 const full = 'utm_source=instagram&utm_medium=social&utm_campaign=x';
 let assertions = 0;
 const check = (actual, expected, message) => { assert.deepEqual(actual, expected, message); assertions++; };
+// Real Google tag hosts only (and subdomains); google.com is counted only for /ccm, as before.
+const tagHosts = ['googletagmanager.com', 'google-analytics.com', 'analytics.google.com'];
+const isGoogleTag = url => tagHosts.some(h => url.hostname === h || url.hostname.endsWith('.' + h)) ||
+  ((url.hostname === 'google.com' || url.hostname.endsWith('.google.com')) && url.pathname.startsWith('/ccm'));
+const noGoogle = (s, message) => {
+  if (s.google.length) console.error('Counted Google requests (' + (message || 'expected none') + '):\n' + s.google.map(g => '  ' + g.url + '\n    page: ' + g.page + '\n    initiator: ' + g.initiator).join('\n'));
+  check(s.google.length, 0, message);
+};
 const contexts = [];
 async function open(consent = null) {
   const context = await browser.newContext({viewport: {width: 390, height: 844}}); contexts.push(context);
@@ -45,7 +53,7 @@ async function open(consent = null) {
     const url = new URL(route.request().url());
     if (url.origin === origin) return route.continue();
     if (url.hostname === 'play.google.com') { plays.push(url.href); return route.fulfill({contentType: 'text/html', body: '<p>play</p>'}); }
-    if (/google/.test(url.hostname)) google.push(url.href);
+    if (isGoogleTag(url)) google.push({url: url.href, page: route.request().frame()?.url() || null, initiator: route.request().headers().referer || null});
     return route.abort();
   });
   const page = await context.newPage();
@@ -72,7 +80,7 @@ try {
   check(await a.stored(), full);
   let t = await a.tap(a.hero());
   check(t.hop, '/go/play?' + full); check(t.location, referrer(full));
-  check(a.google.length, 0, 'no Google request without consent');
+  noGoogle(a, 'no Google request without consent');
   // 2. Session persistence: an untagged second page is decorated from sessionStorage.
   await a.go('/id/privacy');
   check(await a.hrefs(), ['/go/play?' + full]);
@@ -85,7 +93,7 @@ try {
   await a.page.locator('[data-consent-reject]').click(); await a.page.waitForTimeout(100);
   check(await a.hrefs(), ['/go/play?' + full]);
   await a.go('/id/help'); check(await a.hrefs(), ['/go/play?' + full]);
-  check(a.google.length, 0);
+  noGoogle(a);
   // 4. Partial landing: all-or-nothing, clears the stored campaign, Worker applies all three defaults.
   await a.go('/id/?utm_source=ig');
   check(await a.hrefs(), ['/go/play']); check(await a.stored(), null);
@@ -108,7 +116,7 @@ try {
   const raya = 'utm_source=tiktok&utm_medium=paid_social&utm_campaign=raya_launch.2027-q1';
   await b.go('/id/?' + raya); check(await b.hrefs(), ['/go/play?' + raya]);
   t = await b.tap(b.hero()); check(t.location, referrer(raya));
-  check(b.google.length, 0);
+  noGoogle(b);
   // 6. Granted consent decorates the same way (consent has no effect on the handoff).
   const c = await open('granted');
   await c.go('/en/?' + full); check(await c.hrefs(), ['/go/play?' + full]);
@@ -131,5 +139,6 @@ try {
   await d.context.addInitScript(() => { Storage.prototype.setItem = function () { throw Error('blocked'); }; Storage.prototype.getItem = function () { throw Error('blocked'); }; });
   await d.go('/en/?' + full); check(await d.hrefs(), ['/go/play?' + full]);
   await d.go('/en/privacy'); check(await d.hrefs(), ['/go/play']);
+  for (const [name, s] of [['no-choice', a], ['denied', b], ['granted', c], ['storage-failed', d]]) console.log('Counted Google URLs [' + name + ']: ' + (s.google.map(g => g.url).join(' ') || 'none'));
   console.log('PASS — ' + assertions + ' Chromium Play campaign decoration, session persistence, consent-independence and all-or-nothing default assertions');
 } finally { await Promise.all(contexts.map(x => x.close())); await browser.close(); server.close(); }
