@@ -4,6 +4,14 @@ const PLAY =
 // so new campaigns work without a deploy.
 const UTM_VALUE = /^[a-z0-9_.-]{1,64}$/;
 const DEFAULTS = {utm_source: 'rancana.id', utm_medium: 'web', utm_campaign: 'play_cta'};
+const isPreviewHost = hostname => hostname === 'staging.rancana.id' ||
+  hostname.endsWith('.workers.dev') || hostname.endsWith('.pages.dev');
+
+const preventIndexing = response => {
+  const headers = new Headers(response.headers);
+  headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  return new Response(response.body, {status: response.status, statusText: response.statusText, headers});
+};
 
 const validValue = (params, key) => {
   const value = params.get(key)?.toLowerCase();
@@ -26,15 +34,21 @@ const playReferrer = params => {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const previewHost = isPreviewHost(url.hostname.toLowerCase());
     if (url.pathname === '/go/play') {
       const destination = new URL(PLAY);
       destination.searchParams.set('referrer', playReferrer(url.searchParams).toString());
-      return new Response(null, {status: 302, headers: {
+      const response = new Response(null, {status: 302, headers: {
         Location: destination.href,
         'Cache-Control': 'no-store',
       }});
+      return previewHost ? preventIndexing(response) : response;
     }
-    if (url.pathname === '/go/features') return new Response(null, { status: 204 });
-    return env.ASSETS.fetch(request);
+    if (url.pathname === '/go/features') {
+      const response = new Response(null, {status: 204});
+      return previewHost ? preventIndexing(response) : response;
+    }
+    const response = await env.ASSETS.fetch(request);
+    return previewHost ? preventIndexing(response) : response;
   },
 };

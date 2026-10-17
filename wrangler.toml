@@ -1,7 +1,9 @@
 name = "rancana"
 compatibility_date = "2026-08-08"
 main = "worker.js"
+previews = {}
 
 [assets]
 directory = "."
 binding = "ASSETS"
+run_worker_first = true
