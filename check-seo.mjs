@@ -15,7 +15,7 @@ const server = http.createServer(async (req, res) => {
     if (!path.extname(name)) name += '.html';
     const file = path.resolve(root, '.' + name);
     if (!file.startsWith(root + '/')) throw Error('invalid path');
-    res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : 'application/octet-stream');
+    res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : file.endsWith('.png') ? 'image/png' : 'application/octet-stream');
     res.end(await fs.readFile(file));
   } catch { res.statusCode = 404; res.end(); }
 });
@@ -29,7 +29,7 @@ try {
   const rows = await page.evaluate(documents => documents.map(({file, source}) => {
     const doc = new DOMParser().parseFromString(source, 'text/html');
     const meta = key => doc.querySelector('meta[name="' + key + '"],meta[property="' + key + '"]')?.content;
-    return {file, title: doc.title, description: meta('description'), robots: meta('robots'), keywords: meta('keywords'), canonical: doc.querySelector('link[rel=canonical]')?.href, alternates: [...doc.querySelectorAll('link[hreflang]')].map(a => [a.hreflang, a.href]), ogTitle: meta('og:title'), ogDescription: meta('og:description'), schema: [...doc.querySelectorAll('script[type="application/ld+json"]')].map(s => JSON.parse(s.textContent)), links: [...doc.querySelectorAll('a[href]')].map(a => a.getAttribute('href'))};
+    return {file, title: doc.title, description: meta('description'), robots: meta('robots'), keywords: meta('keywords'), canonical: doc.querySelector('link[rel=canonical]')?.href, alternates: [...doc.querySelectorAll('link[hreflang]')].map(a => [a.hreflang, a.href]), ogTitle: meta('og:title'), ogDescription: meta('og:description'), ogImage: meta('og:image'), ogImageWidth: meta('og:image:width'), ogImageHeight: meta('og:image:height'), ogImageAlt: meta('og:image:alt'), twitterCard: meta('twitter:card'), twitterImage: meta('twitter:image'), twitterImageAlt: meta('twitter:image:alt'), schema: [...doc.querySelectorAll('script[type="application/ld+json"]')].map(s => JSON.parse(s.textContent)), links: [...doc.querySelectorAll('a[href]')].map(a => a.getAttribute('href'))};
   }), documents);
   const canonicalSet = new Set(rows.filter(r => r.file.includes('/')).map(r => r.canonical));
   for (const row of rows) {
@@ -65,7 +65,22 @@ try {
     assert.equal(new Set(titles).size, pages.length, 'Unique page titles');
     const home = rows.find(r => r.file === locale + 'index.html');
     assert.match(home.description, /Android/); assert.match(home.description, locale === 'id/' ? /mahasiswa/ : /college/);
+    assert.equal(home.ogImage, 'https://rancana.id/assets/rancana-og-mascot-square-20261017.png');
+    assert.equal(home.ogImageWidth, '1200'); assert.equal(home.ogImageHeight, '1200');
+    assert.ok(home.ogImageAlt && home.ogImageAlt.length > 20);
+    assert.equal(home.twitterCard, 'summary'); assert.equal(home.twitterImage, home.ogImage);
+    assert.equal(home.twitterImageAlt, home.ogImageAlt);
   }
+  const legacyHome = rows.find(r => r.file === 'index.html');
+  assert.equal(legacyHome.ogImage, 'https://rancana.id/assets/rancana-og-mascot-square-20261017.png');
+  assert.equal(legacyHome.ogImageWidth, '1200'); assert.equal(legacyHome.ogImageHeight, '1200');
+  assert.ok(legacyHome.ogImageAlt && legacyHome.twitterImageAlt);
+  const imageSize = await page.evaluate(async url => {
+    const image = new Image(); image.src = url;
+    await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
+    return [image.naturalWidth, image.naturalHeight];
+  }, origin + new URL(legacyHome.ogImage).pathname);
+  assert.deepEqual(imageSize, [1200, 1200]);
   const sitemap = await fs.readFile(path.join(root, 'sitemap.xml'), 'utf8');
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
   assert.equal(urls.length, 16); assert.equal(new Set(urls).size, 16);
@@ -78,5 +93,5 @@ try {
   const hero = (await page.locator('.hero-title').innerText()).replace(/\s+/g, ' ').trim();
   assert.equal(hero, 'Teman belajar setiap harimu');
   assert.equal(googleRequests, 0);
-  console.log('PASS — 33-page metadata/schema/canonical-link audit; 16 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
+  console.log('PASS — 33-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 16 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
 } finally { await browser.close(); server.close(); }

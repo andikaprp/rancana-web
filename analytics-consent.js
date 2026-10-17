@@ -2,6 +2,12 @@
   'use strict';
   if (window.__rancanaAnalyticsInitialized) return;
   window.__rancanaAnalyticsInitialized = true;
+  const previewHost = location.hostname.toLowerCase();
+  if (previewHost === 'staging.rancana.id' || previewHost.endsWith('.workers.dev') || previewHost.endsWith('.pages.dev')) {
+    const previewMeasurementId = window.RancanaAnalyticsConfig?.measurementId;
+    if (previewMeasurementId) window['ga-disable-' + previewMeasurementId] = true;
+    return;
+  }
   const key = 'rancana_analytics_consent_v1';
   const maxAge = 180 * 86400000;
   const pages = new Set(['home', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide']);
