@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import vm from 'node:vm';
 import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const {chromium} = require('playwright');
@@ -24,6 +25,15 @@ const browser = await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHR
 let assertions = 0;
 const check = (actual,expected) => { assert.deepEqual(actual,expected);assertions++; };
 const key = 'rancana_analytics_consent_v1';
+const analyticsSource = await fs.readFile(path.join(root, 'analytics-consent.js'), 'utf8');
+for (const hostname of ['rancana-staging-handoff.rancana.workers.dev','preview.pages.dev','staging.rancana.id']) {
+  const previewWindow = {RancanaAnalyticsConfig:{measurementId:'G-2KDN1C2G3L'}};
+  vm.runInNewContext(analyticsSource, {window:previewWindow,location:{hostname}});
+  assert.equal(previewWindow['ga-disable-G-2KDN1C2G3L'],true,hostname);
+  assert.equal(previewWindow.__rancanaAnalyticsInitialized,true,hostname);
+  assert.deepEqual(Object.keys(previewWindow).sort(),['RancanaAnalyticsConfig','__rancanaAnalyticsInitialized','ga-disable-G-2KDN1C2G3L'].sort(),hostname);
+  assertions++;
+}
 const sdk = `(() => {const process = args => {const a=Array.from(args);if(window['ga-disable-G-2KDN1C2G3L'])return;if(a[0]==='config')document.cookie='rancana_ga=test-browser; Path=/; SameSite=Lax';if(a[0]==='event')fetch('https://www.google-analytics.com/g/collect',{method:'POST',body:JSON.stringify(a)});};window.dataLayer.forEach(process);window.dataLayer.push=function(...items){items.forEach(process);return Array.prototype.push.apply(this,items);};})();`;
 const contexts=[];
 async function session(locale='en',initial=null) {

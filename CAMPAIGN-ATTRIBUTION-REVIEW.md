@@ -1,7 +1,7 @@
-# Campaign attribution review — local only
+# Campaign attribution review
 
 Base: `4997ae9b86b75d2ec7afe0a5bd7870e699f8573c` (latest main verified 2026-10-16).
-No push, PR, deployment, app modification, external publication, or live analytics configuration change.
+Shared for Git review on a non-production Cloudflare preview branch. No PR, deployment to the custom staging hostname, app modification, external campaign publication, or live analytics configuration change is included.
 
 ## Behavior
 
