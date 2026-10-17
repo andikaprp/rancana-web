@@ -3,3 +3,4 @@ check-lang.mjs
 .wrangler/
 node_modules/
 review-evidence/
+dist-staging/
