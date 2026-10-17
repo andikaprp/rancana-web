@@ -15,3 +15,164 @@
 .guide-page { position: relative; display: flow-root; isolation: isolate; }
 .guide-page > .doc-paper { position: absolute; height: 100%; }
 .guide-page > .preview-footer { background: #fff; }
+
+
+/* Guide pages use the same calm, rounded surfaces as the Rancana resource pages. */
+.guide-page .article-main article { max-width: 940px; }
+.guide-page .article-back {
+  padding: 9px 14px;
+  border: 1px solid #dce8e1;
+  border-radius: 999px;
+  background: #fff;
+  color: #217957;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.guide-page .guide-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(250px, .8fr);
+  align-items: center;
+  gap: 34px;
+  overflow: hidden;
+  margin: 12px 0 58px;
+  padding: clamp(28px, 5vw, 52px);
+  border: 1px solid #dce8e1;
+  border-radius: 32px;
+  background: linear-gradient(135deg, #fff 0%, #f6faf7 58%, #eef5f0 100%);
+  box-shadow: 0 18px 48px #1e1e1e08;
+}
+.guide-page .guide-hero::after {
+  position: absolute;
+  top: -100px;
+  right: -74px;
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  background: #dff1e855;
+  content: "";
+}
+.guide-page .guide-hero-copy { position: relative; z-index: 1; max-width: 540px; }
+.guide-page .guide-hero .article-kicker {
+  display: inline-flex;
+  margin: 0;
+  padding: 8px 13px;
+  border: 1px solid #dce8e1;
+  border-radius: 999px;
+  background: #fff;
+  color: #217957;
+  font-size: 13px;
+  font-weight: 600;
+}
+.guide-page .guide-hero h1 {
+  margin: 22px 0 14px;
+  font-size: clamp(34px, 4.5vw, 50px);
+  letter-spacing: -.45px;
+}
+.guide-page .guide-hero .article-lede { margin: 0; font-size: 19px; line-height: 1.6; }
+.guide-page .guide-hero-art {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-height: 284px;
+  place-items: end center;
+  overflow: hidden;
+  border: 1px solid #fff;
+  border-radius: 26px;
+  background: linear-gradient(150deg, #e1f2e9, #f7f4e8);
+}
+.guide-page .guide-hero-art::before {
+  position: absolute;
+  bottom: -86px;
+  left: 50%;
+  width: 248px;
+  height: 248px;
+  border-radius: 50%;
+  background: #ffffffaa;
+  content: "";
+  transform: translateX(-50%);
+}
+.guide-page .guide-hero-mascot {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  z-index: 1;
+  width: 182px;
+  height: 244px;
+  object-fit: contain;
+  transform: translateX(-50%);
+}
+.guide-page .guide-hero-prop {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 2;
+  width: 76px;
+  height: 76px;
+  padding: 12px;
+  border: 1px solid #e3ebe4;
+  border-radius: 21px;
+  background: #fff;
+  box-shadow: 0 10px 24px #1e1e1e12;
+  object-fit: contain;
+  transform: rotate(8deg);
+}
+.guide-page .guide-hero-todo .guide-hero-art { background: linear-gradient(150deg, #f6e5ee, #f8f5ed); }
+.guide-page .guide-hero-todo .guide-hero-art::before { background: #ffffffb5; }
+.guide-page .guide-hero-flashcards .guide-hero-art { background: linear-gradient(150deg, #fde5ef, #f3e8f4); }
+.guide-page .guide-hero-flashcards .guide-hero-mascot { width: 88%; height: auto; bottom: 10px; }
+.guide-page .guide-hero-flashcards .guide-hero-prop { border-color: #f4d8e5; }
+.guide-page .guide-steps {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: guide-step;
+}
+.guide-page .guide-steps li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  padding: 17px 20px;
+  border: 1px solid #e4e8e1;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 24px #1e1e1e04;
+  counter-increment: guide-step;
+}
+.guide-page .guide-steps li::before {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e8f4ec;
+  color: #217957;
+  content: counter(guide-step);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+}
+.guide-page .article-main section > h2 { margin-bottom: 20px; }
+.guide-page .article-main section > h2 + .guide-steps { margin-top: 0; }
+@media (max-width: 700px) {
+  .guide-page .article-main article { max-width: 100%; }
+  .guide-page .guide-hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 46px;
+    padding: 24px;
+    border-radius: 26px;
+  }
+  .guide-page .guide-hero h1 { font-size: clamp(32px, 9vw, 40px); }
+  .guide-page .guide-hero .article-lede { font-size: 17px; }
+  .guide-page .guide-hero-art { min-height: 220px; }
+  .guide-page .guide-hero-mascot { width: 148px; height: 198px; }
+  .guide-page .guide-hero-prop { top: 18px; right: 18px; width: 66px; height: 66px; }
+  .guide-page .guide-hero-flashcards .guide-hero-mascot { width: 88%; height: auto; }
+  .guide-page .guide-steps li { grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding: 15px; }
+  .guide-page .guide-steps li::before { width: 30px; height: 30px; }
+}
