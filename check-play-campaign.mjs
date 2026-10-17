@@ -48,18 +48,34 @@ async function open(consent = null) {
     if (/google/.test(url.hostname)) google.push(url.href);
     return route.abort();
   });
+  // Own the /go/play hop: fetch the Worker's real 302 without following it, then serve a local stub
+  // so the live Play Store page (and its Google-hosted images) never loads in CI.
+  const hops = [];
+  await context.route(u => u.origin === origin && u.pathname === '/go/play', async route => {
+    const response = await route.fetch({maxRedirects: 0});
+    const url = new URL(route.request().url());
+    hops.push({status: response.status(), location: response.headers().location || null, hop: url.pathname + url.search});
+    return route.fulfill({contentType: 'text/html', body: '<p>play stub</p>'});
+  });
   const page = await context.newPage();
   const go = async (p) => { await page.goto(origin + p); await page.waitForTimeout(100); };
   const hrefs = () => page.$$eval('a[href^="/go/play"]', as => [...new Set(as.map(a => a.getAttribute('href')))]);
   const hero = () => page.locator('.hero-ctas a.play-cta').first();
   const stored = () => page.evaluate(k => sessionStorage.getItem(k), playKey);
-  // Tap the CTA for real and capture the Worker's 302 Location from the redirect chain.
+  // Tap the CTA for real and capture the Worker's 302 Location from the stubbed /go/play hop.
   const tap = async (locator) => {
-    const [request] = await Promise.all([page.waitForRequest(r => r.url().startsWith('https://play.google.com/')), locator.click()]);
-    const hop = request.redirectedFrom();
-    const location = hop ? (await hop.response()).headers().location : null;
+    const count = hops.length;
+    await Promise.all([page.waitForResponse(r => new URL(r.url()).origin === origin && new URL(r.url()).pathname === '/go/play'), locator.click()]);
+    check(hops.length, count + 1, 'one /go/play hop per tap');
+    const {status, location, hop} = hops.at(-1);
+    check(status, 302, 'Worker answers /go/play with 302');
+    const target = new URL(location);
+    check(target.origin + target.pathname, 'https://play.google.com/store/apps/details');
+    check(target.searchParams.get('id'), 'com.planora.labs');
+    check(location.includes('&referrer=' + encodeURIComponent(target.searchParams.get('referrer'))), true, 'referrer is URL-encoded');
+    check(plays.length, 0, 'live Play page never requested');
     await page.goBack(); await page.waitForTimeout(100);
-    return {location, hop: hop && new URL(hop.url()).pathname + new URL(hop.url()).search};
+    return {location, hop};
   };
   return {context, page, go, hrefs, hero, stored, tap, google, plays};
 }
