@@ -19,7 +19,7 @@ assert.match(index, /href="\/id\/terms"/);
 assert.match(index, /href="\/id\/delete-account"/);
 
 // Approved website CTA: black pill + official Play prism (not the full badge / lockup).
-const playHrefs = index.match(/href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.planora\.labs"/g) ?? [];
+const playHrefs = index.match(/href="\/go\/play"/g) ?? [];
 assert.equal(playHrefs.length, 4, 'header, hero, closing and footer must link to the Play listing');
 assert.equal((index.match(/class="play-mark"/g) ?? []).length, 3, 'header + hero + closing need the Play prism');
 assert.equal((index.match(/play-cta/g) ?? []).length, 3, 'header + hero + closing need play-cta');

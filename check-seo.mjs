@@ -56,6 +56,7 @@ try {
     assert.equal('aggregateRating' in (graph[1].mainEntity || {}), false);
     for (const href of row.links) {
       if (!href.startsWith('/')) continue;
+      if (href === '/go/play') continue;
       assert.equal(href.includes('.html'), false, row.file + ': ' + href);
       assert.ok(canonicalSet.has('https://rancana.id' + href.split('#')[0]), row.file + ': ' + href);
     }
