@@ -1,5 +1,61 @@
 (() => {
   'use strict';
+  // Campaign tags are format-validated only. There is deliberately no campaign-name allowlist.
+  // Source, medium and campaign are all-or-nothing; content is optional and kept only when valid.
+  const campaignValue = /^[a-z0-9_.-]{1,64}$/;
+  const campaignTags = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+  const tagValue = (params, key) => {
+    const value = params.get(key)?.toLowerCase();
+    return value && campaignValue.test(value) ? value : null;
+  };
+  const parseCampaign = params => {
+    const [source, medium, name, content] = campaignTags.map(key => tagValue(params, key));
+    if (!source || !medium || !name) return null;
+    return {campaign_source: source, campaign_medium: medium, campaign_name: name, ...(content ? {campaign_content: content} : {})};
+  };
+  const campaignQuery = c => {
+    const query = new URLSearchParams({utm_source: c.campaign_source, utm_medium: c.campaign_medium, utm_campaign: c.campaign_name});
+    if (c.campaign_content !== undefined) query.set('utm_content', c.campaign_content);
+    return query.toString();
+  };
+  const hasCampaignTags = params => campaignTags.some(key => params.has(key));
+
+  // Play campaign handoff. Independent of analytics consent: only campaign tags are carried,
+  // and only from this landing URL or this tab session's stored landing campaign.
+  if (!window.__rancanaPlayCampaignInitialized) {
+    window.__rancanaPlayCampaignInitialized = true;
+    const playKey = 'rancana_play_campaign_v1';
+    const landing = new URLSearchParams(location.search);
+    let playCampaign = null;
+    try {
+      if (hasCampaignTags(landing)) {
+        // A new tagged landing replaces the stored campaign; partial or invalid tags clear it.
+        playCampaign = parseCampaign(landing);
+        if (playCampaign) sessionStorage.setItem(playKey, campaignQuery(playCampaign));
+        else sessionStorage.removeItem(playKey);
+      } else {
+        const stored = sessionStorage.getItem(playKey);
+        playCampaign = stored === null ? null : parseCampaign(new URLSearchParams(stored));
+        if (stored !== null && (!playCampaign || campaignQuery(playCampaign) !== stored)) {
+          playCampaign = null; sessionStorage.removeItem(playKey);
+        }
+      }
+    } catch { playCampaign = hasCampaignTags(landing) ? parseCampaign(landing) : null; }
+    const playHref = '/go/play' + (playCampaign ? '?' + campaignQuery(playCampaign) : '');
+    const decoratePlayLink = anchor => {
+      let url; try { url = new URL(anchor.getAttribute('href'), location.href); } catch { return; }
+      if (url.origin !== location.origin || url.pathname !== '/go/play' || url.username || url.password) return;
+      if (anchor.getAttribute('href') !== playHref) anchor.setAttribute('href', playHref);
+    };
+    document.querySelectorAll('a[href]').forEach(decoratePlayLink);
+    for (const type of ['pointerdown', 'contextmenu', 'click', 'auxclick']) {
+      document.addEventListener(type, event => {
+        const anchor = event.target.closest?.('a[href]');
+        if (anchor) decoratePlayLink(anchor);
+      }, {capture: true});
+    }
+  }
+
   if (window.__rancanaAnalyticsInitialized) return;
   window.__rancanaAnalyticsInitialized = true;
   const previewHost = location.hostname.toLowerCase();
@@ -24,23 +80,6 @@
     } catch { return null; }
   };
   let choice = readChoice();
-  // Proposed campaign registry: changing values requires code review, never free text.
-  const campaignPlacements = {
-    instagram: {organic_social: ['profile_bio', 'story'], paid_social: ['feed_ad', 'story_ad']},
-    tiktok: {organic_social: ['profile_bio'], paid_social: ['video_ad']},
-    x: {organic_social: ['profile_bio', 'post'], paid_social: ['feed_ad']}
-  };
-  const validCampaign = (source, medium, name, content) => name === 'rancana_study_2026q4' &&
-    Object.hasOwn(campaignPlacements, source) && Object.hasOwn(campaignPlacements[source], medium) &&
-    campaignPlacements[source][medium].includes(content);
-  const campaignFromURL = () => {
-    const params = new URLSearchParams(location.search);
-    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
-    if (keys.some(key => params.getAll(key).length !== 1)) return null;
-    const [source, medium, name, content] = keys.map(key => params.get(key));
-    if (!validCampaign(source, medium, name, content)) return null;
-    return {campaign_source: source, campaign_medium: medium, campaign_name: name, campaign_content: content};
-  };
   // Same-origin, tab-session storage only, with a fixed 30-minute maximum lifetime.
   const campaignKey = 'rancana_campaign_session_v1';
   const campaignAge = 30 * 60000;
@@ -64,9 +103,9 @@
       if (Object.keys(record).sort().join() !== 'at,campaign,consentAt,version' || record.version !== 1 ||
           record.consentAt !== consentAt() || !Number.isFinite(record.at) || record.at > Date.now() ||
           Date.now() - record.at >= campaignAge || !c ||
-          Object.keys(c).sort().join() !== [...campaignFields].sort().join() ||
-          !campaignFields.every(field => typeof c[field] === 'string') ||
-          !validCampaign(c.campaign_source, c.campaign_medium, c.campaign_name, c.campaign_content)) {
+          typeof c !== 'object' || !Object.keys(c).every(field => campaignFields.includes(field)) ||
+          !campaignFields.every(field => c[field] === undefined || typeof c[field] === 'string') ||
+          JSON.stringify(parseCampaign(new URLSearchParams(campaignQuery(c)))) !== JSON.stringify(c)) {
         clearCampaign(); return null;
       }
       return record;
@@ -85,8 +124,8 @@
   const startCampaign = () => {
     // A supplied but invalid tuple clears prior attribution instead of silently inheriting it.
     const params = new URLSearchParams(location.search);
-    if (['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].some(field => params.has(field))) {
-      const incoming = campaignFromURL();
+    if (hasCampaignTags(params)) {
+      const incoming = parseCampaign(params);
       const existing = readCampaign();
       if (!incoming) clearCampaign();
       else if (!existing || campaignFields.some(field => existing.campaign[field] !== incoming[field])) {
