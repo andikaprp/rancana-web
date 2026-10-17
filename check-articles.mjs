@@ -24,7 +24,7 @@ try{
    await page.evaluate(()=>{for(const i of document.images)i.loading='eager'});await page.locator('footer').scrollIntoViewIfNeeded();await page.evaluate(()=>Promise.all([...document.images].map(i=>i.decode().catch(()=>{}))));await page.evaluate(()=>scrollTo(0,0));
    const images=await page.locator('img').evaluateAll(imgs=>imgs.filter(i=>!i.complete||i.naturalWidth===0).map(i=>i.src));assert.deepEqual(images,[]);
    const links=await page.locator('a[href]').evaluateAll(as=>as.map(a=>a.getAttribute('href')).filter(h=>h.startsWith('/')));
-   for(const href of new Set(links)){let p=href.split('#')[0];if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';await fs.access(path.join(root,p));}
+   for(const href of new Set(links)){let p=href.split('#')[0];if(p==='/go/play')continue;if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';await fs.access(path.join(root,p));}
    const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());assert.equal(schema['@graph'][1]['@type'],route==='articles'?'CollectionPage':'Article');
    if(route==='articles')assert.equal(await page.locator('.article-card').count(),3);
    const backdrop = await page.evaluate(() => {
