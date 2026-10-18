@@ -957,9 +957,9 @@
     "context": "Contoh tugas",
     "page": "todo-guide.html",
     "before": "Deskripsi: Soal 1–5, kumpulkan lewat kelas. Pelajaran: Matematika Deadline contoh: Jumat, 16.00",
-    "after": "Deskripsi: Kerjakan soal 1–5.\nPelajaran: Matematika\nContoh deadline: Jumat, pukul 16.00",
+    "after": "Tugas yang sudah tersimpan di daftar To-do Rancana.",
     "source_locations": [
-      "/html/body/main/article[1]/section[3]/div/p"
+      "/html/body/main/article[1]/section[3]/figure/figcaption"
     ],
     "status": "applied"
   },
