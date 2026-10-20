@@ -5,7 +5,7 @@ import path from 'node:path';
 import {chromium} from 'playwright';
 
 const root = path.dirname(new URL(import.meta.url).pathname);
-const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide'];
+const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide', 'flashcard-hafalan', 'jadwal-belajar', 'todo-tugas'];
 // Expected sameAs after the social-profile extension (PR #34): Play entity first, then verified socials.
 const ORG_SAMEAS = ['https://play.google.com/store/apps/dev?id=4897195411202652501', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
 const APP_SAMEAS = ['https://play.google.com/store/apps/details?id=com.planora.labs', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
@@ -87,7 +87,7 @@ try {
   assert.deepEqual(imageSize, [1200, 1200]);
   const sitemap = await fs.readFile(path.join(root, 'sitemap.xml'), 'utf8');
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert.equal(urls.length, 16); assert.equal(new Set(urls).size, 16);
+  assert.equal(urls.length, 22); assert.equal(new Set(urls).size, 22);
   for (const url of urls) { assert.ok(canonicalSet.has(url)); assert.equal(rows.find(r => r.file.includes('/') && r.canonical === url).robots?.includes('noindex') || false, false); }
   await page.goto(origin + '/?lang=en');
   assert.equal(await page.locator('a[data-locale-page="premium"]').first().getAttribute('href'), '/en/premium');
@@ -97,5 +97,5 @@ try {
   const hero = (await page.locator('.hero-title').innerText()).replace(/\s+/g, ' ').trim();
   assert.equal(hero, 'Teman belajar setiap harimu');
   assert.equal(googleRequests, 0);
-  console.log('PASS — 33-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 16 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
+  console.log('PASS — 42-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 22 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
 } finally { await browser.close(); server.close(); }
