@@ -6,6 +6,9 @@ import {chromium} from 'playwright';
 
 const root = path.dirname(new URL(import.meta.url).pathname);
 const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide'];
+// Expected sameAs after the social-profile extension (PR #34): Play entity first, then verified socials.
+const ORG_SAMEAS = ['https://play.google.com/store/apps/dev?id=4897195411202652501', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
+const APP_SAMEAS = ['https://play.google.com/store/apps/details?id=com.planora.labs', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
 const documents = [];
 for (const locale of ['', 'id/', 'en/']) for (const page of pages) documents.push({file: locale + page + '.html', source: await fs.readFile(path.join(root, locale + page + '.html'), 'utf8')});
 const server = http.createServer(async (req, res) => {
@@ -46,11 +49,11 @@ try {
     const org=graph.find(e=>e['@type']==='Organization');
     const app=graph.find(e=>e['@type']==='SoftwareApplication');
     assert.equal(org['@id'],'https://rancana.id/#organization');assert.equal(org.name,'Rancana');
-    assert.deepEqual(org.sameAs,['https://play.google.com/store/apps/dev?id=4897195411202652501']);
+    assert.deepEqual(org.sameAs, ORG_SAMEAS);
     assert.equal(app['@id'],'https://rancana.id/#android-app');assert.equal(app.name,'Rancana');
     assert.equal(app.operatingSystem,'Android');assert.equal(app.url,'https://rancana.id/');
     assert.equal(app.installUrl,'https://play.google.com/store/apps/details?id=com.planora.labs');
-    assert.deepEqual(app.sameAs,[app.installUrl]);assert.equal(app.publisher['@id'],org['@id']);
+    assert.deepEqual(app.sameAs, APP_SAMEAS);assert.equal(app.publisher['@id'],org['@id']);
     assert.equal(graph[0].publisher['@id'],org['@id']);
     if(row.file.endsWith('index.html'))assert.equal(graph[1].mainEntity['@id'],app['@id']);
     assert.equal('aggregateRating' in (graph[1].mainEntity || {}), false);
