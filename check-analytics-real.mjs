@@ -63,7 +63,7 @@ await context.route('**/*', async route => {
 const page = await context.newPage();
 page.on('response', response => { if (response.url().startsWith('https://www.googletagmanager.com/gtag/js')) { if (response.ok()) sdkResponses++; else scriptFailures.push(response.status()); } });
 try {
-  await page.goto(origin + '/en/?email=qa-probe@example.invalid&utm_campaign=qa_probe#qa-private');
+  await page.goto(origin + '/en/?email=qa-probe@example.invalid&utm_campaign=qa_probe&gclid=qa-click-id&fbclid=qa-facebook-click&ttclid=qa-tiktok-click#qa-private');
   await pause(500);
   check(sdkRequests, 0); check(captures.length, 0); check((await context.cookies()).length, 0); check(await page.locator('.analytics-settings').count(),0);
   consentPhase = 'denied'; await page.locator('[data-consent-reject]').click(); await page.reload(); await pause(500);
@@ -79,20 +79,31 @@ try {
   await page.locator('[data-consent-accept]').evaluate(e=>e.click());
   await pause(500); check(sdkRequests, 1); check(events('page_view').length, 1);
   // Keep the test page open; product navigation handlers remain unchanged.
-  const play = page.locator('.hero-ctas a[href*="play.google.com"]').first();
+  const play = page.locator('.hero-ctas a[href="/go/play"]').first();
+  check(await play.getAttribute('href'), '/go/play');
   await play.evaluate(a => a.addEventListener('click', e => e.preventDefault()));
   await play.click(); await waitFor(() => events('google_play_click').length > 0);
+  check(await play.getAttribute('href'), '/go/play');
   check(events('google_play_click').length, 1);
   check(events('google_play_click')[0].get('ep.link_destination'), 'google_play');
   check(events('google_play_click')[0].get('ep.link_placement'), 'hero');
   await page.goto(origin + '/en/privacy?email=qa-probe@example.invalid');
   await waitFor(() => events('page_view').length >= 2); await pause(1000);
   check(events('page_view').length, 2); check(events('page_view').at(-1).get('dl'), 'https://rancana.id/en/privacy');
+  await page.goto(origin + '/en/?utm_source=instagram&utm_medium=paid_social&utm_campaign=rancana_study_2026q4&utm_content=feed_ad&gclid=qa-click-id&fbclid=qa-facebook-click&ttclid=qa-tiktok-click');
+  await waitFor(() => events('page_view').length >= 3); await pause(1000);
+  const campaignView = events('page_view').at(-1);
+  check(campaignView.get('cs'), 'instagram'); check(campaignView.get('cm'), 'paid_social');
+  check(campaignView.get('cn'), 'rancana_study_2026q4'); check(campaignView.get('cc'), 'feed_ad');
+  await page.goto(origin + '/en/privacy');
+  await waitFor(() => events('page_view').length >= 4); await pause(1000);
+  check(events('page_view').at(-1).get('cs'), 'instagram');
+  check(events('page_view').at(-1).get('cm'), 'paid_social');
   for (const params of captures) {
     check(params.get('tid'), id);
     check(['https://rancana.id/en/', 'https://rancana.id/en/privacy'].includes(params.get('dl')), true);
     check(params.get('dr') || '', '');
-    check([...params.values()].some(value => value.includes('qa-probe@example.invalid') || value.includes('qa-private')), false);
+    check([...params.values()].some(value => value.includes('qa-probe@example.invalid') || value.includes('qa-private') || value.includes('qa-click-id') || value.includes('qa-facebook-click') || value.includes('qa-tiktok-click')), false);
   }
   check(captures.some(p => ['scroll', 'click', 'video_start', 'video_progress', 'video_complete', 'file_download', 'view_search_results', 'form_start', 'form_submit'].includes(p.get('en'))), false);
   const requestsBeforeRevocation = sdkRequests;

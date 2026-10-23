@@ -1,7 +1,69 @@
 (() => {
   'use strict';
+  // Campaign tags are format-validated only. There is deliberately no campaign-name allowlist.
+  // Source, medium and campaign are all-or-nothing; content is optional and kept only when valid.
+  const campaignValue = /^[a-z0-9_.-]{1,64}$/;
+  const campaignTags = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+  const tagValue = (params, key) => {
+    const value = params.get(key)?.toLowerCase();
+    return value && campaignValue.test(value) ? value : null;
+  };
+  const parseCampaign = params => {
+    const [source, medium, name, content] = campaignTags.map(key => tagValue(params, key));
+    if (!source || !medium || !name) return null;
+    return {campaign_source: source, campaign_medium: medium, campaign_name: name, ...(content ? {campaign_content: content} : {})};
+  };
+  const campaignQuery = c => {
+    const query = new URLSearchParams({utm_source: c.campaign_source, utm_medium: c.campaign_medium, utm_campaign: c.campaign_name});
+    if (c.campaign_content !== undefined) query.set('utm_content', c.campaign_content);
+    return query.toString();
+  };
+  const hasCampaignTags = params => campaignTags.some(key => params.has(key));
+
+  // Play campaign handoff. Independent of analytics consent: only campaign tags are carried,
+  // and only from this landing URL or this tab session's stored landing campaign.
+  if (!window.__rancanaPlayCampaignInitialized) {
+    window.__rancanaPlayCampaignInitialized = true;
+    const playKey = 'rancana_play_campaign_v1';
+    const landing = new URLSearchParams(location.search);
+    let playCampaign = null;
+    try {
+      if (hasCampaignTags(landing)) {
+        // A new tagged landing replaces the stored campaign; partial or invalid tags clear it.
+        playCampaign = parseCampaign(landing);
+        if (playCampaign) sessionStorage.setItem(playKey, campaignQuery(playCampaign));
+        else sessionStorage.removeItem(playKey);
+      } else {
+        const stored = sessionStorage.getItem(playKey);
+        playCampaign = stored === null ? null : parseCampaign(new URLSearchParams(stored));
+        if (stored !== null && (!playCampaign || campaignQuery(playCampaign) !== stored)) {
+          playCampaign = null; sessionStorage.removeItem(playKey);
+        }
+      }
+    } catch { playCampaign = hasCampaignTags(landing) ? parseCampaign(landing) : null; }
+    const playHref = '/go/play' + (playCampaign ? '?' + campaignQuery(playCampaign) : '');
+    const decoratePlayLink = anchor => {
+      let url; try { url = new URL(anchor.getAttribute('href'), location.href); } catch { return; }
+      if (url.origin !== location.origin || url.pathname !== '/go/play' || url.username || url.password) return;
+      if (anchor.getAttribute('href') !== playHref) anchor.setAttribute('href', playHref);
+    };
+    document.querySelectorAll('a[href]').forEach(decoratePlayLink);
+    for (const type of ['pointerdown', 'contextmenu', 'click', 'auxclick']) {
+      document.addEventListener(type, event => {
+        const anchor = event.target.closest?.('a[href]');
+        if (anchor) decoratePlayLink(anchor);
+      }, {capture: true});
+    }
+  }
+
   if (window.__rancanaAnalyticsInitialized) return;
   window.__rancanaAnalyticsInitialized = true;
+  const previewHost = location.hostname.toLowerCase();
+  if (previewHost === 'staging.rancana.id' || previewHost.endsWith('.workers.dev') || previewHost.endsWith('.pages.dev')) {
+    const previewMeasurementId = window.RancanaAnalyticsConfig?.measurementId;
+    if (previewMeasurementId) window['ga-disable-' + previewMeasurementId] = true;
+    return;
+  }
   const key = 'rancana_analytics_consent_v1';
   const maxAge = 180 * 86400000;
   const pages = new Set(['home', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide']);
@@ -18,6 +80,70 @@
     } catch { return null; }
   };
   let choice = readChoice();
+  // Same-origin, tab-session storage only, with a fixed 30-minute maximum lifetime.
+  const campaignKey = 'rancana_campaign_session_v1';
+  const campaignAge = 30 * 60000;
+  const campaignFields = ['campaign_source', 'campaign_medium', 'campaign_name', 'campaign_content'];
+  let campaign = null, campaignTimer, campaignStorageFailed = false;
+  const consentAt = () => {
+    try { return readChoice() === 'granted' ? JSON.parse(localStorage.getItem(key)).at : null; }
+    catch { return null; }
+  };
+  const clearCampaign = () => {
+    campaign = null; clearTimeout(campaignTimer);
+    try { sessionStorage.removeItem(campaignKey); } catch { campaignStorageFailed = true; }
+  };
+  const readCampaign = () => {
+    if (campaignStorageFailed) return null;
+    try {
+      if (choice !== 'granted' || readChoice() !== 'granted') { clearCampaign(); return null; }
+      const record = JSON.parse(sessionStorage.getItem(campaignKey));
+      if (!record) return null;
+      const c = record.campaign;
+      if (Object.keys(record).sort().join() !== 'at,campaign,consentAt,version' || record.version !== 1 ||
+          record.consentAt !== consentAt() || !Number.isFinite(record.at) || record.at > Date.now() ||
+          Date.now() - record.at >= campaignAge || !c ||
+          typeof c !== 'object' || !Object.keys(c).every(field => campaignFields.includes(field)) ||
+          !campaignFields.every(field => c[field] === undefined || typeof c[field] === 'string') ||
+          JSON.stringify(parseCampaign(new URLSearchParams(campaignQuery(c)))) !== JSON.stringify(c)) {
+        clearCampaign(); return null;
+      }
+      return record;
+    } catch { campaignStorageFailed = true; clearCampaign(); return null; }
+  };
+  const refreshCampaign = () => {
+    clearTimeout(campaignTimer);
+    const previous = campaign;
+    const record = readCampaign(); campaign = record?.campaign || null;
+    if (previous && !campaign && configured && choice === 'granted' && readChoice() === 'granted') {
+      gtag('config', id, {update: true, send_page_view: false,
+        campaign_source: '', campaign_medium: '', campaign_name: '', campaign_content: ''});
+    }
+    if (record) campaignTimer = setTimeout(refreshCampaign, Math.max(0, record.at + campaignAge - Date.now()));
+  };
+  const startCampaign = () => {
+    // A supplied but invalid tuple clears prior attribution instead of silently inheriting it.
+    const params = new URLSearchParams(location.search);
+    if (hasCampaignTags(params)) {
+      const incoming = parseCampaign(params);
+      const existing = readCampaign();
+      if (!incoming) clearCampaign();
+      else if (!existing || campaignFields.some(field => existing.campaign[field] !== incoming[field])) {
+        try { sessionStorage.setItem(campaignKey, JSON.stringify({version: 1, at: Date.now(),
+          consentAt: consentAt(), campaign: incoming})); }
+        catch { campaignStorageFailed = true; clearCampaign(); }
+      }
+    }
+    refreshCampaign();
+  };
+  const legacyPlay = 'https://play.google.com/store/apps/details?id=com.planora.labs';
+  const isPlayLink = anchor => {
+    let url; try { url = new URL(anchor.href, location.href); } catch { return false; }
+    if (url.username || url.password) return false;
+    return url.href === legacyPlay ||
+      (url.origin === location.origin && url.pathname === '/go/play');
+  };
+
   const language = () => document.documentElement.lang === 'en' ? 'en' : 'id';
   const pageName = () => {
     const parts = location.pathname.replace(/\.html$/, '').split('/').filter(Boolean);
@@ -61,6 +187,7 @@
   };
   const stop = (removeCookies = true, reload = true) => {
     window[disabled] = true;
+    clearCampaign();
     if (removeCookies) clearCookies();
     // Executed SDK code cannot be unloaded by removing a script element.
     // Persist denial/expiry first, disable collection, then replace this document.
@@ -69,7 +196,10 @@
   const send = message => {
     if (choice === 'granted' && readChoice() !== 'granted') { refreshChoice(); return; }
     if (choice !== 'granted' || !tag || !gtag) return;
-    const context = {page_location: 'https://rancana.id/' + message.language + '/' + (message.page === 'home' ? '' : message.page), page_title: 'Rancana — ' + message.page, page_referrer: '', language: message.language};
+    refreshCampaign();
+    const context = {page_location: 'https://rancana.id/' + message.language + '/' + (message.page === 'home' ? '' : message.page), page_title: 'Rancana — ' + message.page, page_referrer: '', language: message.language,
+      campaign_source: '', campaign_medium: '', campaign_name: '', campaign_content: '',
+      campaign_id: '', campaign_term: '', ...(campaign || {})};
     if (!configured) {
       gtag('config', id, {...context, send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'none', cookie_path: '/', cookie_prefix: 'rancana', cookie_expires: 15552000, cookie_update: false});
       configured = true;
@@ -88,6 +218,7 @@
   const start = () => {
     if (choice !== 'granted' || readChoice() !== 'granted' || !pageName() || !/^G-[A-Z0-9]+$/.test(id || '')) return;
     if (tag) { if (window[disabled]) location.reload(); return; }
+    startCampaign();
     window[disabled] = false;
     window.dataLayer = window.dataLayer || [];
     gtag = function () { window.dataLayer.push(arguments); };
@@ -114,18 +245,22 @@
     panel.hidden = choice !== null; render(); scheduleExpiry();
   });
   new MutationObserver(() => { render(); view(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
-  document.addEventListener('click', event => {
-    if (choice !== 'granted' || !tag || !event.isTrusted) return;
+  const seenClicks = new WeakSet();
+  const onPlayInteraction = event => {
     const anchor = event.target.closest?.('a[href]');
-    if (!anchor) return;
-    let url; try { url = new URL(anchor.href, location.href); } catch { return; }
-    const direct = url.protocol === 'https:' && url.hostname === 'play.google.com' && url.pathname === '/store/apps/details' && url.searchParams.get('id') === 'com.planora.labs';
-    const redirect = url.origin === location.origin && url.pathname === '/go/play';
+    if (!anchor || !isPlayLink(anchor)) return;
+    if (!['click', 'auxclick'].includes(event.type) || (event.type === 'auxclick' && event.button !== 1) ||
+        choice !== 'granted' || !tag || !event.isTrusted || seenClicks.has(event)) return;
+    seenClicks.add(event);
     const page = pageName();
-    if ((!direct && !redirect) || !page) return;
+    if (!page) return;
     const placement = anchor.closest('.site-header') ? 'header' : anchor.closest('.hero-ctas') ? 'hero' : anchor.closest('.preview-footer') ? 'footer' : 'body';
     send({type: 'rancana-analytics', event: 'google_play_click', page, language: language(), placement});
-  }, {capture: true});
+  };
+  // Prepare before default navigation (including middle-click/context-menu), without delaying it.
+  for (const type of ['pointerdown', 'contextmenu', 'click', 'auxclick']) {
+    document.addEventListener(type, onPlayInteraction, {capture: true});
+  }
   const scheduleExpiry = () => {
     clearTimeout(expiryTimer);
     if (choice === null || storageFailed) return;
@@ -137,6 +272,7 @@
   const refreshChoice = () => {
     const next = readChoice();
     if (next !== choice) { choice = next; if (choice === 'granted') start(); else stop(); panel.hidden = choice !== null; render(); }
+    refreshCampaign();
     scheduleExpiry();
   };
   addEventListener('pagehide', () => { window[disabled] = true; });
@@ -147,6 +283,6 @@
     choice = readChoice(); if (choice === 'granted') { window[disabled] = false; start(); } else stop(); panel.hidden = choice !== null; render(); scheduleExpiry();
   });
   panel.hidden = choice !== null; render();
-  if (choice === 'granted') start(); else clearCookies();
+  if (choice === 'granted') start(); else { clearCampaign(); clearCookies(); }
   scheduleExpiry();
 })();

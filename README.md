@@ -71,4 +71,8 @@ Motion pauses offscreen, while the document is hidden and on `pagehide`, then re
 
 `node check-companion-motion.mjs --static` checks original asset hashes without launching a browser; it explicitly does not verify layout, lifecycle or playback. Use `COMPANION_REQUIRE_POSES=1` in the review workflow as the explicit final-art gate: all four actors must use the native raster/vector artwork, with no placeholders, intact original hashes, one visible body, one face and two hands each. Passing behavior tests does not replace visual review of the repaired body regions, expressions and hand shapes. No merge or deployment is authorized by this review.
 
-Current local verification: JavaScript syntax and both original asset hashes pass. Full real-browser assertions, pixel review and new recordings remain pending CI because this sandbox cannot launch Chromium. No visual/playback pass is implied.
+Current local verification: `npm test` and `npm run test:staging` pass, including ID/EN desktop and mobile browser checks. The full mascot loop videos are still handled by the existing CI review.
+
+## Isolated staging
+
+`wrangler.staging.toml` targets the separate `rancana-staging` Worker and exact custom domain `staging.rancana.id`; workers.dev and preview URLs are disabled, and no production bindings are configured. `npm run test:staging` builds a filtered `dist-staging` tree with noindex headers and metadata, a visible review banner, and analytics removed. The staging Worker keeps the current Play referrer behavior and adds noindex to all staging responses. Deploy this target with `wrangler deploy --config wrangler.staging.toml`.

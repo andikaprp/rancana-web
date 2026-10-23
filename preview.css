@@ -225,3 +225,6 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
  .benefits{padding-bottom:32px}
  .benefits+.download{margin-top:0}
 }
+
+/* Readable descriptions in all four homepage feature cards. */
+.preview .product .card .card-head p{font-size:18px;line-height:1.5}

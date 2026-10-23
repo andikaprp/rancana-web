@@ -5,7 +5,10 @@ import path from 'node:path';
 import {chromium} from 'playwright';
 
 const root = path.dirname(new URL(import.meta.url).pathname);
-const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide'];
+const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide', 'flashcard-hafalan', 'jadwal-belajar', 'todo-tugas'];
+// Expected sameAs after the social-profile extension (PR #34): Play entity first, then verified socials.
+const ORG_SAMEAS = ['https://play.google.com/store/apps/dev?id=4897195411202652501', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
+const APP_SAMEAS = ['https://play.google.com/store/apps/details?id=com.planora.labs', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
 const documents = [];
 for (const locale of ['', 'id/', 'en/']) for (const page of pages) documents.push({file: locale + page + '.html', source: await fs.readFile(path.join(root, locale + page + '.html'), 'utf8')});
 const server = http.createServer(async (req, res) => {
@@ -15,7 +18,7 @@ const server = http.createServer(async (req, res) => {
     if (!path.extname(name)) name += '.html';
     const file = path.resolve(root, '.' + name);
     if (!file.startsWith(root + '/')) throw Error('invalid path');
-    res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : 'application/octet-stream');
+    res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.html') ? 'text/html' : file.endsWith('.png') ? 'image/png' : 'application/octet-stream');
     res.end(await fs.readFile(file));
   } catch { res.statusCode = 404; res.end(); }
 });
@@ -29,7 +32,7 @@ try {
   const rows = await page.evaluate(documents => documents.map(({file, source}) => {
     const doc = new DOMParser().parseFromString(source, 'text/html');
     const meta = key => doc.querySelector('meta[name="' + key + '"],meta[property="' + key + '"]')?.content;
-    return {file, title: doc.title, description: meta('description'), robots: meta('robots'), keywords: meta('keywords'), canonical: doc.querySelector('link[rel=canonical]')?.href, alternates: [...doc.querySelectorAll('link[hreflang]')].map(a => [a.hreflang, a.href]), ogTitle: meta('og:title'), ogDescription: meta('og:description'), schema: [...doc.querySelectorAll('script[type="application/ld+json"]')].map(s => JSON.parse(s.textContent)), links: [...doc.querySelectorAll('a[href]')].map(a => a.getAttribute('href'))};
+    return {file, title: doc.title, description: meta('description'), robots: meta('robots'), keywords: meta('keywords'), canonical: doc.querySelector('link[rel=canonical]')?.href, alternates: [...doc.querySelectorAll('link[hreflang]')].map(a => [a.hreflang, a.href]), ogTitle: meta('og:title'), ogDescription: meta('og:description'), ogImage: meta('og:image'), ogImageWidth: meta('og:image:width'), ogImageHeight: meta('og:image:height'), ogImageAlt: meta('og:image:alt'), twitterCard: meta('twitter:card'), twitterImage: meta('twitter:image'), twitterImageAlt: meta('twitter:image:alt'), schema: [...doc.querySelectorAll('script[type="application/ld+json"]')].map(s => JSON.parse(s.textContent)), links: [...doc.querySelectorAll('a[href]')].map(a => a.getAttribute('href'))};
   }), documents);
   const canonicalSet = new Set(rows.filter(r => r.file.includes('/')).map(r => r.canonical));
   for (const row of rows) {
@@ -46,16 +49,17 @@ try {
     const org=graph.find(e=>e['@type']==='Organization');
     const app=graph.find(e=>e['@type']==='SoftwareApplication');
     assert.equal(org['@id'],'https://rancana.id/#organization');assert.equal(org.name,'Rancana');
-    assert.deepEqual(org.sameAs,['https://play.google.com/store/apps/dev?id=4897195411202652501']);
+    assert.deepEqual(org.sameAs, ORG_SAMEAS);
     assert.equal(app['@id'],'https://rancana.id/#android-app');assert.equal(app.name,'Rancana');
     assert.equal(app.operatingSystem,'Android');assert.equal(app.url,'https://rancana.id/');
     assert.equal(app.installUrl,'https://play.google.com/store/apps/details?id=com.planora.labs');
-    assert.deepEqual(app.sameAs,[app.installUrl]);assert.equal(app.publisher['@id'],org['@id']);
+    assert.deepEqual(app.sameAs, APP_SAMEAS);assert.equal(app.publisher['@id'],org['@id']);
     assert.equal(graph[0].publisher['@id'],org['@id']);
     if(row.file.endsWith('index.html'))assert.equal(graph[1].mainEntity['@id'],app['@id']);
     assert.equal('aggregateRating' in (graph[1].mainEntity || {}), false);
     for (const href of row.links) {
       if (!href.startsWith('/')) continue;
+      if (href === '/go/play') continue;
       assert.equal(href.includes('.html'), false, row.file + ': ' + href);
       assert.ok(canonicalSet.has('https://rancana.id' + href.split('#')[0]), row.file + ': ' + href);
     }
@@ -65,10 +69,25 @@ try {
     assert.equal(new Set(titles).size, pages.length, 'Unique page titles');
     const home = rows.find(r => r.file === locale + 'index.html');
     assert.match(home.description, /Android/); assert.match(home.description, locale === 'id/' ? /mahasiswa/ : /college/);
+    assert.equal(home.ogImage, 'https://rancana.id/assets/rancana-og-mascot-square-20261017.png');
+    assert.equal(home.ogImageWidth, '1200'); assert.equal(home.ogImageHeight, '1200');
+    assert.ok(home.ogImageAlt && home.ogImageAlt.length > 20);
+    assert.equal(home.twitterCard, 'summary'); assert.equal(home.twitterImage, home.ogImage);
+    assert.equal(home.twitterImageAlt, home.ogImageAlt);
   }
+  const legacyHome = rows.find(r => r.file === 'index.html');
+  assert.equal(legacyHome.ogImage, 'https://rancana.id/assets/rancana-og-mascot-square-20261017.png');
+  assert.equal(legacyHome.ogImageWidth, '1200'); assert.equal(legacyHome.ogImageHeight, '1200');
+  assert.ok(legacyHome.ogImageAlt && legacyHome.twitterImageAlt);
+  const imageSize = await page.evaluate(async url => {
+    const image = new Image(); image.src = url;
+    await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
+    return [image.naturalWidth, image.naturalHeight];
+  }, origin + new URL(legacyHome.ogImage).pathname);
+  assert.deepEqual(imageSize, [1200, 1200]);
   const sitemap = await fs.readFile(path.join(root, 'sitemap.xml'), 'utf8');
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert.equal(urls.length, 16); assert.equal(new Set(urls).size, 16);
+  assert.equal(urls.length, 22); assert.equal(new Set(urls).size, 22);
   for (const url of urls) { assert.ok(canonicalSet.has(url)); assert.equal(rows.find(r => r.file.includes('/') && r.canonical === url).robots?.includes('noindex') || false, false); }
   await page.goto(origin + '/?lang=en');
   assert.equal(await page.locator('a[data-locale-page="premium"]').first().getAttribute('href'), '/en/premium');
@@ -78,5 +97,5 @@ try {
   const hero = (await page.locator('.hero-title').innerText()).replace(/\s+/g, ' ').trim();
   assert.equal(hero, 'Teman belajar setiap harimu');
   assert.equal(googleRequests, 0);
-  console.log('PASS — 33-page metadata/schema/canonical-link audit; 16 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
+  console.log('PASS — 42-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 22 sitemap URLs; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
 } finally { await browser.close(); server.close(); }

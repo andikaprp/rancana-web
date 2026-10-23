@@ -6,7 +6,11 @@ ROOT=Path(__file__).resolve().parent
 ORIGIN='https://rancana.id'
 PLAY='https://play.google.com/store/apps/details?id=com.planora.labs'
 DEVELOPER='https://play.google.com/store/apps/dev?id=4897195411202652501'
-PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html']
+INSTAGRAM='https://www.instagram.com/rancana.app/'
+TIKTOK='https://www.tiktok.com/@rancana.id'
+X_PROFILE='https://x.com/rancanaid'
+PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html']
+ARTICLE_PAGES=['college-schedule.html','todo-guide.html','flashcard-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html']
 def locale_url(page, lang):
  return ORIGIN+'/'+lang+'/'+('' if page=='index.html' else page.removesuffix('.html'))
 def canonical_links(tree, lang, legacy=False):
@@ -31,17 +35,24 @@ def metadata(tree, page, lang, canonical):
  add('link',{'rel':'alternate','hreflang':'x-default','href':locale_url(page,'id')})
  title_element=head.find('title');description_element=head.xpath('meta[@name="description"]')[0]
  title=(title_element.get('data-id') if lang=='id' else None) or title_element.get('data-en') or title_element.text or 'Rancana';desc=(description_element.get('data-id') if lang=='id' else None) or description_element.get('data-en') or description_element.get('content')
- for key,value in {'type':'article' if page in ['college-schedule.html','todo-guide.html','flashcard-guide.html'] else 'website','site_name':'Rancana','title':title,'description':desc,'url':canonical,'locale':'id_ID' if lang=='id' else 'en_US','image':ORIGIN+'/assets/app-icon-180.png'}.items():add('meta',{'property':'og:'+key,'content':value})
+ image=ORIGIN+'/assets/rancana-og-mascot-square-20261017.png' if page=='index.html' else ORIGIN+'/assets/app-icon-180.png'
+ for key,value in {'type':'article' if page in ARTICLE_PAGES else 'website','site_name':'Rancana','title':title,'description':desc,'url':canonical,'locale':'id_ID' if lang=='id' else 'en_US','image':image}.items():add('meta',{'property':'og:'+key,'content':value})
+ if page=='index.html':
+  alt='Maskot Ranca menemani Rancana dengan fitur jadwal kelas, to-do, dan flashcard.' if lang=='id' else 'Ranca, the smiling green cloud mascot, alongside Rancana’s class schedule, to-do, and flashcard features.'
+  for key,value in {'width':'1200','height':'1200','alt':alt}.items():add('meta',{'property':'og:image:'+key,'content':value})
  add('meta',{'name':'twitter:card','content':'summary'})
+ if page=='index.html':
+  add('meta',{'name':'twitter:image','content':image})
+  add('meta',{'name':'twitter:image:alt','content':alt})
  website={'@type':'WebSite','@id':ORIGIN+'/#website','name':'Rancana','url':ORIGIN+'/','publisher':{'@id':ORIGIN+'/#organization'}}
  data={'@type':'WebPage','@id':canonical+'#webpage','name':title,'description':desc,'url':canonical,'inLanguage':lang,'isPartOf':{'@id':website['@id']}}
- if page in ['college-schedule.html','todo-guide.html','flashcard-guide.html']:
+ if page in ARTICLE_PAGES:
   data['@type']='Article';data['headline']=title;data['author']={'@type':'Organization','name':'Rancana'}
  if page=='articles.html':data['@type']='CollectionPage'
- organization={'@type':'Organization','@id':ORIGIN+'/#organization','name':'Rancana','url':ORIGIN+'/','sameAs':[DEVELOPER],'logo':ORIGIN+'/assets/app-icon-180.png'}
- app={'@type':'SoftwareApplication','@id':ORIGIN+'/#android-app','name':'Rancana','alternateName':'Rancana: Teman Belajar','url':ORIGIN+'/','sameAs':[PLAY],'installUrl':PLAY,'applicationCategory':'EducationalApplication','operatingSystem':'Android','publisher':{'@id':organization['@id']},'description':'Rancana adalah aplikasi Android untuk mengatur pelajaran, jadwal kelas, to-do list, dan flashcard.' if lang=='id' else 'Rancana is an Android app for organizing subjects, class schedules, to-do lists, and flashcards.'}
+ organization={'@type':'Organization','@id':ORIGIN+'/#organization','name':'Rancana','url':ORIGIN+'/','sameAs':[DEVELOPER,INSTAGRAM,TIKTOK,X_PROFILE],'logo':ORIGIN+'/assets/app-icon-180.png'}
+ app={'@type':'SoftwareApplication','@id':ORIGIN+'/#android-app','name':'Rancana','alternateName':'Rancana: Teman Belajar','url':ORIGIN+'/','sameAs':[PLAY,INSTAGRAM,TIKTOK,X_PROFILE],'installUrl':PLAY,'applicationCategory':'EducationalApplication','operatingSystem':'Android','publisher':{'@id':organization['@id']},'description':'Rancana adalah aplikasi Android untuk mengatur pelajaran, jadwal kelas, to-do list, dan flashcard.' if lang=='id' else 'Rancana is an Android app for organizing subjects, class schedules, to-do lists, and flashcards.'}
  if page=='index.html':data['mainEntity']={'@id':app['@id']}
- if page in ['articles.html','college-schedule.html','todo-guide.html','flashcard-guide.html']:data['about']={'@id':app['@id']}
+ if page in ['articles.html']+ARTICLE_PAGES:data['about']={'@id':app['@id']}
  if data['@type']=='Article':
   data['author']={'@id':organization['@id']};data['publisher']={'@id':organization['@id']}
  add('script',{'type':'application/ld+json'},json.dumps({'@context':'https://schema.org','@graph':[website,data,organization,app]},ensure_ascii=False))
