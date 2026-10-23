@@ -4,7 +4,7 @@ import path from 'node:path';
 import http from 'node:http';
 import {chromium} from 'playwright';
 const root=path.dirname(new URL(import.meta.url).pathname);
-const routes=['articles','college-schedule','todo-guide','flashcard-guide'];
+const routes=['articles','college-schedule','todo-guide','flashcard-guide','flashcard-hafalan','jadwal-belajar','todo-tugas'];
 const server=http.createServer(async(req,res)=>{try{let p=new URL(req.url,'http://localhost').pathname;if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';const f=path.resolve(root,'.'+p);if(!f.startsWith(root+'/'))throw Error();res.setHeader('Content-Type',f.endsWith('.html')?'text/html':f.endsWith('.css')?'text/css':f.endsWith('.js')?'text/javascript':f.endsWith('.svg')?'image/svg+xml':f.endsWith('.png')?'image/png':f.endsWith('.webp')?'image/webp':'application/octet-stream');res.end(await fs.readFile(f));}catch{res.statusCode=404;res.end();}});
 await new Promise(r=>server.listen(4173,'127.0.0.1',r));
 const origin='http://127.0.0.1:4173';
@@ -26,7 +26,7 @@ try{
    const links=await page.locator('a[href]').evaluateAll(as=>as.map(a=>a.getAttribute('href')).filter(h=>h.startsWith('/')));
    for(const href of new Set(links)){let p=href.split('#')[0];if(p==='/go/play')continue;if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';await fs.access(path.join(root,p));}
    const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());assert.equal(schema['@graph'][1]['@type'],route==='articles'?'CollectionPage':'Article');
-   if(route==='articles')assert.equal(await page.locator('.article-card').count(),3);
+   if(route==='articles')assert.equal(await page.locator('.article-card').count(),6);
    const backdrop = await page.evaluate(() => {
     const paper = document.querySelector('.doc-paper');
     const footer = document.querySelector('.preview-footer');
@@ -70,5 +70,5 @@ try{
  }
  const robots=await fs.readFile(path.join(root,'robots.txt'),'utf8');assert.ok(robots.includes('Sitemap: https://rancana.id/sitemap.xml'));
  await fs.writeFile(path.join(root,'review-evidence/article-qa.txt'),evidence.join('\n')+'\nFooter → hub → locale switch passed.\n');
- console.log('PASS — 16 locale/viewport article checks, real assets, local navigation, schema and mobile overflow');
+ console.log('PASS — 28 locale/viewport article checks, real assets, local navigation, schema and mobile overflow');
 }finally{await browser.close();server.close();}
