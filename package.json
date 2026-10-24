@@ -2,10 +2,13 @@
   "name": "rancana-website-checks",
   "private": true,
   "scripts": {
-    "test": "node check-worker-previews.mjs && node check-lang.mjs && node check-play-redirect.mjs && node check-play-campaign.mjs && node check-preview.mjs && node check-navigation.mjs && node check-anchors.mjs && node check-seo.mjs && node check-articles.mjs && node check-analytics.mjs && node check-mascots.mjs && node check-reviewed-copy.mjs && node check-selected-website-mascots.mjs --no-video",
+    "test": "node tests/check-token-consumers.mjs && node tests/check-design-system.mjs && node scripts/generate-design-tokens.mjs --check && node check-worker-previews.mjs && node check-lang.mjs && node check-play-redirect.mjs && node check-play-campaign.mjs && node check-preview.mjs && node check-navigation.mjs && node check-anchors.mjs && node check-seo.mjs && node check-articles.mjs && node check-analytics.mjs && node check-mascots.mjs && node check-reviewed-copy.mjs && node check-selected-website-mascots.mjs --no-video",
     "test:real-sdk": "node check-analytics-real.mjs",
     "build:staging": "python3 staging/build.py",
-    "test:staging": "python3 staging/build.py && node check-staging.mjs"
+    "test:staging": "python3 staging/build.py && node check-staging.mjs",
+    "tokens:design-system": "node scripts/generate-design-tokens.mjs",
+    "test:design-system": "node tests/check-design-system.mjs",
+    "test:tokens": "node tests/check-token-consumers.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

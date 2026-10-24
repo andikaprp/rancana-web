@@ -35,3 +35,6 @@ MASCOT-REFERENCES.md
 scripts/
 
 REVIEW-CHECKLIST.md
+
+# Internal reference catalog; production uses foundation-tokens.css only.
+design-system/

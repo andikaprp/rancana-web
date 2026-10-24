@@ -1,3 +1,5 @@
+@import url("foundation-tokens.css");
+
 /* Rancana landing page — a 1:1 transcription of the Figma frame "Desktop - 1" (1440 x 3065).
    Every offset below is the node's absolute position in that frame. */
 
@@ -27,19 +29,19 @@
 }
 
 :root {
-  --v-1000: #1e1e1e;
-  --v-800: #6f6f6f;
-  --v-700: #6f6f6f;
-  --v-600: #6f6f6f;
-  --v-200: #e4e4e4;
+  --v-1000: var(--rancana-foundation-color-text);
+  --v-800: var(--rancana-foundation-color-text-muted);
+  --v-700: var(--rancana-foundation-color-text-muted);
+  --v-600: var(--rancana-foundation-color-text-muted);
+  --v-200: var(--rancana-foundation-color-border);
   --v-100: #f0f0f0;
-  --v-50: #f9f9f9;
-  --green-700: #1b6447;
-  --green-500: #217957;
+  --v-50: var(--rancana-foundation-color-bg);
+  --green-700: var(--rancana-foundation-color-primary-hover);
+  --green-500: var(--rancana-foundation-brand-green);
   --tangerine: #ff9a40;
   --danger: #f00;
-  --lora: 'Lora', Georgia, serif;
-  --ssp: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+  --lora: var(--rancana-foundation-font-heading);
+  --ssp: var(--rancana-foundation-font-body);
   /* Side margin the background layers stretch into on screens wider than the 1440 canvas. */
   --bleed: 0px;
 }
