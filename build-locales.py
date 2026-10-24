@@ -50,7 +50,7 @@ def metadata(tree, page, lang, canonical):
   data['@type']='Article';data['headline']=title;data['author']={'@type':'Organization','name':'Rancana'}
  if page=='articles.html':data['@type']='CollectionPage'
  organization={'@type':'Organization','@id':ORIGIN+'/#organization','name':'Rancana','url':ORIGIN+'/','sameAs':[DEVELOPER,INSTAGRAM,TIKTOK,X_PROFILE],'logo':ORIGIN+'/assets/app-icon-180.png'}
- app={'@type':'SoftwareApplication','@id':ORIGIN+'/#android-app','name':'Rancana','alternateName':'Rancana: Teman Belajar','url':ORIGIN+'/','sameAs':[PLAY,INSTAGRAM,TIKTOK,X_PROFILE],'installUrl':PLAY,'applicationCategory':'EducationalApplication','operatingSystem':'Android','publisher':{'@id':organization['@id']},'description':'Rancana adalah aplikasi Android untuk mengatur pelajaran, jadwal kelas, to-do list, dan flashcard.' if lang=='id' else 'Rancana is an Android app for organizing subjects, class schedules, to-do lists, and flashcards.'}
+ app={'@type':'SoftwareApplication','@id':ORIGIN+'/#android-app','name':'Rancana','alternateName':'Rancana: Jadwal & Flashcard','url':ORIGIN+'/','sameAs':[PLAY,INSTAGRAM,TIKTOK,X_PROFILE],'installUrl':PLAY,'applicationCategory':'EducationalApplication','operatingSystem':'Android','publisher':{'@id':organization['@id']},'description':'Rancana adalah aplikasi Android untuk mengatur pelajaran, jadwal kelas, to-do list, dan flashcard.' if lang=='id' else 'Rancana is an Android app for organizing subjects, class schedules, to-do lists, and flashcards.'}
  if page=='index.html':data['mainEntity']={'@id':app['@id']}
  if page in ['articles.html']+ARTICLE_PAGES:data['about']={'@id':app['@id']}
  if data['@type']=='Article':
