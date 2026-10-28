@@ -19,7 +19,7 @@
     "context": "Audiens",
     "page": "index.html",
     "before": "Dari SD, SMP, SMA, sampai kuliah, Rancana bisa jadi teman belajar kamu.",
-    "after": "Rancana bisa jadi teman belajarmu, dari SD sampai kuliah.",
+    "after": "Rancana bisa jadi teman belajarmu, dari SMP sampai kuliah.",
     "source_locations": [
       "/html/body/main/section[1]/p/@data-id"
     ],
@@ -32,7 +32,7 @@
     "context": "Pelajar",
     "page": "index.html",
     "before": "Pisahkan tugas sesuai mata pelajaran. Buat flashcard dari materi yang ingin kamu ingat, lalu buka lagi saat belajar.",
-    "after": "Kelompokkan tugas berdasarkan mata pelajaran. Buat flashcard untuk mengulang materi yang sedang kamu pelajari.",
+    "after": "Pakai Rancana sebagai aplikasi jadwal pelajaran dan to-do tugas. Kelompokkan tugas berdasarkan mata pelajaran, lalu buat flashcard untuk mengulang materi yang sedang kamu pelajari.",
     "source_locations": [
       "/html/body/main/section[1]/div[2]/article[1]/p/@data-id"
     ],
@@ -45,7 +45,7 @@
     "context": "Mahasiswa",
     "page": "index.html",
     "before": "Dari mahasiswa baru sampai semester akhir, Rancana bantu kamu atur kegiatan belajar selama kuliah.",
-    "after": "Dari semester pertama sampai semester akhir, Rancana bantu kamu mengatur tugas dan jadwal kuliah.",
+    "after": "Dari semester pertama sampai semester akhir, aplikasi belajar Rancana bantu kamu mengatur tugas dan jadwal kuliah.",
     "source_locations": [
       "/html/body/main/section[1]/div[2]/article[2]/p/@data-id"
     ],

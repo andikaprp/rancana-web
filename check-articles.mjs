@@ -4,7 +4,8 @@ import path from 'node:path';
 import http from 'node:http';
 import {chromium} from 'playwright';
 const root=path.dirname(new URL(import.meta.url).pathname);
-const routes=['articles','college-schedule','todo-guide','flashcard-guide','flashcard-hafalan','jadwal-belajar','todo-tugas'];
+const routes=['articles','college-schedule','todo-guide','flashcard-guide','flashcard-hafalan','jadwal-belajar','todo-tugas','tka-2026'];
+const idOnly=new Set(['tka-2026']);
 const server=http.createServer(async(req,res)=>{try{let p=new URL(req.url,'http://localhost').pathname;if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';const f=path.resolve(root,'.'+p);if(!f.startsWith(root+'/'))throw Error();res.setHeader('Content-Type',f.endsWith('.html')?'text/html':f.endsWith('.css')?'text/css':f.endsWith('.js')?'text/javascript':f.endsWith('.svg')?'image/svg+xml':f.endsWith('.png')?'image/png':f.endsWith('.webp')?'image/webp':'application/octet-stream');res.end(await fs.readFile(f));}catch{res.statusCode=404;res.end();}});
 await new Promise(r=>server.listen(4173,'127.0.0.1',r));
 const origin='http://127.0.0.1:4173';
@@ -15,6 +16,7 @@ try{
   const page=await browser.newPage({viewport:size});const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('https://www.googletagmanager.com/**',r=>r.abort());
   for(const lang of ['id','en'])for(const route of routes){
+   if(lang==='en'&&idOnly.has(route))continue;
    await page.goto(`${origin}/${lang}/${route}`);await page.evaluate(()=>document.fonts.ready);if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
    assert.equal(await page.locator('h1').count(),1);
    assert.equal(await page.locator('footer a[href*="college-schedule"], footer a[href*="flashcard-guide"]').count(),0);
@@ -26,7 +28,22 @@ try{
    const links=await page.locator('a[href]').evaluateAll(as=>as.map(a=>a.getAttribute('href')).filter(h=>h.startsWith('/')));
    for(const href of new Set(links)){let p=href.split('#')[0];if(p==='/go/play')continue;if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';await fs.access(path.join(root,p));}
    const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());assert.equal(schema['@graph'][1]['@type'],route==='articles'?'CollectionPage':'Article');
-   if(route==='articles')assert.equal(await page.locator('.article-card').count(),6);
+   if(route==='articles'){assert.equal(await page.locator('.article-card').count(),lang==='id'?7:6);if(lang==='id')assert.equal(await page.locator('.article-card').first().getAttribute('href'),'/id/tka-2026');}
+   if(route==='tka-2026'){
+    const text=await page.locator('main').innerText();
+    assert.equal(await page.locator('h1').innerText(),'Jadwal TKA 2026 dan cara atur belajar kamu sampai ASAS');
+    assert.deepEqual(await page.locator('main h2').allInnerTexts(),['Jadwal TKA 2026 yang perlu kamu tahu','Atur hari belajar sebelum dan di antara gelombang','Ikut susulan? Catat tanggalnya, terus siap-siap ASAS','Gimana Rancana bantu kamu lewat musim ujian ini','Pertanyaan yang sering muncul soal TKA 2026','Sumber']);
+    assert.equal(await page.locator('main h3').count(),5);
+    assert.equal(await page.locator('main table tbody tr').count(),6);
+    const ctas=page.locator('main a[href="/go/play"]');assert.equal(await ctas.count(),2);
+    for(const label of await ctas.allInnerTexts())assert.equal(label.trim(),'Download Rancana di Google Play');
+    // First CTA follows section 4, the second follows the closing line.
+    assert.equal(await page.locator('main section:nth-of-type(4) + p.article-end a[href="/go/play"]').count(),1);
+    assert.equal(await page.locator('link[rel="alternate"][hreflang]').count(),0);
+    assert.equal(await page.locator('.article-sources a[href^="https://"]').count(),4);
+    assert.doesNotMatch(text,/\u2014|pengingat/i);
+    assert.equal((text.match(/gratis/gi)||[]).length,1,'only the verbatim FAQ answer mentions gratis');
+   }
    const backdrop = await page.evaluate(() => {
     const paper = document.querySelector('.doc-paper');
     const footer = document.querySelector('.preview-footer');
@@ -70,5 +87,5 @@ try{
  }
  const robots=await fs.readFile(path.join(root,'robots.txt'),'utf8');assert.ok(robots.includes('Sitemap: https://rancana.id/sitemap.xml'));
  await fs.writeFile(path.join(root,'review-evidence/article-qa.txt'),evidence.join('\n')+'\nFooter → hub → locale switch passed.\n');
- console.log('PASS — 28 locale/viewport article checks, real assets, local navigation, schema and mobile overflow');
+ console.log('PASS — 30 locale/viewport article checks, real assets, local navigation, schema and mobile overflow');
 }finally{await browser.close();server.close();}
