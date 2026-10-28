@@ -40,15 +40,14 @@ def metadata(tree, page, lang, canonical):
   add('link',{'rel':'alternate','hreflang':'x-default','href':locale_url(page,'id')})
  title_element=head.find('title');description_element=head.xpath('meta[@name="description"]')[0]
  title=(title_element.get('data-id') if lang=='id' else None) or title_element.get('data-en') or title_element.text or 'Rancana';desc=(description_element.get('data-id') if lang=='id' else None) or description_element.get('data-en') or description_element.get('content')
- image=OG_IMAGE if page=='index.html' else ORIGIN+'/assets/app-icon-180.png'
+ # Every page shares the 1200×1200 homepage card; the 180px app icon is too small for chat/social previews.
+ image=OG_IMAGE
  for key,value in {'type':'article' if page in ARTICLE_PAGES else 'website','site_name':'Rancana','title':title,'description':desc,'url':canonical,'locale':'id_ID' if lang=='id' else 'en_US','image':image}.items():add('meta',{'property':'og:'+key,'content':value})
- if page=='index.html':
-  alt='Maskot Ranca menemani Rancana dengan fitur jadwal kelas, to-do, dan flashcard.' if lang=='id' else 'Ranca, the smiling green cloud mascot, alongside Rancana’s class schedule, to-do, and flashcard features.'
-  for key,value in {'width':'1200','height':'1200','alt':alt}.items():add('meta',{'property':'og:image:'+key,'content':value})
+ alt='Maskot Ranca menemani Rancana dengan fitur jadwal kelas, to-do, dan flashcard.' if lang=='id' else 'Ranca, the smiling green cloud mascot, alongside Rancana’s class schedule, to-do, and flashcard features.'
+ for key,value in {'width':'1200','height':'1200','alt':alt}.items():add('meta',{'property':'og:image:'+key,'content':value})
  add('meta',{'name':'twitter:card','content':'summary'})
- if page=='index.html':
-  add('meta',{'name':'twitter:image','content':image})
-  add('meta',{'name':'twitter:image:alt','content':alt})
+ add('meta',{'name':'twitter:image','content':image})
+ add('meta',{'name':'twitter:image:alt','content':alt})
  website={'@type':'WebSite','@id':ORIGIN+'/#website','name':'Rancana','url':ORIGIN+'/','publisher':{'@id':ORIGIN+'/#organization'}}
  data={'@type':'WebPage','@id':canonical+'#webpage','name':title,'description':desc,'url':canonical,'inLanguage':lang,'isPartOf':{'@id':website['@id']}}
  if page in ARTICLE_PAGES:

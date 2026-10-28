@@ -228,3 +228,9 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 
 /* Readable descriptions in all four homepage feature cards. */
 .preview .product .card .card-head p{font-size:18px;line-height:1.5}
+
+/* Indonesian-only "Baca juga" links to the keyword articles under three feature cards. */
+.preview .product .card .card-head .card-link{margin-top:6px;font-size:15px;line-height:1.4}
+.preview .product .card .card-head .card-link a{color:#217957;font-weight:600;text-underline-offset:3px}
+.preview .download .closing-tka{margin-top:18px}
+.preview .download .closing-tka a{color:inherit;font-weight:600;text-underline-offset:3px}

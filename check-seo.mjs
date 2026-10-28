@@ -69,6 +69,20 @@ try {
       assert.ok(canonicalSet.has('https://rancana.id' + href.split('#')[0]), row.file + ': ' + href);
     }
   }
+  // Raya SEO audit: no em dashes in titles/metas, shared 1200×1200 card on every page, no price wording on the homepage.
+  for (const row of rows) {
+    assert.doesNotMatch(row.title + row.description, /\u2014/, row.file);
+    assert.equal(row.ogImage, 'https://rancana.id/assets/rancana-og-mascot-square-20261017.png', row.file);
+    assert.equal(row.twitterImage, row.ogImage, row.file);
+    if (row.file.startsWith('id/')) assert.ok(row.title.length <= 60 && row.description.length <= 160, row.file);
+  }
+  const idHome = rows.find(r => r.file === 'id/index.html');
+  assert.equal(idHome.title, 'Rancana: Aplikasi Jadwal Pelajaran, Tugas dan Flashcard');
+  assert.doesNotMatch(idHome.description, /gratis/i);
+  assert.equal(idHome.schema[0]['@graph'][1].description, idHome.description);
+  assert.doesNotMatch(rows.find(r => r.file === 'id/help.html').description, /pengingat/i);
+  const homeLinks = rows.find(r => r.file === 'id/index.html').links;
+  for (const href of ['/id/jadwal-belajar', '/id/todo-tugas', '/id/flashcard-hafalan']) assert.ok(homeLinks.includes(href), 'homepage links ' + href);
   for (const locale of ['id/', 'en/']) {
     const titles = rows.filter(r => r.file.startsWith(locale)).map(r => r.title);
     assert.equal(new Set(titles).size, titles.length, 'Unique page titles');

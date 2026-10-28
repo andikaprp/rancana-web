@@ -14,6 +14,8 @@ review-*.html
 build-locales.py
 # Source for Indonesian-only pages; only the built /id/ copy is public.
 /tka-2026.html
+# Legacy root page; the Workers 301 / and /index.html to /id/, so / must not match a static file.
+/index.html
 assets/app-logo-original.png
 assets/fonts/*.ttf
 assets/phone-left.png
