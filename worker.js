@@ -4,6 +4,17 @@ const PLAY =
 // so new campaigns work without a deploy.
 const UTM_VALUE = /^[a-z0-9_.-]{1,64}$/;
 const DEFAULTS = {utm_source: 'rancana.id', utm_medium: 'web', utm_campaign: 'play_cta'};
+// Short campaign paths that permanently move to their canonical locale page.
+// The query string is kept so campaign parameters survive the redirect.
+const PERMANENT_REDIRECTS = new Map([
+  ['/tka-2026', '/id/tka-2026'],
+  ['/tka-2026/', '/id/tka-2026'],
+]);
+const permanentRedirect = url => {
+  const target = PERMANENT_REDIRECTS.get(url.pathname);
+  if (!target) return null;
+  return new Response(null, {status: 301, headers: {Location: new URL(target + url.search, url.origin).href}});
+};
 
 const validValue = (params, key) => {
   const value = params.get(key)?.toLowerCase();
@@ -35,6 +46,8 @@ export default {
       }});
     }
     if (url.pathname === '/go/features') return new Response(null, { status: 204 });
+    const redirect = permanentRedirect(url);
+    if (redirect) return redirect;
     return env.ASSETS.fetch(request);
   },
 };

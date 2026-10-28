@@ -4,6 +4,17 @@ const PLAY =
 // so new campaigns work without a deploy.
 const UTM_VALUE = /^[a-z0-9_.-]{1,64}$/;
 const DEFAULTS = {utm_source: 'rancana.id', utm_medium: 'web', utm_campaign: 'play_cta'};
+// Short campaign paths that permanently move to their canonical locale page.
+// The query string is kept so campaign parameters survive the redirect.
+const PERMANENT_REDIRECTS = new Map([
+  ['/tka-2026', '/id/tka-2026'],
+  ['/tka-2026/', '/id/tka-2026'],
+]);
+const permanentRedirect = url => {
+  const target = PERMANENT_REDIRECTS.get(url.pathname);
+  if (!target) return null;
+  return new Response(null, {status: 301, headers: {Location: new URL(target + url.search, url.origin).href}});
+};
 const isPreviewHost = hostname => hostname === 'staging.rancana.id' ||
   hostname.endsWith('.workers.dev') || hostname.endsWith('.pages.dev');
 
@@ -48,6 +59,8 @@ export default {
       const response = new Response(null, {status: 204});
       return previewHost ? preventIndexing(response) : response;
     }
+    const redirect = permanentRedirect(url);
+    if (redirect) return previewHost ? preventIndexing(redirect) : redirect;
     const response = await env.ASSETS.fetch(request);
     return previewHost ? preventIndexing(response) : response;
   },
