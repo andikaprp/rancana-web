@@ -9,8 +9,12 @@ DEVELOPER='https://play.google.com/store/apps/dev?id=4897195411202652501'
 INSTAGRAM='https://www.instagram.com/rancana.app/'
 TIKTOK='https://www.tiktok.com/@rancana.id'
 X_PROFILE='https://x.com/rancanaid'
-PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html']
-ARTICLE_PAGES=['college-schedule.html','todo-guide.html','flashcard-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html']
+PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html']
+# Indonesian-only pages: built to /id/ only, no hreflang pair, no legacy root route (source excluded via .assetsignore).
+ID_ONLY_PAGES=['tka-2026.html']
+ARTICLE_PAGES=['college-schedule.html','todo-guide.html','flashcard-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html']
+LASTMOD='2026-10-29'
+OG_IMAGE=ORIGIN+'/assets/rancana-og-mascot-square-20261017.png'
 def locale_url(page, lang):
  return ORIGIN+'/'+lang+'/'+('' if page=='index.html' else page.removesuffix('.html'))
 def canonical_links(tree, lang, legacy=False):
@@ -31,19 +35,19 @@ def metadata(tree, page, lang, canonical):
  def add(tag,attrs,text=None):
   e=etree.SubElement(head,tag,attrs);e.text=text;return e
  add('link',{'rel':'canonical','href':canonical})
- for l in ['id','en']:add('link',{'rel':'alternate','hreflang':l,'href':locale_url(page,l)})
- add('link',{'rel':'alternate','hreflang':'x-default','href':locale_url(page,'id')})
+ if page not in ID_ONLY_PAGES:
+  for l in ['id','en']:add('link',{'rel':'alternate','hreflang':l,'href':locale_url(page,l)})
+  add('link',{'rel':'alternate','hreflang':'x-default','href':locale_url(page,'id')})
  title_element=head.find('title');description_element=head.xpath('meta[@name="description"]')[0]
  title=(title_element.get('data-id') if lang=='id' else None) or title_element.get('data-en') or title_element.text or 'Rancana';desc=(description_element.get('data-id') if lang=='id' else None) or description_element.get('data-en') or description_element.get('content')
- image=ORIGIN+'/assets/rancana-og-mascot-square-20261017.png' if page=='index.html' else ORIGIN+'/assets/app-icon-180.png'
+ # Every page shares the 1200×1200 homepage card; the 180px app icon is too small for chat/social previews.
+ image=OG_IMAGE
  for key,value in {'type':'article' if page in ARTICLE_PAGES else 'website','site_name':'Rancana','title':title,'description':desc,'url':canonical,'locale':'id_ID' if lang=='id' else 'en_US','image':image}.items():add('meta',{'property':'og:'+key,'content':value})
- if page=='index.html':
-  alt='Maskot Ranca menemani Rancana dengan fitur jadwal kelas, to-do, dan flashcard.' if lang=='id' else 'Ranca, the smiling green cloud mascot, alongside Rancana’s class schedule, to-do, and flashcard features.'
-  for key,value in {'width':'1200','height':'1200','alt':alt}.items():add('meta',{'property':'og:image:'+key,'content':value})
+ alt='Maskot Ranca menemani Rancana dengan fitur jadwal kelas, to-do, dan flashcard.' if lang=='id' else 'Ranca, the smiling green cloud mascot, alongside Rancana’s class schedule, to-do, and flashcard features.'
+ for key,value in {'width':'1200','height':'1200','alt':alt}.items():add('meta',{'property':'og:image:'+key,'content':value})
  add('meta',{'name':'twitter:card','content':'summary'})
- if page=='index.html':
-  add('meta',{'name':'twitter:image','content':image})
-  add('meta',{'name':'twitter:image:alt','content':alt})
+ add('meta',{'name':'twitter:image','content':image})
+ add('meta',{'name':'twitter:image:alt','content':alt})
  website={'@type':'WebSite','@id':ORIGIN+'/#website','name':'Rancana','url':ORIGIN+'/','publisher':{'@id':ORIGIN+'/#organization'}}
  data={'@type':'WebPage','@id':canonical+'#webpage','name':title,'description':desc,'url':canonical,'inLanguage':lang,'isPartOf':{'@id':website['@id']}}
  if page in ARTICLE_PAGES:
@@ -58,7 +62,7 @@ def metadata(tree, page, lang, canonical):
  add('script',{'type':'application/ld+json'},json.dumps({'@context':'https://schema.org','@graph':[website,data,organization,app]},ensure_ascii=False))
 for page in PAGES:
  source=ROOT/page
- for lang in ['id','en']:
+ for lang in (['id'] if page in ID_ONLY_PAGES else ['id','en']):
   tree=html.fromstring(source.read_text());tree.set('lang',lang)
   for e in tree.xpath('//*[@data-lang]'):
    if e.get('data-lang')!=lang:e.getparent().remove(e)
@@ -102,6 +106,7 @@ for page in PAGES:
    for e in tree.xpath('//img[@alt]'):e.set('alt',alts.get(e.get('alt'),e.get('alt')))
   metadata(tree,page,lang,locale_url(page,lang))
   target=ROOT/lang/page;target.parent.mkdir(exist_ok=True);target.write_text('<!doctype html>\n'+html.tostring(tree,encoding='unicode',method='html'))
+ if page in ID_ONLY_PAGES:continue
  # Legacy route retains live language switch; canonical consolidates to static default locale.
  tree=html.fromstring(source.read_text())
  canonical_links(tree,'id',legacy=True)
@@ -112,11 +117,11 @@ for page in PAGES:
  metadata(tree,page,'id',locale_url(page,'id'))
  source.write_text('<!doctype html>\n'+html.tostring(tree,encoding='unicode',method='html'))
 indexable=[page for page in PAGES if not html.fromstring((ROOT/page).read_text()).xpath('//meta[@name="robots" and contains(@content,"noindex")]')]
-urls=[locale_url(page,lang) for lang in ['id','en'] for page in indexable]
-(ROOT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+u+'</loc></url>'for u in urls)+'</urlset>')
+urls=[locale_url(page,lang) for lang in ['id','en'] for page in indexable if lang=='id' or page not in ID_ONLY_PAGES]
+(ROOT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+u+'</loc><lastmod>'+LASTMOD+'</lastmod></url>'for u in urls)+'</urlset>')
 # Preserve crawler/training preferences; only ensure our sitemap is discoverable.
 robots=ROOT/'robots.txt';text=robots.read_text() if robots.exists() else ''
 directive='Sitemap: '+ORIGIN+'/sitemap.xml'
 if not any(line.strip().lower()==directive.lower() for line in text.splitlines()):
  robots.write_text(text+('' if not text or text.endswith('\n') else '\n')+directive+'\n')
-print(f'Built {len(PAGES)*2} static locale pages; sitemap has {len(urls)} indexable URLs')
+print(f'Built {len(PAGES)*2-len(ID_ONLY_PAGES)} static locale pages; sitemap has {len(urls)} indexable URLs')

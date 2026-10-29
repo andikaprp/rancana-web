@@ -8,6 +8,15 @@ const root=path.dirname(new URL(import.meta.url).pathname);
 const items=JSON.parse(await fs.readFile(path.join(root,'review-evidence/approved-copy-116.json'),'utf8'));
 assert.equal(items.length,116);
 assert.equal(new Set(items.map(i=>i.id)).size,116);
+// Raya's SEO audit (29 Oct 2026) replaced these approved meta descriptions. Body copy for the same items is unchanged.
+const metadataUpdates={
+ 26:'Bandingkan batas pelajaran, tugas, jadwal, dan flashcard di tiap paket Rancana. Cek juga cara memulihkan akses Premium dan mengelola langganan.',
+ 41:'Kenalan dengan Rancana, teman belajar buat pelajar dan mahasiswa yang dibuat oleh Andika Pramudya. Baca misi kami dan cara menghubungi kami.',
+ 53:'Atur jadwal pelajaran atau kuliah mingguan, juga pertemuan satu kali, lengkap dengan hari, jam, dan mapelnya. Panduan langkah demi langkah di Rancana.',
+ 65:'Catat tugas sekolah, lengkapi detailnya, lalu pantau sampai selesai. Kelompokkan tugas per pelajaran biar gampang dicari di Rancana.',
+ 78:'Tulis pertanyaan dan jawaban singkat, pilih pelajarannya, lalu latihan flashcard hafalan dengan jawab dulu sebelum membalik kartu.',
+};
+for(const id of Object.keys(metadataUpdates))assert.ok(items.find(i=>i.id===+id).source_locations.some(p=>p.startsWith('/html/head/')),'metadata item '+id);
 const pages=[...new Set(items.map(i=>i.page))];
 assert.equal(pages.length,11);
 const server=http.createServer(async(req,res)=>{
@@ -50,9 +59,9 @@ try {
     return expected.filter(item=>{
      const needsMetadata=item.source_locations.some(p=>p.startsWith('/html/head/'));
      const needsBody=item.source_locations.some(p=>p.startsWith('/html/body/'));
-     return (needsMetadata&&description!==norm(item.after))||(needsBody&&!texts.has(norm(item.after)));
+     return (needsMetadata&&description!==norm(item.metadataAfter??item.after))||(needsBody&&!texts.has(norm(item.after)));
     }).map(i=>i.id);
-   },items.filter(i=>i.page===filename));
+   },items.filter(i=>i.page===filename).map(i=>({...i,metadataAfter:metadataUpdates[i.id]})));
    assert.deepEqual(missing,[],`${filename}: all approved text present`);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${filename} overflow at ${width}`);
    assert.equal(await page.locator('.site-header .articles-nav').count(),0);

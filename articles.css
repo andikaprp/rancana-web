@@ -179,3 +179,26 @@
   .guide-page .guide-steps li { grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding: 15px; }
   .guide-page .guide-steps li::before { width: 30px; height: 30px; }
 }
+
+/* TKA 2026 landing: text-only hero, dates table, FAQ and sources. */
+.guide-page .guide-hero-text { grid-template-columns: minmax(0, 1fr); }
+.guide-page .guide-hero-text .guide-hero-copy { max-width: 700px; }
+.article-main .article-table-wrap { margin-top: 24px; overflow-x: auto; border: 1px solid #dce8e1; border-radius: 18px; background: #fff; }
+.article-main .article-table { width: 100%; border-collapse: collapse; font-size: 17px; line-height: 1.5; }
+.article-main .article-table th, .article-main .article-table td { padding: 12px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid #e6eee9; }
+.article-main .article-table th { background: #f6faf7; color: #217957; font-weight: 600; }
+.article-main .article-table tr:last-child td { border-bottom: 0; }
+.article-main .article-faq h3 { margin: 28px 0 0; font-size: 19px; line-height: 1.4; }
+.article-main .article-faq h3 + p { margin-top: 8px; }
+.article-main .article-end .play-cta { display: inline-flex; align-items: center; gap: 8px; }
+.article-main .article-sources { margin-top: 56px; padding-top: 20px; border-top: 1px solid #dce8e1; font-size: 14px; color: #5a6554; }
+.article-main .article-sources h2 { font-size: 17px; }
+.article-main .article-sources ul { margin: 10px 0 0; padding-left: 20px; line-height: 1.6; }
+.article-main .article-sources li + li { margin-top: 6px; }
+.article-main .article-sources a { overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+  .article-main .article-table { font-size: 15px; }
+  .article-main .article-table th, .article-main .article-table td { padding: 10px 12px; overflow-wrap: anywhere; }
+  .article-main .article-table th:first-child, .article-main .article-table td:first-child { width: 42%; }
+}
+.article-main section > p a:not(.pill), .article-main .article-table a { color: #217957; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }

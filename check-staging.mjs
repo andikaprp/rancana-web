@@ -30,6 +30,8 @@ assert.ok(files.includes('id/index.html') && files.includes('en/index.html'), 'B
 for (const locale of ['id', 'en']) for (const page of ['articles', 'college-schedule', 'todo-guide', 'flashcard-guide']) {
   assert.ok(files.includes(`${locale}/${page}.html`), `${locale}/${page} is staged`);
 }
+assert.ok(files.includes('id/tka-2026.html') && !files.includes('en/tka-2026.html'), 'Indonesian-only TKA page is staged');
+assert.ok(!files.includes('tka-2026.html'), 'TKA source stays out of public assets');
 assert.ok(!files.some(file => /\.(?:md|mjs|toml|py|json|yml)$/i.test(file)), 'Repository instructions, source, configuration, evidence, and tests stay out of public assets');
 assert.ok(!files.includes('AGENTS.md') && !files.includes('REVIEW-CHECKLIST.md') && !files.includes('worker.js'));
 
@@ -94,7 +96,7 @@ try {
     const page = await context.newPage();
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    const routes = [`/${locale}/`, ...['articles', 'college-schedule', 'todo-guide', 'flashcard-guide'].map(slug => `/${locale}/${slug}`)];
+    const routes = [`/${locale}/`, ...['articles', 'college-schedule', 'todo-guide', 'flashcard-guide'].map(slug => `/${locale}/${slug}`), ...(locale === 'id' ? ['/id/tka-2026'] : [])];
     for (const route of routes) {
       const response = await page.goto(origin + route, {waitUntil: 'networkidle'});
       assert.equal(response.status(), 200, `${locale} ${route}`);
@@ -123,8 +125,8 @@ try {
     }
     assert.deepEqual(external, [], `${locale} makes no external requests even with prior consent granted`);
     assert.deepEqual(errors, [], `${locale} has no page errors`);
-    reports.push(`${locale} at ${width}px: five routes, no overflow, no external requests`);
+    reports.push(`${locale} at ${width}px: ${routes.length} routes, no overflow, no external requests`);
     await context.close();
   }
-  console.log(`PASS — isolated staging assets, noindex, analytics off, Play worker behavior and 30 locale/viewport page checks.\n${reports.join('\n')}`);
+  console.log(`PASS — isolated staging assets, noindex, analytics off, Play worker behavior and 33 locale/viewport page checks.\n${reports.join('\n')}`);
 } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }
