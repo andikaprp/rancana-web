@@ -29,10 +29,12 @@ for (const file of ['worker.js', 'worker.staging.mjs']) {
   await expectRedirect('https://rancana.id/tka-2026/', 'https://rancana.id/id/tka-2026');
   await expectRedirect('https://rancana.id/tka-2026?utm_source=instagram&utm_medium=social&utm_campaign=tka',
     'https://rancana.id/id/tka-2026?utm_source=instagram&utm_medium=social&utm_campaign=tka');
+  await expectRedirect('https://rancana.id/jadwal-belajar-ujian', 'https://rancana.id/id/jadwal-belajar-ujian');
+  await expectRedirect('https://rancana.id/jadwal-belajar-ujian/', 'https://rancana.id/id/jadwal-belajar-ujian');
   assert.deepEqual(seen, [], `${file} answers redirects without reading assets`); assertions++;
 
   // The target page itself and look-alike paths are served from assets, not redirected.
-  for (const path of ['/id/tka-2026', '/tka-2026x', '/en/tka-2026']) {
+  for (const path of ['/id/tka-2026', '/tka-2026x', '/en/tka-2026', '/id/jadwal-belajar-ujian', '/jadwal-belajar']) {
     const response = await worker.fetch(new Request('https://rancana.id' + path), env);
     assert.equal(response.status, 200, `${file} ${path}`); assertions++;
   }

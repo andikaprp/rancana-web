@@ -11,7 +11,7 @@ const SITEMAP_LASTMOD = '2026-10-29';
 const ORG_SAMEAS = ['https://play.google.com/store/apps/dev?id=4897195411202652501', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
 const APP_SAMEAS = ['https://play.google.com/store/apps/details?id=com.planora.labs', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
 // Indonesian-only pages have no legacy root route and no EN counterpart.
-const idOnly = ['tka-2026'];
+const idOnly = ['tka-2026', 'jadwal-belajar-ujian'];
 const documents = [];
 for (const locale of ['', 'id/', 'en/']) for (const page of pages) documents.push({file: locale + page + '.html', source: await fs.readFile(path.join(root, locale + page + '.html'), 'utf8')});
 for (const page of idOnly) documents.push({file: 'id/' + page + '.html', source: await fs.readFile(path.join(root, 'id/' + page + '.html'), 'utf8')});
@@ -107,7 +107,7 @@ try {
   assert.deepEqual(imageSize, [1200, 1200]);
   const sitemap = await fs.readFile(path.join(root, 'sitemap.xml'), 'utf8');
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert.equal(urls.length, 23); assert.equal(new Set(urls).size, 23);
+  assert.equal(urls.length, 24); assert.equal(new Set(urls).size, 24);
   assert.ok(urls.includes('https://rancana.id/id/tka-2026')); assert.equal(urls.includes('https://rancana.id/en/tka-2026'), false);
   const lastmods = [...sitemap.matchAll(/<url><loc>[^<]+<\/loc><lastmod>([^<]+)<\/lastmod><\/url>/g)].map(m => m[1]);
   assert.deepEqual(lastmods, urls.map(() => SITEMAP_LASTMOD), 'every sitemap URL has a lastmod');
@@ -116,6 +116,24 @@ try {
   assert.equal(tka.title, 'Jadwal TKA 2026 dan Cara Atur Belajar Sampai ASAS | Rancana');
   assert.equal(tka.description, 'Cek jadwal gelombang TKA 2026, susulan, dan pengumuman hasil. Plus cara atur jadwal belajar, tugas, dan flashcard sampai ASAS selesai pakai Rancana.');
   assert.ok(tka.title.length <= 60 && tka.description.length <= 155);
+  // ASAS study-plan page (Raya keyword 'jadwal belajar untuk ujian'): ID-only, dated Article, breadcrumb, FAQPage = visible FAQ.
+  assert.ok(urls.includes('https://rancana.id/id/jadwal-belajar-ujian')); assert.equal(urls.includes('https://rancana.id/en/jadwal-belajar-ujian'), false);
+  const asas = rows.find(r => r.file === 'id/jadwal-belajar-ujian.html');
+  assert.equal(asas.canonical, 'https://rancana.id/id/jadwal-belajar-ujian');
+  assert.equal(asas.title, 'Jadwal Belajar untuk Ujian ASAS 2026 dan Contohnya | Rancana');
+  assert.match(asas.title.toLowerCase(), /jadwal belajar untuk ujian/); assert.match(asas.description.toLowerCase(), /jadwal belajar untuk ujian/);
+  assert.ok(asas.title.length <= 60 && asas.description.length >= 140 && asas.description.length <= 155);
+  const asasGraph = asas.schema[0]['@graph'];
+  const asasArticle = asasGraph[1];
+  assert.equal(asasArticle['@type'], 'Article'); assert.equal(asasArticle.headline, 'Jadwal belajar untuk ujian ASAS, mulai 3 minggu sebelumnya');
+  assert.equal(asasArticle.datePublished, '2026-10-29'); assert.equal(asasArticle.dateModified, '2026-10-29');
+  const crumbs = asasGraph.find(e => e['@type'] === 'BreadcrumbList');
+  assert.deepEqual(crumbs.itemListElement.map(i => i.item), ['https://rancana.id/id/', 'https://rancana.id/id/articles', asas.canonical]);
+  const asasDoc = documents.find(d => d.file === 'id/jadwal-belajar-ujian.html').source;
+  const visibleFaq = await page.evaluate(source => [...new DOMParser().parseFromString(source, 'text/html').querySelectorAll('.article-faq h3')].map(h => [h.textContent.trim(), h.nextElementSibling.textContent.trim()]), asasDoc);
+  assert.equal(visibleFaq.length, 5);
+  assert.deepEqual(asasGraph.find(e => e['@type'] === 'FAQPage').mainEntity.map(q => [q.name, q.acceptedAnswer.text]), visibleFaq);
+  assert.ok(asas.links.includes('/id/tka-2026'), 'ASAS page links the TKA page');
   // Internal links to the TKA page use the agreed anchor text.
   const tkaAnchors = await page.evaluate(documents => documents.flatMap(({file, source}) => [...new DOMParser().parseFromString(source, 'text/html').querySelectorAll('a[href="/id/tka-2026"]')].map(a => [file, a.textContent.replace(/\s+/g, ' ').trim()])), documents.filter(d => d.file.startsWith('id/')));
   for (const file of ['id/index.html', 'id/jadwal-belajar.html', 'id/flashcard-hafalan.html', 'id/todo-tugas.html']) assert.deepEqual(tkaAnchors.filter(([f]) => f === file).map(([, text]) => text), ['jadwal TKA 2026'], file);
@@ -130,5 +148,5 @@ try {
   const hero = (await page.locator('.hero-title').innerText()).replace(/\s+/g, ' ').trim();
   assert.equal(hero, 'Teman belajar setiap harimu');
   assert.equal(googleRequests, 0);
-  console.log('PASS — 43-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 23 sitemap URLs with lastmod; TKA anchors; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
+  console.log('PASS — 44-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 24 sitemap URLs with lastmod; TKA anchors; ASAS page schema; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
 } finally { await browser.close(); server.close(); }
