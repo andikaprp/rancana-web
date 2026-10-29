@@ -76,3 +76,7 @@ Current local verification: `npm test` and `npm run test:staging` pass, includin
 ## Isolated staging
 
 `wrangler.staging.toml` targets the separate `rancana-staging` Worker and exact custom domain `staging.rancana.id`; workers.dev and preview URLs are disabled, and no production bindings are configured. `npm run test:staging` builds a filtered `dist-staging` tree with noindex headers and metadata, a visible review banner, and analytics removed. The staging Worker keeps the current Play referrer behavior and adds noindex to all staging responses. Deploy this target with `wrangler deploy --config wrangler.staging.toml`.
+
+## Design tokens
+
+The [foundation ledger](design-system/tokens.json) retains all 61 proposed assignments. [Web integration](design-system/WEB-INTEGRATION.md) documents the eight exact-value tokens used by existing website aliases, recovery provenance and validation. Run `npm run tokens:design-system` to regenerate both CSS outputs and `npm run test:tokens` for live consumer checks. The internal catalog and component recipes remain excluded from website assets.
