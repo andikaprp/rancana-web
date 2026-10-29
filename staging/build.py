@@ -16,6 +16,9 @@ ALLOWED = {".html", ".css", ".js", ".svg", ".png", ".jpg", ".jpeg", ".webp", ".i
 
 def ignored(name, patterns):
     basename = Path(name).name
+    # A leading slash anchors the pattern to the repository root, as in .assetsignore.
+    if any(pattern.startswith("/") and fnmatch.fnmatchcase(name, pattern[1:]) for pattern in patterns):
+        return True
     return any(
         fnmatch.fnmatchcase(name, pattern)
         or fnmatch.fnmatchcase(basename, pattern)

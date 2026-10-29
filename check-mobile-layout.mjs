@@ -111,9 +111,12 @@ try {
     } else {
       assert.equal(current.mobileExample, false, 'original desktop composition');
       assert.equal(current.gapToGreen, old.gapToGreen, 'desktop spacing unchanged');
+      // Description typography is intentionally larger in the website refresh.
+      // Hide only that ink while retaining its box to compare the original artwork.
+      for (const page of [before, after]) await page.addStyleTag({content:'.card-flashcards .card-head p{visibility:hidden}'});
       const original = await before.locator('.card-flashcards').screenshot();
       const updated = await after.locator('.card-flashcards').screenshot();
-      assert.equal(original.equals(updated), true, 'desktop Flashcard pixels unchanged');
+      assert.equal(original.equals(updated), true, 'desktop Flashcard artwork pixels unchanged');
     }
     if ([320,390,1440].includes(width)) {
       await screenshots(before, 'before', lang, width);
@@ -139,6 +142,6 @@ try {
     sections.push(`<section><h2>${lang.toUpperCase()} · ${width}px · ${target}</h2><div class="pair">${['before','after'].map(variant => `<figure><figcaption>${variant}</figcaption><img src="${lang}-${width}-${variant}-${target}.png" alt="${variant} ${target} at ${width}px"></figure>`).join('')}</div></section>`);
   }
   await fs.writeFile(path.join(out,'index.html'), `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Rancana mobile layout review</title><style>body{font:16px/1.5 system-ui;margin:24px;color:#182c23;background:#f8faf9}section{margin:40px 0}.pair{display:flex;align-items:flex-start;gap:24px}figure{margin:0;flex:1;min-width:0}figcaption{font-weight:700;margin:8px 0}img{display:block;max-width:100%;height:auto;border:1px solid #ddd}h2{font-size:20px}</style><h1>Rancana mobile layout review</h1><p>Before: d289e92315f601045326f72536178e117c27ea6f. Screenshots use Chromium, 2× pixel density and reduced motion. Open report.json for measurements. Supplied Library JPEGs could not be downloaded; these comparisons use the actual baseline checkout.</p>${sections.join('')}`);
-  console.log('PASS — 12 baseline/updated comparisons, 6 normal-motion layouts, 24 screenshots; desktop Flashcard pixels unchanged');
+  console.log('PASS — 12 baseline/updated comparisons, 6 normal-motion layouts, 24 screenshots; desktop Flashcard artwork pixels unchanged');
   console.log(JSON.stringify(report.layouts.filter(row => row.width < 900 && row.before).map(row => ({lang:row.lang,width:row.width,captionBefore:row.before.captionSize,captionAfter:row.after.captionSize,gapBefore:row.before.gapToGreen,gapAfter:row.after.gapToGreen}))));
 } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }

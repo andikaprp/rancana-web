@@ -42,3 +42,26 @@ if (navSlot && heroDownload) {
 const headerMascot = document.querySelector('.site-header .brand-mark');
 if (typeof window !== 'undefined' && headerMascot) import(new URL('./header-mascot.js', document.currentScript.src).href)
  .then(({mountHeaderMascot}) => mountHeaderMascot(headerMascot)).catch(() => { /* Selected static Ranca remains available. */ });
+
+// One billing selection controls every plan in both language panels.
+(() => {
+  const toggles = document.querySelectorAll('.billing-toggle');
+  toggles.forEach(toggle => {
+    toggle.hidden = false;
+    toggle.addEventListener('click', event => {
+      const button = event.target.closest('[data-billing]');
+      if (!button) return;
+      const yearly = button.dataset.billing === 'yearly';
+      document.querySelectorAll('[data-billing]').forEach(item => {
+        item.setAttribute('aria-pressed', String(item.dataset.billing === button.dataset.billing));
+      });
+      document.querySelectorAll('[data-price-monthly]').forEach(price => {
+        price.textContent = `Rp${yearly ? price.dataset.priceYearly : price.dataset.priceMonthly}`;
+      });
+      document.querySelectorAll('[data-price-period]').forEach(period => {
+        const english = period.closest('[data-lang]').dataset.lang === 'en';
+        period.textContent = english ? (yearly ? ' / year' : ' / month') : (yearly ? ' / tahun' : ' / bulan');
+      });
+    });
+  });
+})();
