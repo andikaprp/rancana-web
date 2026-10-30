@@ -9,10 +9,12 @@ DEVELOPER='https://play.google.com/store/apps/dev?id=4897195411202652501'
 INSTAGRAM='https://www.instagram.com/rancana.app/'
 TIKTOK='https://www.tiktok.com/@rancana.id'
 X_PROFILE='https://x.com/rancanaid'
-PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html']
+PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html','jadwal-belajar-ujian.html']
 # Indonesian-only pages: built to /id/ only, no hreflang pair, no legacy root route (source excluded via .assetsignore).
-ID_ONLY_PAGES=['tka-2026.html']
-ARTICLE_PAGES=['college-schedule.html','todo-guide.html','flashcard-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html']
+ID_ONLY_PAGES=['tka-2026.html','jadwal-belajar-ujian.html']
+ARTICLE_PAGES=['college-schedule.html','todo-guide.html','flashcard-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html','jadwal-belajar-ujian.html']
+# Dated SEO landing pages (layout v2): Article dates + headline from H1, BreadcrumbList, FAQPage from the visible FAQ.
+SEO_LANDING_PAGES={'jadwal-belajar-ujian.html':{'published':'2026-10-29','modified':'2026-10-29'}}
 LASTMOD='2026-10-29'
 OG_IMAGE=ORIGIN+'/assets/rancana-og-mascot-square-20261017.png'
 def locale_url(page, lang):
@@ -59,7 +61,16 @@ def metadata(tree, page, lang, canonical):
  if page in ['articles.html']+ARTICLE_PAGES:data['about']={'@id':app['@id']}
  if data['@type']=='Article':
   data['author']={'@id':organization['@id']};data['publisher']={'@id':organization['@id']}
- add('script',{'type':'application/ld+json'},json.dumps({'@context':'https://schema.org','@graph':[website,data,organization,app]},ensure_ascii=False))
+ graph=[website,data,organization,app]
+ if page in SEO_LANDING_PAGES:
+  dates=SEO_LANDING_PAGES[page];h1=tree.xpath('//h1')[0].text_content().strip()
+  data.update({'headline':h1,'datePublished':dates['published'],'dateModified':dates['modified'],'image':OG_IMAGE,'breadcrumb':{'@id':canonical+'#breadcrumb'}})
+  crumbs=[('Beranda',ORIGIN+'/id/'),('Artikel',ORIGIN+'/id/articles'),(h1,canonical)]
+  graph.append({'@type':'BreadcrumbList','@id':canonical+'#breadcrumb','itemListElement':[{'@type':'ListItem','position':i+1,'name':n,'item':u} for i,(n,u) in enumerate(crumbs)]})
+  # FAQPage mirrors the visible h3/p pairs, so schema and page text cannot drift apart.
+  faq=[(q.text_content().strip(),q.getnext().text_content().strip()) for q in tree.xpath('//section[contains(@class,"article-faq")]/h3')]
+  if faq:graph.append({'@type':'FAQPage','@id':canonical+'#faq','mainEntity':[{'@type':'Question','name':q,'acceptedAnswer':{'@type':'Answer','text':a}} for q,a in faq]})
+ add('script',{'type':'application/ld+json'},json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False))
 for page in PAGES:
  source=ROOT/page
  for lang in (['id'] if page in ID_ONLY_PAGES else ['id','en']):

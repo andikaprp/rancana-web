@@ -11,6 +11,8 @@ const PERMANENT_REDIRECTS = new Map([
   ['/index.html', '/id/'],
   ['/tka-2026', '/id/tka-2026'],
   ['/tka-2026/', '/id/tka-2026'],
+  ['/jadwal-belajar-ujian', '/id/jadwal-belajar-ujian'],
+  ['/jadwal-belajar-ujian/', '/id/jadwal-belajar-ujian'],
 ]);
 const CANONICAL_HOST = 'rancana.id';
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
