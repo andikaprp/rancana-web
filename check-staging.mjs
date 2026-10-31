@@ -48,7 +48,13 @@ for (const [page, label] of [
   ['en/college-schedule.html', 'Sample data · not an app screenshot'],
   ['en/todo-guide.html', 'Sample data · not an app screenshot'],
 ]) assert.ok((await fs.readFile(path.join(root, page), 'utf8')).includes(label), `${page} labels its text example`);
-assert.match(await fs.readFile(path.join(root, 'id/flashcard-guide.html'), 'utf8'), /phone-center\.webp/, 'Flashcard guide uses the genuine app screen');
+for (const [slug, shot] of [['todo-guide', 'todo'], ['college-schedule', 'jadwal'], ['flashcard-guide', 'flashcard']]) {
+  for (const locale of ['id', 'en']) {
+    const html = await fs.readFile(path.join(root, `${locale}/${slug}.html`), 'utf8');
+    assert.match(html, new RegExp(`screenshots/${shot}-screen\\.webp`), `${locale} ${slug} uses the real app screen`);
+    assert.doesNotMatch(html, /guide-hero-prop|phone-center\.webp/, `${locale} ${slug} no longer uses the old icon/illustration`);
+  }
+}
 const analyticsConfig = await fs.readFile(path.join(root, 'analytics-config.js'), 'utf8');
 assert.match(analyticsConfig, /measurementId:\s*""/);
 assert.equal(await fs.readFile(path.join(root, 'analytics-consent.js'), 'utf8'), '// Staging only: analytics disabled.\n');
@@ -112,8 +118,9 @@ try {
       assert.equal(await page.evaluate(() => window.RancanaAnalyticsConfig.measurementId), '');
       assert.equal(await page.evaluate(() => typeof window.gtag), 'undefined');
       if (route.endsWith('college-schedule') || route.endsWith('todo-guide')) assert.equal(await page.locator('.guide-example-label').count(), 1);
-      if (route.endsWith('flashcard-guide')) {
-        const screenshot = page.locator('img[src*="phone-center.webp"]');
+      const guideShot = {'todo-guide': 'todo', 'college-schedule': 'jadwal', 'flashcard-guide': 'flashcard'}[route.split('/').pop()];
+      if (guideShot) {
+        const screenshot = page.locator(`.guide-app-shot img[src*="screenshots/${guideShot}-screen.webp"]`);
         assert.equal(await screenshot.count(), 1);
         assert.ok(await screenshot.evaluate(image => image.complete && image.naturalWidth > 0));
       }

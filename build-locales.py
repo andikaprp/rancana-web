@@ -111,6 +111,8 @@ for page in PAGES:
     path,sep,fragment=value.partition('#')
     if path in PAGES:e.set(attr,'../'+lang+'/'+path+sep+fragment)
     else:e.set(attr,'../'+value)
+  for e in tree.xpath('//*[@srcset]'):
+   e.set('srcset',', '.join(c if re.match(r'^(?:https?:|/|\.\./)',c) else '../'+c for c in (c.strip() for c in e.get('srcset').split(','))))
   # Translate descriptive alt text independently of client-side swapping.
   if lang=='id':
    alts={'Rancana home screen in the monochrome theme':'Beranda Rancana dengan tema monokrom','Rancana home screen in the pink theme':'Beranda Rancana dengan tema pink','Rancana home screen with a flashcard in the green theme':'Beranda dan flashcard Rancana dengan tema hijau','Flashcard front showing the title Introduction':'Bagian depan flashcard dengan judul Introduction','Flashcard back showing the formula a² + b² = c²':'Bagian belakang flashcard dengan rumus a² + b² = c²'}

@@ -43,3 +43,6 @@ REVIEW-CHECKLIST.md
 
 # Internal reference catalog; production uses foundation-tokens.css only.
 design-system/
+
+# RAN-62 screenshot sources (real app screens rendered from the app source); only the WebP exports are public.
+assets/screenshots/source/
