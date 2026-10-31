@@ -16,6 +16,13 @@ const metadataUpdates={
  65:'Catat tugas sekolah, lengkapi detailnya, lalu pantau sampai selesai. Kelompokkan tugas per pelajaran biar gampang dicari di Rancana.',
  78:'Tulis pertanyaan dan jawaban singkat, pilih pelajarannya, lalu latihan flashcard hafalan dengan jawab dulu sebelum membalik kartu.',
 };
+// Nila's web jenjang plan (31 Oct 2026, rows 4, 8 and 10) added exam prep to the home audience, FAQ and about mission copy.
+const bodyUpdates={
+ 2:'Rancana bisa jadi teman belajarmu, dari SMP, SMA, SMK, kuliah, sampai persiapan UTBK atau CPNS.',
+ 22:'Bisa dipakai buat sekolah, kuliah, atau persiapan ujian?',
+ 23:'Bisa. Tambahin mata pelajaran, mata kuliah, atau materi ujian, lalu lengkapi dengan tugas, jadwal, dan flashcard. Kalau lagi persiapan UTBK, ada hitung mundurnya juga.',
+ 43:'Kami ingin membantu pelajar, mahasiswa, dan pejuang ujian belajar dengan lebih tenang setiap hari. Mulai dari bersiap sebelum kelas sampai mengatur waktu belajar, Rancana hadir untuk membantu kamu merasa lebih siap.',
+};
 for(const id of Object.keys(metadataUpdates))assert.ok(items.find(i=>i.id===+id).source_locations.some(p=>p.startsWith('/html/head/')),'metadata item '+id);
 const pages=[...new Set(items.map(i=>i.page))];
 assert.equal(pages.length,11);
@@ -59,9 +66,9 @@ try {
     return expected.filter(item=>{
      const needsMetadata=item.source_locations.some(p=>p.startsWith('/html/head/'));
      const needsBody=item.source_locations.some(p=>p.startsWith('/html/body/'));
-     return (needsMetadata&&description!==norm(item.metadataAfter??item.after))||(needsBody&&!texts.has(norm(item.after)));
+     return (needsMetadata&&description!==norm(item.metadataAfter??item.after))||(needsBody&&!texts.has(norm(item.bodyAfter??item.after)));
     }).map(i=>i.id);
-   },items.filter(i=>i.page===filename).map(i=>({...i,metadataAfter:metadataUpdates[i.id]})));
+   },items.filter(i=>i.page===filename).map(i=>({...i,metadataAfter:metadataUpdates[i.id],bodyAfter:bodyUpdates[i.id]})));
    assert.deepEqual(missing,[],`${filename}: all approved text present`);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${filename} overflow at ${width}`);
    assert.equal(await page.locator('.site-header .articles-nav').count(),0);
