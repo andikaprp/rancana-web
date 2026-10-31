@@ -1,23 +1,19 @@
 # Article example assets
 
-Checked the website and Android app repositories on 2026-10-18.
+Updated 2026-10-31 (RAN-62). First checked 2026-10-18.
 
-## Available
+## Current state
 
-- `assets/phone-center.webp` is a genuine Rancana flashcard screen already in the website repository. It shows a question on the home screen before the card is flipped, so the flashcard guide now uses it as its app example.
-- `assets/phone-left.webp` and `assets/phone-right.webp` also show flashcard UI. They do not show schedule or to-do screens.
-- The app repository has `assets/images/onboarding/flashcards.png`, `assets/images/onboarding/productivity.png`, `assets/images/todo_confirm.webp`, and `assets/images/todo_success.webp`. These are feature illustrations, not screen captures.
+The To-do, Jadwal (class schedule) and Flashcard guides now use real app screenshots. They are real app screens rendered from the app source (app repository `staging`, commit 3e0c55b, 31 Oct 2026) with sample data, not phone captures and not illustrations.
 
-## Still needed
+- `assets/screenshots/todo-screen.webp`: the To-do tab with the Semua/Aktif/Terlewat/Selesai filters and a task list. Used in the "Kelola tugas setelah dibuat" / "Manage tasks after adding them" section.
+- `assets/screenshots/jadwal-screen.webp`: the Jadwal tab in the Mingguan (weekly) view. Used in the "Cek dan ubah jadwal" / "Review and update your schedule" section.
+- `assets/screenshots/flashcard-screen.webp`: the Flashcard deck list. It replaces `assets/phone-center.webp` in the existing flashcard figure, and the caption is unchanged.
+- Each has a 400 px `-400.webp` variant for `srcset`. The cropped PNG sources are in `assets/screenshots/source/`, which `.assetsignore` excludes from deployment.
+- The hero app icons (`guide-hero-prop`) were removed from these three guides. The mascot stays.
+- Crops: the top ~40 px (header background strip) on all three. On To-do and Jadwal, the bottom strip with the home flashcard "peek" drawer was also cut. On Flashcard, the empty bottom gradient was trimmed.
 
-- A genuine schedule screen capture showing the schedule list or weekly calendar.
-- A genuine to-do screen capture showing the to-do list or task details.
+## Unchanged
 
-No matching schedule or to-do screen capture was found in the app repository or the existing website screenshot assets. The schedule and to-do article examples remain text examples until those captures are available.
-
-## Owner choice
-
-1. Add actual schedule and to-do captures with sample data to the website repository; or
-2. Approve purpose-made UI illustrations, each clearly captioned `Illustrative example, not an app screenshot`.
-
-The second option has not been applied. The existing feature illustrations are not substituted for product screens.
+- The text examples in the To-do and Jadwal guides keep their "Contoh data · bukan tangkapan layar aplikasi" / "Sample data · not an app screenshot" labels, because those boxes are still sample text.
+- The app shows the Indonesian UI in both language versions.

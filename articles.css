@@ -124,7 +124,7 @@
 .guide-page .guide-hero-flashcards .guide-hero-mascot { width: 88%; height: auto; bottom: 10px; }
 .guide-page .guide-hero-flashcards .guide-hero-prop { border-color: #f4d8e5; }
 .guide-page .guide-app-shot { width: min(100%, 330px); margin: 24px auto; text-align: center; }
-.guide-page .guide-app-shot img { display: block; width: 100%; height: auto; }
+.guide-page .guide-app-shot img { display: block; width: 100%; max-width: 100%; height: auto; border: 1px solid #e3ebe4; border-radius: 22px; background: #fff; box-shadow: 0 14px 32px #1e1e1e14; }
 .guide-page .guide-app-shot figcaption { margin-top: 10px; color: #5f675e; font-size: 14px; }
 .guide-page .guide-example-label { display: block; width: fit-content; max-width: 100%; margin-bottom: 10px; padding: 6px 10px; border-radius: 999px; background: #e8f4ec; color: #217957; font-size: 13px; font-weight: 600; }
 .guide-page .guide-steps {

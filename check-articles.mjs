@@ -4,8 +4,8 @@ import path from 'node:path';
 import http from 'node:http';
 import {chromium} from 'playwright';
 const root=path.dirname(new URL(import.meta.url).pathname);
-const routes=['articles','college-schedule','todo-guide','flashcard-guide','flashcard-hafalan','jadwal-belajar','todo-tugas','tka-2026'];
-const idOnly=new Set(['tka-2026']);
+const routes=['articles','college-schedule','todo-guide','flashcard-guide','flashcard-hafalan','jadwal-belajar','todo-tugas','tka-2026','jadwal-belajar-ujian'];
+const idOnly=new Set(['tka-2026','jadwal-belajar-ujian']);
 const server=http.createServer(async(req,res)=>{try{let p=new URL(req.url,'http://localhost').pathname;if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';const f=path.resolve(root,'.'+p);if(!f.startsWith(root+'/'))throw Error();res.setHeader('Content-Type',f.endsWith('.html')?'text/html':f.endsWith('.css')?'text/css':f.endsWith('.js')?'text/javascript':f.endsWith('.svg')?'image/svg+xml':f.endsWith('.png')?'image/png':f.endsWith('.webp')?'image/webp':'application/octet-stream');res.end(await fs.readFile(f));}catch{res.statusCode=404;res.end();}});
 await new Promise(r=>server.listen(4173,'127.0.0.1',r));
 const origin='http://127.0.0.1:4173';
@@ -28,7 +28,7 @@ try{
    const links=await page.locator('a[href]').evaluateAll(as=>as.map(a=>a.getAttribute('href')).filter(h=>h.startsWith('/')));
    for(const href of new Set(links)){let p=href.split('#')[0];if(p==='/go/play')continue;if(p.endsWith('/'))p+='index.html';if(!path.extname(p))p+='.html';await fs.access(path.join(root,p));}
    const schema=JSON.parse(await page.locator('script[type="application/ld+json"]').innerText());assert.equal(schema['@graph'][1]['@type'],route==='articles'?'CollectionPage':'Article');
-   if(route==='articles'){assert.equal(await page.locator('.article-card').count(),lang==='id'?7:6);if(lang==='id')assert.equal(await page.locator('.article-card').first().getAttribute('href'),'/id/tka-2026');}
+   if(route==='articles'){assert.equal(await page.locator('.article-card').count(),lang==='id'?8:6);if(lang==='id'){assert.equal(await page.locator('.article-card').first().getAttribute('href'),'/id/tka-2026');assert.equal(await page.locator('.article-card[href="/id/jadwal-belajar-ujian"]').count(),1);}}
    if(route==='tka-2026'){
     const text=await page.locator('main').innerText();
     assert.equal(await page.locator('h1').innerText(),'Jadwal TKA 2026 dan cara atur belajar kamu sampai ASAS');
@@ -43,6 +43,25 @@ try{
     assert.equal(await page.locator('.article-sources a[href^="https://"]').count(),4);
     assert.doesNotMatch(text,/\u2014|pengingat/i);
     assert.equal((text.match(/gratis/gi)||[]).length,1,'only the verbatim FAQ answer mentions gratis');
+   }
+   if(route==='jadwal-belajar-ujian'){
+    const text=await page.locator('main').innerText();
+    assert.equal(await page.locator('h1').innerText(),'Jadwal belajar untuk ujian ASAS, mulai 3 minggu sebelumnya');
+    assert.deepEqual(await page.locator('main article > section > h2').allInnerTexts(),['Kapan ASAS semester ganjil 2026?','Hitung mundur dari hari pertama ujian kamu','Contoh jadwal belajar 3 minggu sebelum ASAS','Pecah tiap mapel jadi tugas kecil','Kalau ujiannya besok','Gimana Rancana bantu kamu atur jadwal belajar ujian','Pertanyaan yang sering muncul soal jadwal belajar ujian','Baca juga','Sumber']);
+    assert.match(await page.locator('.seo-meta-line').innerText(),/^Diperbarui 29 Oktober 2026$/);
+    assert.equal(await page.locator('.seo-facts li').count(),3);
+    assert.equal(await page.locator('.seo-toc a').count(),7);
+    for(const href of await page.locator('.seo-toc a').evaluateAll(as=>as.map(a=>a.getAttribute('href'))))assert.equal(await page.locator(href).count(),1,href);
+    assert.equal(await page.locator('.article-faq h3').count(),5);
+    assert.equal(await page.locator('.seo-related .article-card').count(),3);
+    assert.equal(await page.locator('.seo-related a[href="/id/tka-2026"]').count(),1);
+    const ctas=page.locator('main a[href="/go/play"]');assert.equal(await ctas.count(),2);
+    for(const label of await ctas.allInnerTexts())assert.equal(label.trim(),'Download Rancana di Google Play');
+    assert.equal(await page.locator('link[rel="alternate"][hreflang]').count(),0);
+    assert.equal(await page.locator('.article-sources a[href^="https://"]').count(),2);
+    // Only sourced ASAS dates (Raya 2026-10-29: Tirto madrasah, Tribunnews Banten); no widget/reminder/price claims.
+    assert.match(text,/23 November sampai 5 Desember 2026/);assert.match(text,/30 November sampai 5 Desember 2026/);
+    assert.doesNotMatch(text,/\u2014|pengingat|widget|gratis/i);
    }
    const backdrop = await page.evaluate(() => {
     const paper = document.querySelector('.doc-paper');
@@ -87,5 +106,5 @@ try{
  }
  const robots=await fs.readFile(path.join(root,'robots.txt'),'utf8');assert.ok(robots.includes('Sitemap: https://rancana.id/sitemap.xml'));
  await fs.writeFile(path.join(root,'review-evidence/article-qa.txt'),evidence.join('\n')+'\nFooter → hub → locale switch passed.\n');
- console.log('PASS — 30 locale/viewport article checks, real assets, local navigation, schema and mobile overflow');
+ console.log('PASS — 32 locale/viewport article checks, real assets, local navigation, schema and mobile overflow');
 }finally{await browser.close();server.close();}

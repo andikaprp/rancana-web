@@ -59,7 +59,9 @@ if (typeof window !== 'undefined' && headerMascot) import(new URL('./header-masc
         price.textContent = `Rp${yearly ? price.dataset.priceYearly : price.dataset.priceMonthly}`;
       });
       document.querySelectorAll('[data-price-period]').forEach(period => {
-        const english = period.closest('[data-lang]').dataset.lang === 'en';
+        // Built locale pages (/id/, /en/) have no [data-lang] wrapper; fall back to <html lang>.
+        const scope = period.closest('[data-lang]');
+        const english = (scope ? scope.dataset.lang : document.documentElement.lang) === 'en';
         period.textContent = english ? (yearly ? ' / year' : ' / month') : (yearly ? ' / tahun' : ' / bulan');
       });
     });
