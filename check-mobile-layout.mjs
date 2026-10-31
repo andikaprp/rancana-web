@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
@@ -77,6 +78,25 @@ async function measure(page) {
   });
 }
 
+async function artwork(page) {
+  const images = await page.evaluate(() => Promise.all(['.fc-front','.fc-back'].map(async selector => {
+    const img = document.querySelector(`.card-flashcards ${selector}`);
+    await img.decode();
+    const box = img.getBoundingClientRect();
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+    const data = context.getImageData(0, 0, img.naturalWidth, img.naturalHeight).data;
+    let binary = '';
+    for (let i = 0; i < data.length; i += 0x8000) binary += String.fromCharCode(...data.subarray(i, i + 0x8000));
+    return {selector, src:new URL(img.currentSrc || img.src).pathname.replace(/^\/(before|after)\//, '/'),
+      width:Math.round(box.width), height:Math.round(box.height),
+      naturalWidth:img.naturalWidth, naturalHeight:img.naturalHeight, pixels:btoa(binary)};
+  })));
+  return images.map(({pixels, ...image}) => ({...image, sha256:createHash('sha256').update(Buffer.from(pixels, 'base64')).digest('hex')}));
+}
+
 async function screenshots(page, variant, lang, width) {
   const prefix = `${lang}-${width}-${variant}`;
   const flashcard = `${prefix}-flashcard.png`, gap = `${prefix}-gap.png`;
@@ -111,12 +131,8 @@ try {
     } else {
       assert.equal(current.mobileExample, false, 'original desktop composition');
       assert.equal(current.gapToGreen, old.gapToGreen, 'desktop spacing unchanged');
-      // Description typography is intentionally larger in the website refresh.
-      // Hide only that ink while retaining its box to compare the original artwork.
-      for (const page of [before, after]) await page.addStyleTag({content:'.card-flashcards .card-head p{visibility:hidden}'});
-      const original = await before.locator('.card-flashcards').screenshot();
-      const updated = await after.locator('.card-flashcards').screenshot();
-      assert.equal(original.equals(updated), true, 'desktop Flashcard artwork pixels unchanged');
+      // The larger caption shifts the artwork by subpixels, so compare the images themselves.
+      assert.deepStrictEqual(await artwork(after), await artwork(before), 'desktop Flashcard artwork pixels unchanged');
     }
     if ([320,390,1440].includes(width)) {
       await screenshots(before, 'before', lang, width);
