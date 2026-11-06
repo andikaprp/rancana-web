@@ -23,6 +23,9 @@ try{
    assert.equal(await icon.evaluate(e=>e.parentElement.tagName==='ARTICLE'&&e.getAnimations({subtree:true}).length===0),true);
    assert.equal(crypto.createHash('sha256').update(await fs.readFile(path.join(root,'assets/mascots',file))).digest('hex'),i?'c97a6a2a5792b9905f04f85478b24468eeca6dc9331607c1583d80866da75775':'5dc88e3c525f530d7fd28df0c011ec4a3326f9ebb22f1ab1b6c4869ae704e1af');
   }
+  // RAN-122: the exam-prep card reuses the shipped static Cana rest pose; no new artwork.
+  assert.equal(await page.locator('.audience-icon').count(),3);
+  assert.ok((await page.locator('.audience-icon').nth(2).getAttribute('src')).endsWith('selected-A/cana-rest.svg'));
   assert.equal(await page.locator('.audience-grid [data-companion-scene],.audience-grid svg').count(),0);
   assert.equal(await page.locator('.benefit-mascot').evaluate(e=>e.tagName==='IMG'&&e.complete&&e.naturalWidth>0&&e.getAnimations().length===0&&!e.closest('[data-companion-scene-root]')),true);
   // Both hero palms leave rest and both arms extend; the inner shoulder roots stay integrated.
