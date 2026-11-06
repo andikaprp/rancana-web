@@ -12,3 +12,5 @@
 .analytics-consent p+p{flex:none;white-space:nowrap}
 .analytics-consent-actions{flex:none;flex-wrap:nowrap;gap:8px /* --space-8 */}
 }
+/* RAN-121: mobile tap targets >=44x44. Inline padding grows the privacy link's hit area without reflowing text (--space-12). */
+@media(max-width:899px){.analytics-consent a{padding-block:12px}.analytics-settings{min-height:44px;min-width:44px}}

@@ -966,3 +966,20 @@ img { display: block; }
 
 /* Keep small planner-example labels readable; colored borders remain. */
 .preview .todo-meta,.preview .todo-2 .todo-meta{color:var(--v-700)}
+
+/* RAN-121: mobile tap targets >=44x44. The ID/EN pill keeps its 32px height; ::before extends the hit area to 44px. */
+@media (max-width: 899px) {
+  .lang-btn {
+    position: relative;
+    min-width: 44px;
+    text-align: center;
+  }
+  .lang-btn::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    left: 0;
+    right: 0;
+  }
+}
