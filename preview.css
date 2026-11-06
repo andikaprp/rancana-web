@@ -6,6 +6,7 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 /* Restore the original hero falloff above the phone artwork. */
 .hero-wrap .band-hero{position:absolute;z-index:3;mix-blend-mode:normal;pointer-events:none;height:calc(240px * var(--hero-scale));bottom:-1px}
 .audience-grid{gap:28px;margin-top:44px}
+@media(min-width:900px){.audience-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .audience-grid article{position:relative;padding:36px;border:1px solid #dce8e1;border-radius:24px;background:linear-gradient(145deg,#f2f8f4,#fff);box-shadow:0 12px 40px #21795708}
 .audience-grid article:nth-child(2){background:linear-gradient(145deg,#fff4f8,#fff);border-color:#f0dfe6}
 .audience-icon{object-fit:contain;margin-bottom:28px}
@@ -229,10 +230,25 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 /* Readable descriptions in all four homepage feature cards. */
 .preview .product .card .card-head p{font-size:18px;line-height:1.5}
 
-/* Indonesian-only "Baca juga" links to the keyword articles under three feature cards. */
-.preview .product .card .card-head .card-link{margin-top:6px;font-size:15px;line-height:1.4}
-.preview .product .card .card-head .card-link a{color:#217957;font-weight:600;text-underline-offset:3px}
+/* Indonesian-only "Baca juga" links to the keyword articles, below three feature cards' images or mocks and the exam-prep audience card. */
+.preview .product .card .card-link,.audience-grid .card-link{font-size:15px;line-height:1.4}
+.preview .product .card .card-link a,.audience-grid .card-link a{color:#217957;font-weight:600;text-underline-offset:3px}
+.audience-grid .card-link{margin-top:12px}
+/* Desktop cards are absolutely composed. RAN-122 captions run to three lines, so the to-do and
+   schedule mocks drop 36px; the taller /id grid keeps the links clear of the assets. */
+@media(min-width:900px){
+ .preview .product .card{height:448px}
+ .preview .product-grid:has(.card-link) .card{height:484px}
+ .preview .card-todo .todo-1{top:189px}
+ .preview .card-todo .todo-2{top:299px}
+ .preview .card-schedule .days{top:185px}
+ .preview .card-schedule .slot-time{top:303px}
+ .preview .card-schedule .slot{top:329px}
+ .preview .hero .hero-sub-1,.preview .hero .hero-sub-2{left:220px;width:1000px}
+ .preview .product .card .card-link{position:absolute;left:24px;right:24px;bottom:22px;text-align:center}
+}
+@media(max-width:899px){.preview .product .card .card-link{margin-top:20px;text-align:center}}
 .preview .download .closing-tka{margin-top:18px}
 .preview .download .closing-tka a{color:inherit;font-weight:600;text-underline-offset:3px}
 /* RAN-121: mobile tap targets >=44x44 with no layout shift. Inline links pad vertically (--space-12); FAQ rows and the help email offset padding with equal negative margins (--space-4 / --space-12). */
-@media(max-width:899px){.preview .product .card .card-head .card-link a,.preview .download .closing-tka a{padding-block:12px}.faq-list summary{padding-block:4px;margin-block:-4px}.faq .support{margin-top:0;padding-block:12px;margin-bottom:-12px}}
+@media(max-width:899px){.preview .product .card .card-link a,.audience-grid .card-link a,.preview .download .closing-tka a{padding-block:12px}.faq-list summary{padding-block:4px;margin-block:-4px}.faq .support{margin-top:0;padding-block:12px;margin-bottom:-12px}}
