@@ -41,3 +41,5 @@ html{scroll-padding-top:108px}.resource-page .resource-section,.resource-page .r
 .site-header .nav-download{margin:0}
 
 .articles-nav{pointer-events:auto;font-size:14px;text-decoration:none;color:inherit;padding:8px}.articles-nav:focus-visible{outline:3px solid #56744b;outline-offset:5px}
+/* RAN-121: footer links get 44px mobile tap targets; the column pitch grows from 36 to 44px (--space-0 gap) to avoid overlap. */
+@media(max-width:899px){.footer-meta section{gap:0}.footer-meta a,.footer-meta a.legal{display:flex;align-items:center;min-height:44px;min-width:44px}}

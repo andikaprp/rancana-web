@@ -234,3 +234,5 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .preview .product .card .card-head .card-link a{color:#217957;font-weight:600;text-underline-offset:3px}
 .preview .download .closing-tka{margin-top:18px}
 .preview .download .closing-tka a{color:inherit;font-weight:600;text-underline-offset:3px}
+/* RAN-121: mobile tap targets >=44x44 with no layout shift. Inline links pad vertically (--space-12); FAQ rows and the help email offset padding with equal negative margins (--space-4 / --space-12). */
+@media(max-width:899px){.preview .product .card .card-head .card-link a,.preview .download .closing-tka a{padding-block:12px}.faq-list summary{padding-block:4px;margin-block:-4px}.faq .support{margin-top:0;padding-block:12px;margin-bottom:-12px}}
