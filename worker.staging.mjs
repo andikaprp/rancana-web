@@ -13,6 +13,9 @@ const PERMANENT_REDIRECTS = new Map([
   ['/tka-2026/', '/id/tka-2026'],
   ['/jadwal-belajar-ujian', '/id/jadwal-belajar-ujian'],
   ['/jadwal-belajar-ujian/', '/id/jadwal-belajar-ujian'],
+  // The exit survey lives at /berhenti (Indonesian only, no /id/ copy).
+  ['/id/berhenti', '/berhenti'],
+  ['/id/berhenti/', '/berhenti'],
 ]);
 const CANONICAL_HOST = 'rancana.id';
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
@@ -51,6 +54,66 @@ const preventIndexing = response => {
   return new Response(response.body, {status: response.status, statusText: response.statusText, headers});
 };
 
+// RAN-139 exit survey (/berhenti). Stores only the option id, the optional Lainnya
+// text and a timestamp in the BERHENTI KV namespace. No IP, user agent or other
+// request data is read or stored. The Lainnya text is untrusted and never rendered.
+const BERHENTI_OPTIONS = new Set(['confused_start', 'setup_tedious', 'missing_feature', 'other_app', 'forgot', 'not_needed', 'other']);
+const BERHENTI_HOSTS = new Set(['rancana.id', 'staging.rancana.id', ...LOCAL_HOSTS]);
+const BERHENTI_MAX_BODY = 2048;
+const BERHENTI_MAX_OTHER = 280;
+const berhentiReply = (status, body, headers = {}) => new Response(JSON.stringify(body), {status, headers: {
+  'Content-Type': 'application/json; charset=utf-8',
+  'Cache-Control': 'no-store',
+  'X-Robots-Tag': 'noindex',
+  ...headers,
+}});
+// Reads at most BERHENTI_MAX_BODY bytes; returns null when the body is larger.
+const readCappedBody = async request => {
+  if (Number(request.headers.get('Content-Length') || 0) > BERHENTI_MAX_BODY) return null;
+  if (!request.body) return '';
+  const reader = request.body.getReader();
+  const chunks = [];
+  let size = 0;
+  for (;;) {
+    const {done, value} = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > BERHENTI_MAX_BODY) { await reader.cancel(); return null; }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return new TextDecoder('utf-8', {fatal: true}).decode(bytes);
+};
+const handleBerhenti = async (request, env, url) => {
+  if (request.method !== 'POST') return berhentiReply(405, {error: 'method'}, {Allow: 'POST'});
+  // Same-origin only: the page and the API share one host.
+  const origin = request.headers.get('Origin');
+  if (origin !== url.origin || !BERHENTI_HOSTS.has(url.hostname.toLowerCase())) return berhentiReply(403, {error: 'origin'});
+  if (!/^application\/json\b/i.test(request.headers.get('Content-Type') || '')) return berhentiReply(415, {error: 'type'});
+  let text;
+  try { text = await readCappedBody(request); } catch { return berhentiReply(400, {error: 'body'}); }
+  if (text === null) return berhentiReply(413, {error: 'size'});
+  let data;
+  try { data = JSON.parse(text); } catch { return berhentiReply(400, {error: 'json'}); }
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return berhentiReply(400, {error: 'json'});
+  if (Object.keys(data).some(key => key !== 'option' && key !== 'other')) return berhentiReply(400, {error: 'fields'});
+  const {option, other = null} = data;
+  if (typeof option !== 'string' || !BERHENTI_OPTIONS.has(option)) return berhentiReply(400, {error: 'option'});
+  if (other !== null && typeof other !== 'string') return berhentiReply(400, {error: 'other'});
+  const trimmed = (other ?? '').trim();
+  if (trimmed.length > BERHENTI_MAX_OTHER) return berhentiReply(400, {error: 'other'});
+  if (trimmed && option !== 'other') return berhentiReply(400, {error: 'other'});
+  if (!env.BERHENTI) return berhentiReply(503, {error: 'storage'});
+  const ts = new Date().toISOString();
+  const key = `berhenti:${ts}:${crypto.randomUUID().replaceAll('-', '').slice(0, 12)}`;
+  try {
+    await env.BERHENTI.put(key, JSON.stringify({option, other: trimmed || null, ts}));
+  } catch { return berhentiReply(503, {error: 'storage'}); }
+  return berhentiReply(200, {ok: true});
+};
+
 const validValue = (params, key) => {
   const value = params.get(key)?.toLowerCase();
   return value && UTM_VALUE.test(value) ? value : null;
@@ -86,6 +149,10 @@ export default {
     }
     if (url.pathname === '/go/features') {
       const response = new Response(null, {status: 204});
+      return previewHost ? preventIndexing(response) : response;
+    }
+    if (url.pathname === '/api/berhenti') {
+      const response = await handleBerhenti(request, env, url);
       return previewHost ? preventIndexing(response) : response;
     }
     const redirect = permanentRedirect(url);

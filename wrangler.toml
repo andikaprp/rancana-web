@@ -6,3 +6,8 @@ previews = {}
 [assets]
 directory = "."
 binding = "ASSETS"
+
+# RAN-139 exit survey answers (/api/berhenti). Free-tier Workers KV.
+[[kv_namespaces]]
+binding = "BERHENTI"
+id = "50a8156d13b949849a5ea9429b06e64d"

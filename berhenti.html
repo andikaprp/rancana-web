@@ -1,0 +1,96 @@
+<!doctype html>
+<!-- RAN-139 exit survey. Indonesian only, noindex, not in the sitemap, not built by build-locales.py.
+     No analytics or consent script on this page: the submission itself is the count. -->
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rancana: Survei singkat</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://rancana.id/berhenti">
+<link rel="icon" href="/assets/favicon.svg?v=social-ranca-1" type="image/svg+xml" sizes="any"><link rel="icon" href="/assets/ranca-favicon-32.png?v=social-ranca-1" type="image/png" sizes="32x32"><link rel="icon" href="/assets/ranca-favicon-16.png?v=social-ranca-1" type="image/png" sizes="16x16"><link rel="icon" href="/assets/favicon.ico?v=social-ranca-1" sizes="16x16 32x32 48x48 64x64"><link rel="apple-touch-icon" href="/assets/app-icon-180.png">
+<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/preview.css"><link rel="stylesheet" href="/footer-links.css?v=shared-shell-4"><link rel="stylesheet" href="/companion-motion.css?v=selected-A-contours"><link rel="stylesheet" href="/berhenti.css">
+</head>
+<body class="doc-page survey-page">
+
+<img width="1440" height="998" decoding="async" class="doc-paper" src="/assets/paper.webp" alt="">
+
+<header class="site-header" aria-label="Rancana">
+  <a class="brand" href="/id/">
+    <span class="brand-mark"></span>
+    <span class="brand-name">Rancana</span>
+  </a>
+</header>
+
+<main class="survey-main" id="main">
+  <form class="survey" id="survey" method="post" action="/api/berhenti" data-state="default" aria-describedby="survey-sub">
+    <p class="survey-eyebrow">Survei singkat</p>
+
+    <fieldset class="survey-question">
+      <legend><h1 class="survey-title">Apa yang bikin kamu berhenti pakai Rancana?</h1></legend>
+      <p class="survey-sub" id="survey-sub">Pilih satu jawaban. Cuma satu pertanyaan kok.</p>
+
+      <!-- Source order is the no-JS fallback order. JS shuffles every option except "other", which always stays last. -->
+      <ul class="survey-options" id="survey-options">
+        <li class="option" data-key="confused_start">
+          <label><input type="radio" name="reason" value="confused_start" required><span class="option-dot" aria-hidden="true"></span><span class="option-text">Bingung mulai dari mana</span></label>
+        </li>
+        <li class="option" data-key="setup_tedious">
+          <label><input type="radio" name="reason" value="setup_tedious"><span class="option-dot" aria-hidden="true"></span><span class="option-text">Ngisi jadwal sama kelas di awal kerasa ribet</span></label>
+        </li>
+        <li class="option" data-key="missing_feature">
+          <label><input type="radio" name="reason" value="missing_feature"><span class="option-dot" aria-hidden="true"></span><span class="option-text">Fitur yang dicari nggak ada</span></label>
+        </li>
+        <li class="option" data-key="other_app">
+          <label><input type="radio" name="reason" value="other_app"><span class="option-dot" aria-hidden="true"></span><span class="option-text">Udah pakai app lain</span></label>
+        </li>
+        <li class="option" data-key="forgot">
+          <label><input type="radio" name="reason" value="forgot"><span class="option-dot" aria-hidden="true"></span><span class="option-text">Lupa buka lagi</span></label>
+        </li>
+        <li class="option" data-key="not_needed">
+          <label><input type="radio" name="reason" value="not_needed"><span class="option-dot" aria-hidden="true"></span><span class="option-text">Ternyata aku nggak terlalu butuh app jadwal</span></label>
+        </li>
+        <li class="option option-other" data-key="other">
+          <label><input type="radio" name="reason" value="other" id="opt-other" aria-controls="other-field"><span class="option-dot" aria-hidden="true"></span><span class="option-text">Lainnya (tulis sendiri ya)</span></label>
+          <div class="other-field" id="other-field">
+            <label class="other-label" for="other-text">Ceritain sedikit (boleh dikosongin)</label>
+            <textarea class="other-input" id="other-text" name="other_text" rows="3" maxlength="280" aria-describedby="other-count" placeholder="Tulis alasannya di sini"></textarea>
+            <p class="other-count" id="other-count" aria-live="polite"><span data-count>0</span>/280</p>
+          </div>
+        </li>
+      </ul>
+    </fieldset>
+
+    <div class="survey-alert" id="survey-alert" role="alert" hidden>
+      <span class="survey-alert-mark" aria-hidden="true">!</span>
+      <p><strong>Jawabanmu belum terkirim.</strong> <span>Cek koneksi internet, terus coba lagi ya.</span></p>
+    </div>
+
+    <div class="survey-actions">
+      <button class="survey-submit" id="survey-submit" type="submit" aria-describedby="survey-hint">
+        <span class="survey-spinner" aria-hidden="true"></span>
+        <span class="survey-submit-label" data-label-default="Kirim jawaban" data-label-busy="Mengirim..." data-label-retry="Coba kirim lagi">Kirim jawaban</span>
+      </button>
+      <p class="survey-hint" id="survey-hint">Pilih satu jawaban dulu ya.</p>
+    </div>
+  </form>
+
+  <section class="survey-thanks" id="survey-thanks" aria-labelledby="thanks-title" hidden>
+    <div class="survey-thanks-art" aria-hidden="true">
+      <img src="/assets/mascots/selected-A/ranca-rest.svg" width="741" height="532" alt="">
+      <img src="/assets/mascots/selected-A/cana-rest.svg" width="745" height="528" alt="">
+    </div>
+    <h1 class="survey-title" id="thanks-title" tabindex="-1">Makasih udah jawab!</h1>
+    <p class="survey-sub">Jawabanmu udah masuk dan bakal dipakai buat bikin Rancana lebih enak dipakai.</p>
+    <a class="survey-home" href="/id/">Balik ke beranda</a>
+  </section>
+</main>
+
+<footer class="preview-footer"><div class="footer-meta"><section><h2>Produk</h2><a href="/id/#features">Fitur</a><a href="/id/premium">Premium</a><a href="/go/play">Unduh aplikasi</a><a href="/id/articles">Artikel</a></section><section><h2>Rancana</h2><a href="/id/about#about-rancana">Tentang Rancana</a><a href="/id/about#our-purpose">Misi kami</a><a href="/id/about#contact">Hubungi kami</a></section><section><h2>Bantuan &amp; Kebijakan</h2><a class="legal" href="/id/help">Bantuan &amp; Kontak</a><a class="legal" href="/id/privacy">Kebijakan Privasi</a><a class="legal" href="/id/terms">Ketentuan Layanan</a><a class="legal" href="/id/delete-account">Hapus Akun</a></section></div><div class="social-icons" aria-label="Rancana"><a href="https://x.com/rancanaid" aria-label="X"><img src="/assets/social/x.svg" alt="" width="20" height="20"></a><a href="https://www.instagram.com/rancana.app/" aria-label="Instagram"><img src="/assets/social/instagram.svg" alt="" width="20" height="20"></a><a href="https://www.tiktok.com/@rancana.id" aria-label="TikTok"><img src="/assets/social/tiktok.svg" alt="" width="20" height="20"></a></div><p class="footer-copyright">© 2026 Rancana. All rights reserved.</p><div class="footer-mascots footer-brand-row"><img class="footer-mascot" src="/assets/mascots/selected-A/ranca-rest.svg" width="741" height="532" alt="" loading="lazy" decoding="async"><span class="footer-brand-text">Rancana</span><img class="footer-mascot" src="/assets/mascots/selected-A/cana-rest.svg" width="745" height="528" alt="" loading="lazy" decoding="async"></div></footer>
+
+<script src="/shared-nav.js?v=selected-A-contours"></script>
+<script src="/companion-art.js?v=selected-A-contours" defer></script>
+<script src="/companion-motion.js?v=selected-A-contours" defer></script>
+<script src="/berhenti.js" defer></script>
+</body>
+</html>

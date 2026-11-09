@@ -32,6 +32,7 @@ const copyUpdates={
  17:'Mulai sesi belajar 10 menit',
  18:'Buka Mode Belajar, mulai sesi 10 menit untuk satu pelajaran, lalu cek durasinya setelah selesai.',
  20:'Rancana tersedia untuk Android di Google Play di 9 negara: Indonesia, Malaysia, Singapura, Filipina, Thailand, Vietnam, Kamboja, Laos, dan Myanmar. Ketuk “Dapatkan di Google Play” di halaman ini untuk mengunduhnya.',
+ 22:'Bisa dipakai untuk sekolah, kuliah, dan persiapan ujian?',
  23:'Bisa. Tambahkan mata pelajaran atau mata kuliah, lalu lengkapi dengan PR atau tugas, jadwal kelas, dan flashcard. Kalau lagi persiapan UTBK atau ujian, catat materi ulangan dan atur jadwal belajarnya di sini juga.',
  24:'Kamu bisa mengatur mata pelajaran, PR atau tugas, jadwal kelas, dan flashcard. Ada pengingat untuk jam pelajaran dan tenggat tugas, sesi belajar 10 menit di Mode Belajar, beserta timer dan laporan durasi belajarmu.',
  95:'Tambahkan mata pelajaran pertamamu, lalu catat PR, tugas, atau jadwal kelasnya.',

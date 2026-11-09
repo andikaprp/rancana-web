@@ -82,3 +82,7 @@ Current local verification: `npm test` and `npm run test:staging` pass, includin
 ## Design tokens
 
 The [foundation ledger](design-system/tokens.json) retains all 61 proposed assignments. [Web integration](design-system/WEB-INTEGRATION.md) documents the eight exact-value tokens used by existing website aliases, recovery provenance and validation. Run `npm run tokens:design-system` to regenerate both CSS outputs and `npm run test:tokens` for live consumer checks. The internal catalog and component recipes remain excluded from website assets.
+
+## Exit survey (/berhenti, RAN-139)
+
+`berhenti.html` (+ `berhenti.css`, `berhenti.js`) is a standalone Indonesian-only page served at `/berhenti`; `/id/berhenti` 301s there. It is not in `build-locales.py`, so no `/id/` or `/en/` copy, no hreflang and no sitemap entry; it carries `noindex` and loads no analytics or consent script. Colours are literal values scoped to this page. The form POSTs `{option, other}` as JSON to `/api/berhenti` in both Workers: same-origin only, 2 KB body cap, one of 7 option ids, `other` (Lainnya only) trimmed and at most 280 characters; anything else is rejected. Answers are stored in the `BERHENTI` Workers KV namespace (production only; staging has no binding and returns 503) as `berhenti:<ISO ts>:<random>` → `{option, other, ts}`. No IP, user agent or other request data is stored. The Lainnya text is untrusted and never rendered. `node check-berhenti.mjs` (in `npm test`) covers the page rules and API validation with a KV shim.

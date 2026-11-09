@@ -1,0 +1,149 @@
+/* RAN-139 exit survey (/berhenti only). Colours are literal values by Nila's call (no new tokens);
+   the header, paper and footer shell come from styles.css, preview.css and footer-links.css. */
+
+.survey-page [hidden] { display: none !important; }
+.survey-page a:focus-visible, .survey-page button:focus-visible { outline: 3px solid #217957; outline-offset: 4px; }
+
+.survey-main { max-width: 600px; margin: 0 auto; padding-top: 108px; }
+.survey, .survey-thanks { padding: 32px 0 0; }
+
+.survey-eyebrow {
+  margin-bottom: 16px;
+  font: 600 14px/1.5 var(--ssp);
+  letter-spacing: 1.5px; text-transform: uppercase; color: #217957;
+}
+.survey-title {
+  font: 600 42px/1.25 var(--lora);
+  letter-spacing: -.7px; color: #1E1E1E;
+}
+.survey-title:focus { outline: none; }
+.survey-sub {
+  margin-top: 12px;
+  font: 400 18px/1.65 var(--ssp);
+  color: #6F6F6F;
+}
+
+.survey-question { margin: 0; padding: 0; border: 0; min-width: 0; }
+.survey-question legend { padding: 0; float: left; width: 100%; }
+.survey-question legend + * { clear: both; }
+.survey-question .survey-sub { margin-top: 0; padding-top: 12px; }
+
+.survey-options { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 12px; }
+
+/* One option row: the whole row is the label, so the tap target is the full card (min 56px). */
+.option > label {
+  position: relative; display: flex; align-items: center; gap: 12px;
+  min-height: 56px; padding: 12px 16px;
+  border: 1px solid #E4E4E4; border-radius: 16px;
+  background: #FFFFFF; box-shadow: 0 4px 18px 0 rgba(0, 0, 0, .08);
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.option input[type=radio] { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+.option-dot {
+  flex: none; position: relative; width: 22px; height: 22px;
+  border: 2px solid #6F6F6F; border-radius: 999px;
+  background: #FFFFFF;
+}
+.option-dot::after {
+  content: ''; position: absolute; inset: 3px; border-radius: 999px;
+  background: #FFFFFF; transform: scale(0); transition: transform .15s ease;
+}
+.option-text { font: 400 16px/1.5 var(--ssp); color: #1E1E1E; }
+
+@media (hover: hover) {
+  .option > label:hover { border-color: #6F6F6F; }
+}
+.option:has(input:checked) > label {
+  border-color: #217957;
+  box-shadow: inset 0 0 0 1px #217957;
+  background: #E5F4ED;
+}
+.option input:checked + .option-dot { border-color: #217957; background: #217957; }
+.option input:checked + .option-dot::after { transform: scale(1); }
+.option input:checked ~ .option-text { font-weight: 600; color: #09261A; }
+.option:has(input:focus-visible) > label { outline: 3px solid #217957; outline-offset: 4px; }
+
+/* "Lainnya" text field: revealed by CSS from the checked radio, so it also works without JS. */
+.other-field { display: none; margin-top: 12px; padding: 0 0 0 16px; }
+.option-other:has(input:checked) .other-field { display: block; }
+.other-label { display: block; margin-bottom: 8px; font: 600 14px/1.5 var(--ssp); color: #1E1E1E; }
+.other-input {
+  display: block; width: 100%; min-height: 96px; resize: none;
+  padding: 12px 16px;
+  border: 1px solid #6F6F6F; border-radius: 12px;
+  background: #FFFFFF; color: #1E1E1E;
+  font: 400 16px/1.5 var(--ssp);
+  -webkit-appearance: none; appearance: none;
+}
+.other-input::placeholder { color: #6F6F6F; opacity: 1; }
+.other-input:focus { outline: 3px solid #217957; outline-offset: 2px; border-color: #217957; }
+.other-count { margin-top: 4px; text-align: right; font: 400 12px/1.5 var(--ssp); color: #6F6F6F; }
+.other-count.is-limit { color: #D60000; font-weight: 600; }
+
+/* Error alert (send failed). */
+.survey-alert {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-top: 24px; padding: 16px;
+  border: 1px solid #D60000; border-radius: 16px;
+  background: #FFFFFF;
+}
+.survey-alert-mark {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 999px;
+  background: #D60000; color: #FFFFFF;
+  font: 600 14px/1 var(--ssp);
+}
+.survey-alert p { font: 400 16px/1.5 var(--ssp); color: #1E1E1E; }
+.survey-alert strong { font-weight: 600; }
+
+/* Submit: design-system .ds-button recipe (52px pill, SSP 600 16px), same as the live consent banner action. */
+.survey-actions { margin-top: 32px; display: flex; align-items: center; gap: 16px; }
+.survey-submit {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-width: 200px; min-height: 52px; padding: 12px 24px;
+  border: 1px solid transparent; border-radius: 999px;
+  background: #217957; color: #FFFFFF;
+  font: 600 16px/1.5 var(--ssp);
+  cursor: pointer; transition: background-color .15s ease;
+}
+.survey-submit:hover { background: #1B6447; }
+.survey-submit:disabled, .survey-submit[aria-disabled=true] { background: #E4E4E4; color: #6F6F6F; cursor: not-allowed; }
+.survey-hint { font: 400 14px/1.5 var(--ssp); color: #6F6F6F; }
+.survey:not([data-state=default]) .survey-hint { display: none; }
+
+.survey-spinner { display: none; width: 18px; height: 18px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 999px; }
+.survey[data-state=submitting] .survey-spinner { display: block; animation: survey-spin .8s linear infinite; }
+.survey[data-state=submitting] .survey-submit { background: #217957; color: #FFFFFF; cursor: progress; opacity: .8; }
+.survey[data-state=submitting] .option > label { cursor: progress; }
+@keyframes survey-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .survey[data-state=submitting] .survey-spinner { animation-duration: 2.4s; }
+  .option > label, .option-dot::after, .survey-submit { transition: none; }
+}
+
+/* Thank-you panel: existing approved selected-A rest art, untouched. */
+.survey-thanks { text-align: center; }
+.survey-thanks-art { display: flex; justify-content: center; align-items: flex-end; gap: 8px; width: 280px; max-width: 80%; margin: 0 auto 32px; }
+.survey-thanks-art img { width: calc(50% - 4px); height: auto; }
+.survey-home {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 52px; margin-top: 32px; padding: 12px 24px;
+  border: 1px solid #217957; border-radius: 999px;
+  background: #FFFFFF; color: #217957;
+  font: 600 16px/1.5 var(--ssp);
+}
+.survey-home:hover { background: #E5F4ED; }
+
+/* Mobile (site breakpoint 899px). */
+@media (max-width: 899px) {
+  .survey-main { padding-top: 96px; }
+  .survey, .survey-thanks { padding-top: 16px; }
+  .survey-title { font-size: 32px; line-height: 1.3; letter-spacing: -.5px; }
+  .survey-sub { font-size: 17px; }
+  .survey-options { margin-top: 24px; }
+  .survey-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+  .survey-submit { width: 100%; }
+  .survey-hint { text-align: center; }
+  .survey-home { width: 100%; }
+}
