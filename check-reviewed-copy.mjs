@@ -18,7 +18,7 @@ const metadataUpdates={
 };
 // RAN-122 (6 Nov 2026) replaced these approved body lines to match production 1.0.4.
 const copyUpdates={
- 1:'Catat PR, susun jadwal pelajaran, dan bikin flashcard di Rancana.',
+ 1:'Catat PR, atur jadwal pelajaran, dan ulang materi pakai flashcard.',
  2:'Rancana bisa jadi teman belajarmu, dari SMP sampai kuliah, termasuk kalau lagi persiapan ujian atau UTBK.',
  3:'Pakai Rancana buat catat jadwal pelajaran dan daftar PR. Kelompokkan PR-nya per mapel, bikin flashcard buat ngulang materi, nyalakan pengingat, lalu mulai sesi 10 menit di Mode Belajar sebelum ulangan.',
  4:'Dari semester awal sampai akhir, Rancana bantu kamu atur tugas kuliah, jadwal mata kuliah, dan sesi belajar.',
