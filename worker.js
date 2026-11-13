@@ -145,7 +145,7 @@ const assetLinks = () => new Response(ASSET_LINKS, {status: 200, headers: {
 // the Play listing); other platforms go to the Play listing. Build 111+ verifies
 // the App Link for this path, so Android opens the app before reaching the Worker.
 const APP_JADWAL_PATHS = new Set(['/app/jadwal', '/app/jadwal/']);
-const WELCOME_REFERRER = new URLSearchParams({utm_source: 'email', utm_medium: 'email', utm_campaign: 'welcome_v1'});
+const WELCOME_REFERRER = new URLSearchParams({utm_source: 'email', utm_medium: 'email', utm_campaign: 'welcome_v2'});
 const appJadwal = request => {
   const play = playLocation(WELCOME_REFERRER);
   const android = /\bAndroid\b/i.test(request.headers.get('User-Agent') || '');

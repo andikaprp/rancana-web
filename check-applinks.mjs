@@ -8,7 +8,7 @@ const importWorker = async file => {
 };
 const FINGERPRINT = '54:60:20:A1:73:65:94:A8:B7:47:64:9B:F7:F5:A1:6D:D0:B0:60:2A:2E:1E:4D:33:CF:F3:FB:FA:19:DF:F4:93';
 const EXPECTED_LINKS = '[{"relation":["delegate_permission/common.handle_all_urls"],"target":{"namespace":"android_app","package_name":"com.planora.labs","sha256_cert_fingerprints":["' + FINGERPRINT + '"]}}]';
-const PLAY = 'https://play.google.com/store/apps/details?id=com.planora.labs&referrer=utm_source%3Demail%26utm_medium%3Demail%26utm_campaign%3Dwelcome_v1';
+const PLAY = 'https://play.google.com/store/apps/details?id=com.planora.labs&referrer=utm_source%3Demail%26utm_medium%3Demail%26utm_campaign%3Dwelcome_v2';
 const INTENT = 'intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.planora.labs;S.browser_fallback_url=' + encodeURIComponent(PLAY) + ';end';
 const UA = {
   android: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36',
