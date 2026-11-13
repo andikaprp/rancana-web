@@ -124,20 +124,55 @@ const playReferrer = params => {
   return referrer;
 };
 
+const playLocation = params => {
+  const destination = new URL(PLAY);
+  destination.searchParams.set('referrer', playReferrer(params).toString());
+  return destination.href;
+};
+
+// RAN-161 Android App Links. Served by the Worker (no static file), so asset
+// filtering of dot-folders cannot drop it. Fingerprint is the Play app signing cert.
+const APP_PACKAGE = 'com.planora.labs';
+const ASSET_LINKS = JSON.stringify([{relation: ['delegate_permission/common.handle_all_urls'], target: {
+  namespace: 'android_app', package_name: APP_PACKAGE,
+  sha256_cert_fingerprints: ['54:60:20:A1:73:65:94:A8:B7:47:64:9B:F7:F5:A1:6D:D0:B0:60:2A:2E:1E:4D:33:CF:F3:FB:FA:19:DF:F4:93'],
+}}]);
+const assetLinks = () => new Response(ASSET_LINKS, {status: 200, headers: {
+  'Content-Type': 'application/json',
+  'Cache-Control': 'public, max-age=3600',
+}});
+// RAN-161 welcome email handoff. Android opens the installed app (or falls back to
+// the Play listing); other platforms go to the Play listing. Build 111+ verifies
+// the App Link for this path, so Android opens the app before reaching the Worker.
+const APP_JADWAL_PATHS = new Set(['/app/jadwal', '/app/jadwal/']);
+const WELCOME_REFERRER = new URLSearchParams({utm_source: 'email', utm_medium: 'email', utm_campaign: 'welcome_v1'});
+const appJadwal = request => {
+  const play = playLocation(WELCOME_REFERRER);
+  const android = /\bAndroid\b/i.test(request.headers.get('User-Agent') || '');
+  const location = android
+    ? `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${APP_PACKAGE};S.browser_fallback_url=${encodeURIComponent(play)};end`
+    : play;
+  return new Response(null, {status: 302, headers: {
+    Location: location,
+    'Cache-Control': 'no-store',
+    'X-Robots-Tag': 'noindex',
+  }});
+};
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === '/.well-known/assetlinks.json') return assetLinks();
     const goPath = url.pathname.startsWith('/go/');
     const moved = goPath ? null : canonicalOrigin(url);
     if (moved) return moved;
     if (url.pathname === '/go/play') {
-      const destination = new URL(PLAY);
-      destination.searchParams.set('referrer', playReferrer(url.searchParams).toString());
       return new Response(null, {status: 302, headers: {
-        Location: destination.href,
+        Location: playLocation(url.searchParams),
         'Cache-Control': 'no-store',
       }});
     }
+    if (APP_JADWAL_PATHS.has(url.pathname)) return appJadwal(request);
     if (url.pathname === '/go/features') return new Response(null, { status: 204 });
     if (url.pathname === '/api/berhenti') return handleBerhenti(request, env, url);
     const redirect = permanentRedirect(url);
