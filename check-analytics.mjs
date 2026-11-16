@@ -306,9 +306,16 @@ try {
   // Withdrawal clears session data; a later grant on an untagged page cannot resurrect it.
   await flow.page.goto(origin + '/en/?' + tags); await flow.settle();
   await flow.page.goto(origin + '/en/privacy'); await flow.settle();
-  await flow.page.locator('[data-consent-reject]').evaluate(e=>e.click()); await flow.settle();
+  // Rejecting reloads the document (the loaded Google tag cannot be unloaded). Wait for that
+  // reload before accepting, and for a NEW event after accepting; otherwise events.at(-1) can
+  // be the stale pre-withdrawal tagged page_view on a slow runner (RAN-202).
+  await Promise.all([flow.page.waitForEvent('load'), flow.page.locator('[data-consent-reject]').evaluate(e=>e.click())]); await flow.settle();
   check(await flow.page.evaluate(k => sessionStorage.getItem(k), sessionKey), null);
-  await flow.page.locator('[data-consent-accept]').evaluate(e=>e.click()); await flow.settle();
+  const eventsBeforeGrant = flow.events.length;
+  await flow.page.locator('[data-consent-accept]').evaluate(e=>e.click());
+  for (let i = 0; i < 50 && flow.events.length === eventsBeforeGrant; i++) await flow.page.waitForTimeout(100);
+  await flow.settle();
+  check(flow.events.length > eventsBeforeGrant, true);
   check(flow.events.at(-1)[2].campaign_source, '');
   // Session storage failure does not block normal navigation or permit campaign collection.
   await flow.page.evaluate(() => {Storage.prototype.setItem=function(){throw Error('blocked')};});

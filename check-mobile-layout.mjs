@@ -111,12 +111,27 @@ try {
     } else {
       assert.equal(current.mobileExample, false, 'original desktop composition');
       assert.equal(current.gapToGreen, old.gapToGreen, 'desktop spacing unchanged');
-      // Description typography is intentionally larger in the website refresh.
-      // Hide only that ink while retaining its box to compare the original artwork.
-      for (const page of [before, after]) await page.addStyleTag({content:'.card-flashcards .card-head p{visibility:hidden}'});
-      const original = await before.locator('.card-flashcards').screenshot();
-      const updated = await after.locator('.card-flashcards').screenshot();
-      assert.equal(original.equals(updated), true, 'desktop Flashcard artwork pixels unchanged');
+      // The card box and its copy intentionally changed (larger description
+      // type, SEO internal-link row under the card, RAN-202), which shifts the
+      // card to fractional page offsets, so a screenshot diff of the scaled
+      // artwork is not stable. Assert the artwork itself is unchanged instead:
+      // same source bytes and same size/position inside the card.
+      const artwork = page => page.evaluate(() => {
+        const card = document.querySelector('.card-flashcards').getBoundingClientRect();
+        return ['.fc-front', '.fc-back'].map(selector => {
+          const image = document.querySelector('.card-flashcards ' + selector);
+          const box = image.getBoundingClientRect();
+          return {selector, src: new URL(image.currentSrc).pathname.replace(/^\/(before|after)/, ''),
+            x: box.x - card.x, y: box.y - card.y, width: box.width, height: box.height};
+        });
+      });
+      const oldArt = await artwork(before);
+      assert.deepEqual(await artwork(after), oldArt, 'desktop Flashcard artwork geometry unchanged');
+      for (const {src} of oldArt) {
+        const original = await fs.readFile(path.join(path.resolve(baseline), '.' + src));
+        const updated = await fs.readFile(path.join(root, '.' + src));
+        assert.equal(original.equals(updated), true, 'desktop Flashcard artwork pixels unchanged');
+      }
     }
     if ([320,390,1440].includes(width)) {
       await screenshots(before, 'before', lang, width);
