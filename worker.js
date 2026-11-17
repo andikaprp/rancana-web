@@ -113,20 +113,20 @@ const validValue = (params, key) => {
 
 // Source, medium and campaign are all-or-nothing: if any is missing or invalid,
 // all three defaults are used. Content is optional and only kept with a complete tuple.
-const playReferrer = params => {
+const playReferrer = (params, fallback = DEFAULTS) => {
   const source = validValue(params, 'utm_source');
   const medium = validValue(params, 'utm_medium');
   const campaign = validValue(params, 'utm_campaign');
-  if (!source || !medium || !campaign) return new URLSearchParams(DEFAULTS);
+  if (!source || !medium || !campaign) return new URLSearchParams(fallback);
   const referrer = new URLSearchParams({utm_source: source, utm_medium: medium, utm_campaign: campaign});
   const content = validValue(params, 'utm_content');
   if (content) referrer.set('utm_content', content);
   return referrer;
 };
 
-const playLocation = params => {
+const playLocation = (params, fallback) => {
   const destination = new URL(PLAY);
-  destination.searchParams.set('referrer', playReferrer(params).toString());
+  destination.searchParams.set('referrer', playReferrer(params, fallback).toString());
   return destination.href;
 };
 
@@ -147,7 +147,7 @@ const assetLinks = () => new Response(ASSET_LINKS, {status: 200, headers: {
 const APP_JADWAL_PATHS = new Set(['/app/jadwal', '/app/jadwal/']);
 const WELCOME_REFERRER = new URLSearchParams({utm_source: 'email', utm_medium: 'email', utm_campaign: 'welcome_v2'});
 const appJadwal = request => {
-  const play = playLocation(WELCOME_REFERRER);
+  const play = playLocation(new URL(request.url).searchParams, WELCOME_REFERRER);
   const android = /\bAndroid\b/i.test(request.headers.get('User-Agent') || '');
   const location = android
     ? `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${APP_PACKAGE};S.browser_fallback_url=${encodeURIComponent(play)};end`
