@@ -48,9 +48,21 @@ for (const file of ['worker.js', 'worker.staging.mjs']) {
       assert.match(response.headers.get('x-robots-tag'), /noindex/); assertions++;
     }
   }
-  // Campaign query parameters cannot override the welcome email attribution.
-  const spoof = await worker.fetch(new Request(host + '/app/jadwal?utm_source=x&utm_medium=y&utm_campaign=z', {headers: {'User-Agent': UA.desktop}}), env);
-  assert.equal(spoof.headers.get('location'), PLAY); assertions++;
+  // Complete valid UTM passes through; the Play referrer carries it (desktop and Android fallback).
+  const v5q = '?utm_source=email&utm_medium=email&utm_campaign=welcome_v5';
+  const V5 = PLAY.replace('welcome_v2', 'welcome_v5');
+  for (const path of ['/app/jadwal', '/app/jadwal/']) {
+    const desktop = await worker.fetch(new Request(host + path + v5q, {headers: {'User-Agent': UA.desktop}}), env);
+    assert.equal(desktop.headers.get('location'), V5); assertions++;
+    const android = await worker.fetch(new Request(host + path + v5q, {headers: {'User-Agent': UA.android}}), env);
+    assert.equal(android.headers.get('location'), INTENT.replace(encodeURIComponent(PLAY), encodeURIComponent(V5))); assertions++;
+    assert.ok(decodeURIComponent(android.headers.get('location')).includes('welcome_v5')); assertions++;
+  }
+  // Partial or invalid UTM falls back to the welcome_v2 tuple.
+  for (const q of ['?utm_source=email&utm_medium=email', '?utm_source=x&utm_medium=y&utm_campaign=bad%20value', '?utm_campaign=welcome_v5', '?utm_source=&utm_medium=&utm_campaign=', '?foo=bar']) {
+    const r = await worker.fetch(new Request(host + '/app/jadwal' + q, {headers: {'User-Agent': UA.desktop}}), env);
+    assert.equal(r.headers.get('location'), PLAY, q); assertions++;
+  }
   assert.deepEqual(seen, [], `${file} answers without reading assets`); assertions++;
   // Look-alike paths are not handled.
   await worker.fetch(new Request(host + '/app/jadwalx'), env);
