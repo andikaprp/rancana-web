@@ -206,7 +206,7 @@
     } else {
       gtag('config', id, {...context, update: true, send_page_view: false});
     }
-    gtag('event', message.event, {...context, send_to: id, ...(message.event === 'google_play_click' ? {link_destination: 'google_play', link_placement: message.placement} : {})});
+    gtag('event', message.event, {...context, send_to: id, ...(message.event === 'google_play_click' ? {link_destination: 'google_play', link_placement: message.placement} : message.event === 'dukung_click' ? {link_destination: 'dukung', link_placement: message.placement} : {})});
   };
   const view = () => {
     const page = pageName();
@@ -248,14 +248,15 @@
   const seenClicks = new WeakSet();
   const onPlayInteraction = event => {
     const anchor = event.target.closest?.('a[href]');
-    if (!anchor || !isPlayLink(anchor)) return;
+    const dukung = !!anchor?.matches('a.dukung-cta');
+    if (!anchor || !(dukung || isPlayLink(anchor))) return;
     if (!['click', 'auxclick'].includes(event.type) || (event.type === 'auxclick' && event.button !== 1) ||
         choice !== 'granted' || !tag || !event.isTrusted || seenClicks.has(event)) return;
     seenClicks.add(event);
     const page = pageName();
     if (!page) return;
     const placement = anchor.closest('.site-header') ? 'header' : anchor.closest('.hero-ctas') ? 'hero' : anchor.closest('.preview-footer') ? 'footer' : 'body';
-    send({type: 'rancana-analytics', event: 'google_play_click', page, language: language(), placement});
+    send({type: 'rancana-analytics', event: dukung ? 'dukung_click' : 'google_play_click', page, language: language(), placement: dukung ? 'cta' : placement});
   };
   // Prepare before default navigation (including middle-click/context-menu), without delaying it.
   for (const type of ['pointerdown', 'contextmenu', 'click', 'auxclick']) {
