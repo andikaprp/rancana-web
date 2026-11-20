@@ -9,7 +9,7 @@ DEVELOPER='https://play.google.com/store/apps/dev?id=4897195411202652501'
 INSTAGRAM='https://www.instagram.com/rancana.app/'
 TIKTOK='https://www.tiktok.com/@rancana.id'
 X_PROFILE='https://x.com/rancanaid'
-PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html','jadwal-belajar-ujian.html']
+PAGES=['index.html','help.html','premium.html','privacy.html','terms.html','delete-account.html','about.html','dukung.html','college-schedule.html','flashcard-guide.html','articles.html','todo-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html','jadwal-belajar-ujian.html']
 # Indonesian-only pages: built to /id/ only, no hreflang pair, no legacy root route (source excluded via .assetsignore).
 ID_ONLY_PAGES=['tka-2026.html','jadwal-belajar-ujian.html']
 ARTICLE_PAGES=['college-schedule.html','todo-guide.html','flashcard-guide.html','flashcard-hafalan.html','jadwal-belajar.html','todo-tugas.html','tka-2026.html','jadwal-belajar-ujian.html']

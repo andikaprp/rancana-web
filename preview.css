@@ -266,3 +266,10 @@ html{scroll-behavior:smooth;scroll-padding-top:32px}.preview{overflow-x:hidden}.
 .dukung-bank{font-family:var(--ssp);color:#1e1e1e}
 .dukung-thanks{margin-top:48px}
 @media(max-width:899px){.download-ctas{flex-direction:column;align-items:center;gap:10px}.dukung-options{grid-template-columns:1fr;gap:36px;margin-top:36px}.dukung-thanks{margin-top:36px}}
+
+/* RAN-254 home teaser */
+.section.dukung{padding:64px 0 80px;text-align:center}
+.section.dukung .dukung-intro{max-width:560px;margin:0 auto}
+.section.dukung .dukung-intro .section-copy{max-width:none;margin:0 auto}
+.section.dukung .pill{margin:24px auto 0;width:fit-content}
+@media(max-width:899px){.section.dukung{padding:48px 24px 64px}}
