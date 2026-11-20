@@ -93,11 +93,11 @@
 .dukung-head{text-align:center;margin:0 auto 16px;max-width:560px}
 .dukung-head h1{margin:0;font:600 32px/1.25 var(--lora);letter-spacing:-.5px;color:var(--v-1000)}
 .dukung-page .dukung-head p{margin:10px 0 0;font:16px/1.45 var(--ssp);color:#6f6f6f}
-.dukung-card{display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:center;max-width:640px;margin:0 auto;padding:32px}
+.dukung-card{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:center;max-width:700px;margin:0 auto;padding:32px}
 .dukung-card p{margin:0}
 .dukung-qris-col,.dukung-bank-col{min-width:0}
 .dukung-label{margin:0 0 8px;font:600 14px/1.3 var(--ssp);letter-spacing:.08em;text-transform:uppercase;color:#777}
-.dukung-page .dukung-qris{display:block;width:200px;max-width:100%;height:auto;margin:0}
+.dukung-page .dukung-qris{display:block;width:260px;max-width:100%;height:auto;margin:0}
 .dukung-help{margin:8px 0 0;font:14px/1.4 var(--ssp);color:#6f6f6f}
 .dukung-bankname{margin:0;font:16px/1.4 var(--ssp);color:var(--v-1000)}
 .dukung-number{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:6px 0}
@@ -112,7 +112,7 @@
   .dukung-head{margin:0 auto 8px}
   .dukung-page .dukung-head p{margin-top:8px;font:15px/1.4 var(--ssp)}
   .dukung-card{grid-template-columns:1fr;gap:0;padding:16px 24px;justify-items:center;text-align:center}
-  .dukung-page .dukung-qris{width:220px;margin:0 auto}
+  .dukung-page .dukung-qris{width:260px;margin:0 auto}
   .dukung-qris-col{width:100%;padding-bottom:12px;border-bottom:1px solid #e4e4e4}
   .dukung-bank-col{width:100%;padding-top:12px;text-align:left}
   .dukung-number{justify-content:flex-start}
