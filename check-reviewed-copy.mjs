@@ -39,7 +39,16 @@ const copyUpdates={
  23:'Bisa. Tambahkan mata pelajaran atau mata kuliah, lalu lengkapi dengan PR atau tugas, jadwal kelas, dan flashcard. Kalau lagi persiapan UTBK atau ujian, catat materi ulangan dan atur jadwal belajarnya di sini juga.',
  24:'Kamu bisa mengatur mata pelajaran, PR atau tugas, jadwal kelas, dan flashcard. Ada pengingat untuk jam pelajaran dan tenggat tugas, sesi belajar 10 menit di Mode Belajar, beserta timer dan laporan durasi belajarmu.',
  95:'Tambahkan mata pelajaran pertamamu, lalu catat PR, tugas, atau jadwal kelasnya.',
+ // RAN-248 v2.1 (21 Nov 2026) /premium: free forever, Premium+ only, no prices or trial.
+ 27:'Buat atur semua kegiatan belajarmu.',
+ 29:'Buat kamu yang mau lebih.',
+ 30:'Mata pelajaran',
+ 31:'Sudah berlangganan? Pulihkan akses langganan',
+ 36:'Mata pelajaran, jadwal, to-do, flashcard yang kamu ketik, dan file bisa kamu pakai gratis selamanya, tanpa batas. Scan jadwal dan flashcard dari foto juga bisa dicoba di paket Gratis, dengan batas tertentu.',
+ 40:'Semua datamu tetap ada dan bisa dipakai seperti biasa. Kamu kembali ke paket Gratis, yang tetap tanpa batas untuk mata pelajaran, jadwal, to-do, flashcard ketik, dan file.',
 };
+// The mid-tier Premium card (28) was removed in RAN-248 v2.1, so its copy must no longer be on the page.
+const removedCopyIds=new Set([28]);
 for(const id of Object.keys(copyUpdates))assert.ok(items.find(i=>i.id===+id).source_locations.every(p=>p.startsWith('/html/body/')),'body item '+id);
 for(const item of items)if(copyUpdates[item.id])item.after=copyUpdates[item.id];
 for(const id of Object.keys(metadataUpdates))assert.ok(items.find(i=>i.id===+id).source_locations.some(p=>p.startsWith('/html/head/')),'metadata item '+id);
@@ -73,7 +82,7 @@ try {
    await page.evaluate(()=>document.fonts.ready);
    if(await page.locator('[data-consent-reject]').isVisible())await page.locator('[data-consent-reject]').click();
    assert.equal(await page.locator('html').getAttribute('lang'),'id');
-   const missing=await page.evaluate(expected=>{
+   const missing=await page.evaluate(([expected,removed])=>{
     const norm=s=>s.replace(/\s+/g,' ').trim();
     const textWithBreaks=e=>{
      const clone=e.cloneNode(true);
@@ -85,9 +94,9 @@ try {
     return expected.filter(item=>{
      const needsMetadata=item.source_locations.some(p=>p.startsWith('/html/head/'));
      const needsBody=item.source_locations.some(p=>p.startsWith('/html/body/'));
-     return (needsMetadata&&description!==norm(item.metadataAfter??item.after))||(needsBody&&!texts.has(norm(item.after)));
+     return (needsMetadata&&description!==norm(item.metadataAfter??item.after))||(needsBody&&!removed.includes(item.id)&&!texts.has(norm(item.after)));
     }).map(i=>i.id);
-   },items.filter(i=>i.page===filename).map(i=>({...i,metadataAfter:metadataUpdates[i.id]})));
+   },[items.filter(i=>i.page===filename).map(i=>({...i,metadataAfter:metadataUpdates[i.id]})),[...removedCopyIds]]);
    assert.deepEqual(missing,[],`${filename}: all approved text present`);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${filename} overflow at ${width}`);
    assert.equal(await page.locator('.site-header .articles-nav').count(),0);

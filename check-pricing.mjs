@@ -1,48 +1,33 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import vm from 'node:vm';
 
-const buttons = [];
-const prices = [];
-const periods = [];
-const toggles = ['id','en'].map(lang => {
-  for (const billing of ['monthly','yearly']) buttons.push({dataset:{billing},setAttribute(key,value){this[key]=value;}});
-  for (const [monthly,yearly] of [['0','0'],['15.000','159.000'],['23.000','210.000']]) {
-    prices.push({dataset:{priceMonthly:monthly,priceYearly:yearly},textContent:`Rp${monthly}`});
-    periods.push({closest:()=>({dataset:{lang}})});
+// RAN-248 v2.1 (21 Nov 2026): Free forever + optional Premium+. No prices, billing toggle or trial on the site.
+const files = ['premium.html', 'id/premium.html', 'en/premium.html'];
+const slots = {
+  id: ['Gratis selamanya.', 'Cek harga di aplikasi'],
+  en: ['Free forever.', 'See price in the app'],
+};
+const panelsOf = (html, file) => {
+  const name = file.split('/')[0];
+  if (file === 'premium.html') {
+    const [, enPart, idPart] = html.split(/<div data-lang="(?:en|id)"(?: hidden)?>/);
+    return [['en', enPart], ['id', idPart]];
   }
-  return {hidden:true,addEventListener(type,callback){this.click=callback;}};
-});
-const document = {querySelectorAll(selector){return ({'.billing-toggle':toggles,'[data-billing]':buttons,'[data-price-monthly]':prices,'[data-price-period]':periods})[selector];}};
-vm.runInNewContext((await fs.readFile('shared-nav.js','utf8')).split('// One billing selection')[1].replace(/^[^\n]*\n/, ''),{document});
-assert.ok(toggles.every(t=>!t.hidden));
-for (const index of [1,0,3,2]) {
-  toggles[index<2?0:1].click({target:{closest:()=>buttons[index]}});
-  const yearly=index%2===1;
-  assert.deepEqual(prices.map(p=>p.textContent),Array(2).fill(yearly?['Rp0','Rp159.000','Rp210.000']:['Rp0','Rp15.000','Rp23.000']).flat());
-  assert.ok(buttons.every(b=>b['aria-pressed']===String(b.dataset.billing===(yearly?'yearly':'monthly'))));
-  assert.ok(periods.every((p,i)=>p.textContent===(i<3?(yearly?' / tahun':' / bulan'):(yearly?' / year':' / month'))));
-}
-// Built locale pages: no [data-lang] wrapper, period label follows <html lang>.
-for (const lang of ['id','en']) {
-  const lb=[{dataset:{billing:'monthly'},setAttribute(){}},{dataset:{billing:'yearly'},setAttribute(){}}];
-  const lp=[['0','0'],['15.000','159.000'],['23.000','210.000']].map(([m,y])=>({dataset:{priceMonthly:m,priceYearly:y},textContent:`Rp${m}`}));
-  const lper=lp.map(()=>({closest:()=>null}));
-  const lt=[{hidden:true,addEventListener(type,callback){this.click=callback;}}];
-  const ldoc={documentElement:{lang},querySelectorAll(selector){return ({'.billing-toggle':lt,'[data-billing]':lb,'[data-price-monthly]':lp,'[data-price-period]':lper})[selector];}};
-  vm.runInNewContext((await fs.readFile('shared-nav.js','utf8')).split('// One billing selection')[1].replace(/^[^\n]*\n/, ''),{document:ldoc});
-  for (const yearly of [true,false,true]) {
-    lt[0].click({target:{closest:()=>lb[yearly?1:0]}});
-    assert.deepEqual(lp.map(p=>p.textContent),yearly?['Rp0','Rp159.000','Rp210.000']:['Rp0','Rp15.000','Rp23.000']);
-    assert.ok(lper.every(p=>p.textContent===(lang==='en'?(yearly?' / year':' / month'):(yearly?' / tahun':' / bulan'))));
+  return [[name, html]];
+};
+for (const file of files) {
+  const html = await fs.readFile(file, 'utf8');
+  assert.doesNotMatch(html, /billing-toggle/, `${file}: billing toggle removed`);
+  assert.doesNotMatch(html, /data-billing|data-price-monthly|data-price-yearly|data-price-period/, `${file}: price switching attributes removed`);
+  assert.doesNotMatch(html, /Rp\s?\d/, `${file}: no Rp figures`);
+  assert.doesNotMatch(html, /Buat kamu yang ingin mencatat lebih banyak pelajaran dan tugas/, `${file}: mid-tier Premium card copy removed`);
+  assert.match(html, /src="(?:\.\.\/)?shared-nav\.js(?:\?[^"]*)?"/);
+  for (const [lang, panel] of panelsOf(html, file)) {
+    assert.equal((panel.match(/<article class="plan-card/g) || []).length, 2, `${file} ${lang}: two plan cards`);
+    assert.equal((panel.match(/class="plan-card plan-plus"/g) || []).length, 1, `${file} ${lang}: one Premium+ card`);
+    const prices = [...panel.matchAll(/<div class="plan-price"[^>]*><strong>([^<]*)<\/strong><\/div>/g)].map(m => m[1]);
+    assert.deepEqual(prices, slots[lang], `${file} ${lang}: price slots`);
+    assert.equal((panel.match(/<th scope="col">/g) || []).length, 3, `${file} ${lang}: three comparison columns`);
   }
 }
-for (const file of ['premium.html','id/premium.html','en/premium.html']) {
-  const html=await fs.readFile(file,'utf8');
-  const panels=file==='premium.html'?2:1;
-  assert.equal((html.match(/class="billing-toggle"/g)||[]).length,panels);
-  assert.equal((html.match(/data-price-monthly="15.000" data-price-yearly="159.000"/g)||[]).length,panels);
-  assert.equal((html.match(/data-price-monthly="23.000" data-price-yearly="210.000"/g)||[]).length,panels);
-  assert.match(html,/src="(?:\.\.\/)?shared-nav\.js(?:\?[^"]*)?"/);
-}
-console.log('PASS: shared billing state, both locales, repeated monthly/yearly changes, exact catalog prices and generated script references');
+console.log('PASS: v2.1 premium pages have two plan cards, app-pointing price slots, no billing toggle and no Rp figures, in all three files');
