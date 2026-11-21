@@ -17,8 +17,9 @@ const metadataUpdates={
  78:'Tulis pertanyaan dan jawaban singkat, pilih pelajarannya, lalu latihan flashcard hafalan dengan jawab dulu sebelum membalik kartu.',
 };
 // RAN-122 (6 Nov 2026) replaced these approved body lines to match production 1.0.4.
+// RAN-248 (21 Nov 2026) free-forever hero (1), closing CTA (19) and FAQ (21) copy.
 const copyUpdates={
- 1:'Catat PR, atur jadwal pelajaran, dan ulang materi pakai flashcard.',
+ 1:'Gratis selamanya, tanpa batas. Catat PR, atur jadwal pelajaran, dan ulang materi pakai flashcard.',
  2:'Rancana bisa jadi teman belajarmu, dari SMP sampai kuliah, termasuk kalau lagi persiapan ujian atau UTBK.',
  3:'Pakai Rancana buat catat jadwal pelajaran dan daftar PR. Kelompokkan PR-nya per mapel, bikin flashcard buat ngulang materi, nyalakan pengingat, lalu mulai sesi 10 menit di Mode Belajar sebelum ulangan.',
  4:'Dari semester awal sampai akhir, Rancana bantu kamu atur tugas kuliah, jadwal mata kuliah, dan sesi belajar.',
@@ -31,7 +32,9 @@ const copyUpdates={
  13:'Buka To-do untuk melihat PR atau tugas yang masih perlu kamu kerjakan.',
  17:'Mulai sesi belajar 10 menit',
  18:'Buka Mode Belajar, mulai sesi 10 menit untuk satu pelajaran, lalu cek durasinya setelah selesai.',
+ 19:'Gratis selamanya. Atur kegiatan belajarmu mulai hari ini.',
  20:'Rancana tersedia untuk Android di Google Play di 9 negara: Indonesia, Malaysia, Singapura, Filipina, Thailand, Vietnam, Kamboja, Laos, dan Myanmar. Ketuk “Dapatkan di Google Play” di halaman ini untuk mengunduhnya.',
+ 21:'Beneran. Mata pelajaran, jadwal, to-do, flashcard yang kamu ketik, dan file bisa kamu pakai gratis selamanya, tanpa batas. Scan jadwal dan flashcard dari foto juga bisa dicoba di paket Gratis, dengan batas tertentu. Kalau butuh lebih, ada Premium+ sebagai tambahan opsional.',
  22:'Bisa dipakai untuk sekolah, kuliah, dan persiapan ujian?',
  23:'Bisa. Tambahkan mata pelajaran atau mata kuliah, lalu lengkapi dengan PR atau tugas, jadwal kelas, dan flashcard. Kalau lagi persiapan UTBK atau ujian, catat materi ulangan dan atur jadwal belajarnya di sini juga.',
  24:'Kamu bisa mengatur mata pelajaran, PR atau tugas, jadwal kelas, dan flashcard. Ada pengingat untuk jam pelajaran dan tenggat tugas, sesi belajar 10 menit di Mode Belajar, beserta timer dan laporan durasi belajarmu.',
