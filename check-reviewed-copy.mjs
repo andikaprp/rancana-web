@@ -10,7 +10,8 @@ assert.equal(items.length,116);
 assert.equal(new Set(items.map(i=>i.id)).size,116);
 // Raya's SEO audit (29 Oct 2026) replaced these approved meta descriptions. Body copy for the same items is unchanged.
 const metadataUpdates={
- 26:'Bandingkan batas pelajaran, tugas, jadwal, dan flashcard di tiap paket Rancana. Cek juga cara memulihkan akses Premium dan mengelola langganan.',
+ // RAN-248 v2.1 meta: item 26 (/premium) description updated per Raya, 21 Nov 2026.
+ 26:'Mata pelajaran, jadwal, to-do, flashcard ketik dan file gratis tanpa batas di Rancana. Lihat fitur Premium+ dan cara memulihkan akses langganan.',
  41:'Kenalan dengan Rancana, teman belajar buat pelajar dan mahasiswa yang dibuat oleh Andika Pramudya. Baca misi kami dan cara menghubungi kami.',
  53:'Atur jadwal pelajaran atau kuliah mingguan, juga pertemuan satu kali, lengkap dengan hari, jam, dan mapelnya. Panduan langkah demi langkah di Rancana.',
  65:'Catat tugas sekolah, lengkapi detailnya, lalu pantau sampai selesai. Kelompokkan tugas per pelajaran biar gampang dicari di Rancana.',
