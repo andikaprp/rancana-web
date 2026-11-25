@@ -88,12 +88,13 @@ try {
   assert.doesNotMatch(enHome.description, /free forever|trial|Rp\b|\$/i);
   assert.match(enHome.description, /college/);
   const idDukung = rows.find(r => r.file === 'id/dukung.html');
-  assert.equal(idDukung.title, 'Dukung Rancana: Donasi buat Teman Belajar');
-  assert.equal(idDukung.description, 'Bantu Rancana tetap jadi teman belajar lewat donasi QRIS atau transfer bank. Berapa pun nominalnya sangat berarti.');
+  assert.equal(idDukung.title, 'Dukung Rancana: Bantu Teman Belajar Tetap Gratis');
+  assert.equal(idDukung.description, 'Bantu Rancana tetap gratis buat semua pelajar lewat donasi QRIS atau transfer bank. Berapa pun nominalnya, berarti banget buat kami.');
   assert.ok(idDukung.title.length <= 60 && idDukung.description.length <= 160);
   assert.doesNotMatch(idDukung.description, /trial|Rp\b|\$/i);
   const enDukung = rows.find(r => r.file === 'en/dukung.html');
   assert.equal(enDukung.title, 'Support Rancana: Donate to Keep It Going');
+  assert.equal(enDukung.description, 'Support Rancana with a QRIS or bank transfer donation of any amount. It helps keep this study companion free for every student.');
   assert.ok(enDukung.description.length <= 160);
   assert.equal(rows.find(r => r.file === 'id/about.html').title, 'Tentang Rancana: Teman Belajar Setiap Hari');
   const homeLinks = rows.find(r => r.file === 'id/index.html').links;
