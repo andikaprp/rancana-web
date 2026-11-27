@@ -1,3 +1,20 @@
+// Keep the fixed consent banner from covering this page. Height varies with the viewport.
+const consentBanner = document.getElementById('analytics-consent');
+if (consentBanner) {
+  const syncBannerSpace = () => {
+    if (consentBanner.hidden) {
+      document.documentElement.style.removeProperty('--dukung-banner-space');
+      return;
+    }
+    const space = Math.ceil(window.innerHeight - consentBanner.getBoundingClientRect().top) + 16;
+    document.documentElement.style.setProperty('--dukung-banner-space', space + 'px');
+  };
+  syncBannerSpace();
+  new ResizeObserver(syncBannerSpace).observe(consentBanner);
+  new MutationObserver(syncBannerSpace).observe(consentBanner, {attributes: true, attributeFilter: ['hidden']});
+  addEventListener('resize', syncBannerSpace);
+}
+
 // Copy button for the Dukung page: copies only the account digits, then confirms briefly.
 const btn = document.querySelector('.dukung-copy');
 const status = document.querySelector('.dukung-status');
