@@ -5,7 +5,7 @@ import path from 'node:path';
 import {chromium} from 'playwright';
 
 const root = path.dirname(new URL(import.meta.url).pathname);
-const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide', 'flashcard-hafalan', 'jadwal-belajar', 'todo-tugas'];
+const pages = ['index', 'about', 'help', 'premium', 'privacy', 'terms', 'delete-account', 'dukung', 'college-schedule', 'flashcard-guide', 'articles', 'todo-guide', 'flashcard-hafalan', 'jadwal-belajar', 'todo-tugas'];
 const SITEMAP_LASTMOD = '2026-10-29';
 // Expected sameAs after the social-profile extension (PR #34): Play entity first, then verified socials.
 const ORG_SAMEAS = ['https://play.google.com/store/apps/dev?id=4897195411202652501', 'https://www.instagram.com/rancana.app/', 'https://www.tiktok.com/@rancana.id', 'https://x.com/rancanaid'];
@@ -84,6 +84,19 @@ try {
   assert.doesNotMatch(idHome.description, /gratis/i);
   assert.equal(idHome.schema[0]['@graph'][1].description, idHome.description);
   assert.doesNotMatch(rows.find(r => r.file === 'id/help.html').description, /pengingat/i);
+  const enHome = rows.find(r => r.file === 'en/index.html');
+  assert.doesNotMatch(enHome.description, /free forever|trial|Rp\b|\$/i);
+  assert.match(enHome.description, /college/);
+  const idDukung = rows.find(r => r.file === 'id/dukung.html');
+  assert.equal(idDukung.title, 'Dukung Rancana: Bantu Teman Belajar Tetap Gratis');
+  assert.equal(idDukung.description, 'Bantu Rancana tetap gratis buat semua pelajar lewat donasi QRIS atau transfer bank. Berapa pun nominalnya, berarti banget buat kami.');
+  assert.ok(idDukung.title.length <= 60 && idDukung.description.length <= 160);
+  assert.doesNotMatch(idDukung.description, /trial|Rp\b|\$/i);
+  const enDukung = rows.find(r => r.file === 'en/dukung.html');
+  assert.equal(enDukung.title, 'Support Rancana: Donate to Keep It Going');
+  assert.equal(enDukung.description, 'Support Rancana with a QRIS or bank transfer donation of any amount. It helps keep this study companion free for every student.');
+  assert.ok(enDukung.description.length <= 160);
+  assert.equal(rows.find(r => r.file === 'id/about.html').title, 'Tentang Rancana: Teman Belajar Setiap Hari');
   const homeLinks = rows.find(r => r.file === 'id/index.html').links;
   for (const href of ['/id/jadwal-belajar', '/id/todo-tugas', '/id/flashcard-hafalan']) assert.ok(homeLinks.includes(href), 'homepage links ' + href);
   for (const locale of ['id/', 'en/']) {
@@ -111,6 +124,7 @@ try {
   const sitemap = await fs.readFile(path.join(root, 'sitemap.xml'), 'utf8');
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
   assert.equal(urls.length, 26); assert.equal(new Set(urls).size, 26);
+  assert.ok(urls.includes('https://rancana.id/id/dukung')); assert.ok(urls.includes('https://rancana.id/en/dukung'));
   assert.ok(urls.includes('https://rancana.id/id/tka-2026')); assert.equal(urls.includes('https://rancana.id/en/tka-2026'), false);
   const lastmods = [...sitemap.matchAll(/<url><loc>[^<]+<\/loc><lastmod>([^<]+)<\/lastmod><\/url>/g)].map(m => m[1]);
   assert.deepEqual(lastmods, urls.map(() => SITEMAP_LASTMOD), 'every sitemap URL has a lastmod');
@@ -151,5 +165,5 @@ try {
   const hero = (await page.locator('.hero-title').innerText()).replace(/\s+/g, ' ').trim();
   assert.equal(hero, 'Teman belajar setiap harimu');
   assert.equal(googleRequests, 0);
-  console.log('PASS — 44-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 26 sitemap URLs with lastmod; TKA anchors; ASAS page schema; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
+  console.log('PASS — 44-page metadata/schema/canonical-link audit; localized 1200×1200 homepage OG/Twitter card image loaded; 26 sitemap URLs with lastmod; dukung meta; TKA anchors; ASAS page schema; legacy language/fragment navigation and protected hero; no pre-consent Google tag');
 } finally { await browser.close(); server.close(); }

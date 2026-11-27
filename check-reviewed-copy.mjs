@@ -40,6 +40,8 @@ const copyUpdates={
  23:'Bisa. Tambahkan mata pelajaran atau mata kuliah, lalu lengkapi dengan PR atau tugas, jadwal kelas, dan flashcard. Kalau lagi persiapan UTBK atau ujian, catat materi ulangan dan atur jadwal belajarnya di sini juga.',
  24:'Kamu bisa mengatur mata pelajaran, PR atau tugas, jadwal kelas, dan flashcard. Ada pengingat untuk jam pelajaran dan tenggat tugas, sesi belajar 10 menit di Mode Belajar, beserta timer dan laporan durasi belajarmu.',
  95:'Tambahkan mata pelajaran pertamamu, lalu catat PR, tugas, atau jadwal kelasnya.',
+ // RAN-265 SEO: help guides blurb now also points to the articles hub.
+ 94:'Baca panduan bikin jadwal kelas atau pelajari cara membuat dan menggunakan flashcard. Lihat juga kumpulan artikel Rancana.',
  // RAN-248 v2.1 (21 Nov 2026) /premium: free forever, Premium+ only, no prices or trial.
  27:'Buat atur semua kegiatan belajarmu.',
  29:'Buat kamu yang mau lebih.',
