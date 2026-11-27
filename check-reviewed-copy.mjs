@@ -49,6 +49,8 @@ const copyUpdates={
  31:'Sudah berlangganan? Pulihkan akses langganan',
  36:'Mata pelajaran, jadwal, to-do, flashcard yang kamu ketik, dan file bisa kamu pakai gratis selamanya, tanpa batas. Scan jadwal dan flashcard dari foto juga bisa dicoba di paket Gratis, dengan batas tertentu.',
  40:'Semua datamu tetap ada dan bisa dipakai seperti biasa. Kamu kembali ke paket Gratis, yang tetap tanpa batas untuk mata pelajaran, jadwal, to-do, flashcard ketik, dan file.',
+ // RAN-268 (26 Nov 2026): Cadangan dan izin split; permissions line expanded for Foto jadwal / Foto daftar tugas.
+ 107:'Cadangan manual berupa berkas JSON biasa yang dibuat saat kamu memintanya. Rancana tidak mengenkripsi berkas tersebut dan tidak mengunggah cadangan perencana secara otomatis. Memulihkan cadangan akan mengganti data perencana di perangkat tujuan. Lindungi salinan yang diekspor.',
 };
 // The mid-tier Premium card (28) was removed in RAN-248 v2.1, so its copy must no longer be on the page.
 const removedCopyIds=new Set([28]);
